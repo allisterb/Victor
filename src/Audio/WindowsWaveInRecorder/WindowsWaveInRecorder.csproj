@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
+    <ProjectReference Include="..\..\Interop\Victor.Interop.Windows\Victor.Interop.Windows.csproj" />
+  </ItemGroup>
+
+</Project>
