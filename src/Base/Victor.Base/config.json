@@ -2,6 +2,7 @@
   "Julius:Exe": "ENVR-v5.4.Dnn.Bin/julius-dnn.exe",
   "Julius:MicConf": "ENVR-v5.4.Dnn.Bin/mic.jconf",
   "Julius:Args": "-dnnconf ENVR-v5.4.Dnn.Bin/dnn.jconf",
-  "SnipsNLU:EngineDir": "nlu_engine_beverage"
-
+  "SnipsNLU:EngineDir": "nlu_engine_beverage",
+  "Mimic:Exe": "mimic.exe",
+  "Mimic:Args": ""
 }

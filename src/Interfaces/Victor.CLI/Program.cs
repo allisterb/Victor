@@ -22,7 +22,7 @@ namespace Victor
     }
     #endregion
 
-    #region Entrypoint
+    #region Entry-point
     class Program : Api
     {
         static void Main(string[] args)
@@ -44,7 +44,7 @@ namespace Victor
             {
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, NLUOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, NLUOptions, TTSOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -65,20 +65,20 @@ namespace Victor
                     }
                     else
                     {
-                        help.AddVerbs(typeof(NLUOptions));
+                        help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
-                    help.AddVerbs(typeof(NLUOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(NLUOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
                     Error("No input selected. Specify one of: mic.");
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -93,7 +93,7 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.UnknownOptionError))
                 {
                     UnknownOptionError error = (UnknownOptionError)errors.First(e => e.Tag == ErrorType.UnknownOptionError);
-                    help.AddVerbs(typeof(NLUOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
                     Error("Unknown option: {error}.", error.Token);
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -101,7 +101,7 @@ namespace Victor
                 else
                 {
                     Error("An error occurred parsing the program options: {errors}.", errors);
-                    help.AddVerbs(typeof(NLUOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -109,6 +109,11 @@ namespace Victor
             .WithParsed<NLUOptions>(o =>
             {
                 Recognize();
+                Exit(ExitResult.SUCCESS);
+            })
+            .WithParsed<TTSOptions>(o =>
+            {
+                TTS(o.Text);
                 Exit(ExitResult.SUCCESS);
             });
 
@@ -130,12 +135,17 @@ namespace Victor
             Error("Could not initialize SnipsNLU engine.");
             Exit(ExitResult.UNKNOWN_ERROR);
         }
+        
         s.Recognized += (text) =>
         {
             engine.GetIntents(text, out string[] intents, out string json, out string error);
             if (intents.Length > 0)
             {
                 Info("Intents: {0}", intents);
+                if (intents.First() != "None")
+                {
+                    new MimicSession(intents.First()).Run();
+                }
                 if (!string.IsNullOrEmpty(json))
                 {
                     Info("Slots: {0}", json);
@@ -146,9 +156,9 @@ namespace Victor
         s.WaitForExit();
     }
 
-    private static void S_Recognized(string sentence)
+    static void TTS(string text)
     {
-        throw new NotImplementedException();
+        new MimicSession(text).Run();
     }
 
     static void Exit(ExitResult result)

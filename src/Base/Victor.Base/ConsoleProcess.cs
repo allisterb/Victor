@@ -19,6 +19,7 @@ namespace Victor
         {
             if (!File.Exists(cmd))
             {
+                Error("The executable {0} could not be found.", cmd);
                 return;
             }
             Process = new Process();

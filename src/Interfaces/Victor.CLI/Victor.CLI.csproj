@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\NLU\Snips\Victor.NLU.Snips.csproj" />
+    <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
   </ItemGroup>
 
 </Project>

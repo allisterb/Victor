@@ -23,6 +23,7 @@ namespace Victor
     [Verb("tts", HelpText = "Use the TTS feature of Victor.")]
     class TTSOptions : Options
     {
+        [Option('t', "text", Required = true, HelpText = "The text to synthesize speech for.")]
         public string Text { get; set; }
 
     }
