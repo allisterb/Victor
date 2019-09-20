@@ -115,88 +115,87 @@ namespace Victor
         }
         #endregion
 
-        #region Methods
-        static void Recognize()
+    #region Methods
+    static void Recognize()
+    {
+        JuliusSession s = new JuliusSession();
+        if (!s.Initialized)
         {
-            JuliusSession s = new JuliusSession();
-            if (!s.Initialized)
+            Error("Could not initialize Julius session.");
+            Exit(ExitResult.UNKNOWN_ERROR);
+        }
+        SnipsNLUEngine engine = new SnipsNLUEngine();
+        if (!engine.Initialized)
+        {
+            Error("Could not initialize SnipsNLU engine.");
+            Exit(ExitResult.UNKNOWN_ERROR);
+        }
+        s.Recognized += (text) =>
+        {
+            engine.GetIntents(text, out string[] intents, out string json, out string error);
+            if (intents.Length > 0)
             {
-                Error("Could not initialize Julius session.");
-                Exit(ExitResult.UNKNOWN_ERROR);
-            }
-            SnipsNLUEngine engine = new SnipsNLUEngine();
-            if (!engine.Initialized)
-            {
-                Error("Could not initialize SnipsNLU engine.");
-                Exit(ExitResult.UNKNOWN_ERROR);
-            }
-            s.Recognized += (text) =>
-            {
-                engine.GetIntents(text, out string intent, out string json, out string error);
-                if (!string.IsNullOrEmpty(intent))
+                Info("Intents: {0}", intents);
+                if (!string.IsNullOrEmpty(json))
                 {
-                    Info("Intent: {0}", intent);
-                    if (!string.IsNullOrEmpty(json))
-                    {
-                        Info("Slots: {0}", json);
-                    }
+                    Info("Slots: {0}", json);
                 }
-            };
-            s.Start();
-            s.WaitForExit();
-        }
-
-        private static void S_Recognized(string sentence)
-        {
-            throw new NotImplementedException();
-        }
-
-        static void Exit(ExitResult result)
-        {
-
-            if (Cts != null)
-            {
-                Cts.Cancel();
-                Cts.Dispose();
             }
+        };
+        s.Start();
+        s.WaitForExit();
+    }
 
-            Environment.Exit((int)result);
-        }
+    private static void S_Recognized(string sentence)
+    {
+        throw new NotImplementedException();
+    }
 
-        static int ExitWithCode(ExitResult result)
+    static void Exit(ExitResult result)
+    {
+
+        if (Cts != null)
         {
-            return (int)result;
+            Cts.Cancel();
+            Cts.Dispose();
         }
 
-        static HelpText GetAutoBuiltHelpText(ParserResult<object> result)
-        {
-            return HelpText.AutoBuild(result, h =>
-            {
-                h.AddOptions(result);
-                return h;
-            },
-            e =>
-            {
-                return e;
-            });
-        }
-        #endregion
+        Environment.Exit((int)result);
+    }
 
-        #region Event Handlers
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    static int ExitWithCode(ExitResult result)
+    {
+        return (int)result;
+    }
+
+    static HelpText GetAutoBuiltHelpText(ParserResult<object> result)
+    {
+        return HelpText.AutoBuild(result, h =>
         {
-            Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");
-            Exit(ExitResult.UNHANDLED_EXCEPTION);
-        }
+            h.AddOptions(result);
+            return h;
+        },
+        e =>
+        {
+            return e;
+        });
+    }
+    #endregion
+
+    #region Event Handlers
+    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");
+        Exit(ExitResult.UNHANDLED_EXCEPTION);
+    }
         
 
-        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
-        {
-            Info("Ctrl-C pressed. Exiting.");
-            Cts.Cancel();
-            Exit(ExitResult.SUCCESS);
-        }
-        #endregion
-
+    private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+    {
+        Info("Ctrl-C pressed. Exiting.");
+        Cts.Cancel();
+        Exit(ExitResult.SUCCESS);
+    }
+    #endregion
     }
 }
