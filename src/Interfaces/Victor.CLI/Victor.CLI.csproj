@@ -3,7 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <AssemblyVersion>0.1.1.0</AssemblyVersion>
+    <Version>0.1.1</Version>
+    <Authors>Allister Beharry</Authors>
+    <Product>Victor</Product>
+    <Company />
   </PropertyGroup>
 
   <ItemGroup>

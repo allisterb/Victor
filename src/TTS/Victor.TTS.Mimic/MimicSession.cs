@@ -46,6 +46,10 @@ namespace Victor
         {
             MimicProcess.Start();
             MimicProcess.WaitForExit();
+            if (!MimicProcess.IsDisposed)
+            {
+                MimicProcess.Process.Dispose();
+            }
         }
 
         public void OnProcessOutput(string line)
@@ -56,7 +60,7 @@ namespace Victor
             }
             else
             {
-                Info("Mimic TTS: {0}", line);
+                Info("TTS: {0}", line);
             }
         }
 

@@ -22,9 +22,10 @@ namespace Victor
     }
     #endregion
 
-    #region Entry-point
     class Program : Api
     {
+        #region Entry-point
+
         static void Main(string[] args)
         {
             if (args.Contains("--debug"))
@@ -120,7 +121,7 @@ namespace Victor
         }
         #endregion
 
-    #region Methods
+        #region Methods
     static void Recognize()
     {
         JuliusSession s = new JuliusSession();
@@ -142,9 +143,9 @@ namespace Victor
             if (intents.Length > 0)
             {
                 Info("Intents: {0}", intents);
-                if (intents.First() != "None")
+                if (!intents.First().StartsWith("None"))
                 {
-                    new MimicSession(intents.First()).Run();
+                    new MimicSession(intents.First().Split(':').First()).Run();
                 }
                 if (!string.IsNullOrEmpty(json))
                 {
@@ -164,7 +165,7 @@ namespace Victor
     static void Exit(ExitResult result)
     {
 
-        if (Cts != null)
+        if (Cts != null && !Cts.Token.CanBeCanceled)
         {
             Cts.Cancel();
             Cts.Dispose();
@@ -192,7 +193,7 @@ namespace Victor
     }
     #endregion
 
-    #region Event Handlers
+        #region Event Handlers
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");

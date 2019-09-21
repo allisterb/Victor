@@ -12,7 +12,7 @@ namespace Victor
 
     public delegate void OnError(string line);
 
-    public class ConsoleProcess : Api
+    public class ConsoleProcess : Api, IDisposable
     {
         #region Constructors
         public ConsoleProcess(string cmd, string[] args, bool relativeToAssemblyDir = true, OnExit onExit = null, OnOutput onOutput = null,  OnError onError = null)
@@ -39,7 +39,7 @@ namespace Victor
             Process.OutputDataReceived += Process_OutputDataReceived;
             Process.ErrorDataReceived += Process_ErrorDataReceived; 
             Process.Exited += Process_Exited;
-
+            Process.Disposed += Process_Disposed;
             Initialized = true;
         }
         #endregion
@@ -52,7 +52,7 @@ namespace Victor
 
         private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (CancellationToken.IsCancellationRequested)
+            if (CancellationToken.IsCancellationRequested && !Process.HasExited)
             {
                 Stop();
                 return;
@@ -67,7 +67,7 @@ namespace Victor
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         { 
-            if (CancellationToken.IsCancellationRequested)
+            if (CancellationToken.IsCancellationRequested && !Process.HasExited)
             {
                 Stop();
                 return;
@@ -78,6 +78,11 @@ namespace Victor
                 OutputBuilder.AppendLine(e.Data);
                 OnOutput?.Invoke(e.Data);
             }
+        }
+
+        private void Process_Disposed(object sender, EventArgs e)
+        {
+            IsDisposed = true;
         }
         #endregion
 
@@ -103,6 +108,8 @@ namespace Victor
         public OnError OnError { get; protected set; }
 
         public OnOutput OnOutput { get; protected set; }
+
+        public bool IsDisposed { get; protected set; }
         #endregion
 
         #region Methods
@@ -132,11 +139,9 @@ namespace Victor
             Process.WaitForExit();
         }
 
-        public void WaitForInputIdle()
+        public void Dispose()
         {
-            ThrowIfNotInitialized();
-            ThrowIfNotStarted();
-            Process.WaitForInputIdle();
+            
         }
 
         protected void ThrowIfNotStarted()
