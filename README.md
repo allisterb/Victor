@@ -2,8 +2,11 @@
 
 Victor is an free cross-platform programmable voice control program for desktops that is currently in the early stages of development. Victor was started during my entry into the [Mozilla Voice Challenge](https://www.herox.com/voice) to test some ideas for an integrated open-source voice stack and currently uses the following open-source projects:
 
-* Julius (ASR)
-* SnipsNLU (NLU)
+* Julius (ASR) Julius is a hi-speed accurate and flexible LVCSR library whicn can decode and recognize speech in real-time using a variety of models built for different languages like Japanese, English and Polish. Julius can be built as a statically-linked binary and run as a sub-process of Victor. Victor communicates with Julius by monitoring its stdout stream and detecting the different states the program is in.
+
+[![Victor Debug Mode](https://tt4r9w.dm.files.1drv.com/y4m2-x2RJFkx1VaXFHLqEWIUwZhBfEbfKaTlKsCQxKlnboznLObf-BnmLosDEg5Gj7qWA8JIj9wA2wjxVwJsqD4H1agM-WaIF7AfcgLOrnL43DZJ5B9r_KRe-og-njzg2a6SeOdZYGdaKA8INf67y7suXXkeUwWyxkdsnp2eEMlt-Ve-6JJmiMvoG_l3JPe6paKY6U-eNK8rTcItqLKaZ_VoQ?width=475&height=315&cropmode=none)](https://www.youtube.com/watch?v=1PFBRR15F-A "Victor Debug Mode")
+
+* SnipsNLU (NLU) Snips NLU 
 * Mimic (TTS)
 
 The current release is v0.1.1 and can be downloaded from the [release page](https://github.com/allisterb/Victor/releases/tag/v0.1.1).
