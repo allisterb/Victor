@@ -18,5 +18,7 @@ Julius can be built as a statically-linked binary and run as a sub-process of Vi
 
 [![Victor Debug Mode](https://tt4r9w.dm.files.1drv.com/y4m2-x2RJFkx1VaXFHLqEWIUwZhBfEbfKaTlKsCQxKlnboznLObf-BnmLosDEg5Gj7qWA8JIj9wA2wjxVwJsqD4H1agM-WaIF7AfcgLOrnL43DZJ5B9r_KRe-og-njzg2a6SeOdZYGdaKA8INf67y7suXXkeUwWyxkdsnp2eEMlt-Ve-6JJmiMvoG_l3JPe6paKY6U-eNK8rTcItqLKaZ_VoQ?width=475&height=315&cropmode=none)](https://www.youtube.com/watch?v=1PFBRR15F-A "Victor Debug Mode")
 
-### SnipsNLU (NLU) 
+### SnipsNLU (NLU)
+[Snips NLU](https://github.com/snipsco/snips-nlu-rs) is a hi-speed accurate open-source NLU inference engine which can recognize intents and entities in utterances for a partucular domain in real-time. It is written in Rust and has an FFI allowing it to be used by any language that call C libraries. 
+
 ### Mimic (TTS)
