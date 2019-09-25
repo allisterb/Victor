@@ -31,11 +31,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Audio", "Audio", "{362DD365
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Tests.Julius", "..\tests\Victor.Tests.Julius\Victor.Tests.Julius.csproj", "{D3F3BE05-8F4A-49DE-AFC6-B8D7A502E60E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsWaveInRecorder", "Audio\WindowsWaveInRecorder\WindowsWaveInRecorder.csproj", "{761627B7-52DB-4953-A24E-2D2D6519240D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Audio.Windows.WaveInRecorder", "Audio\Victor.Audio.Windows.WaveInRecorder\Victor.Audio.Windows.WaveInRecorder.csproj", "{761627B7-52DB-4953-A24E-2D2D6519240D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLU", "NLU", "{4D5197B4-E735-441A-8980-023FD450CDF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.NLU.Snips", "NLU\Snips\Victor.NLU.Snips.csproj", "{BCE43139-AA67-4A9A-B0DE-7BD20386754B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.NLU.Snips", "NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj", "{BCE43139-AA67-4A9A-B0DE-7BD20386754B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TTS", "TTS", "{1A9CD243-0B95-49D8-9A69-F39E5684431C}"
 EndProject

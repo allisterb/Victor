@@ -6,10 +6,10 @@ namespace Victor
 {
     public delegate void BufferDoneEventHandler(IntPtr data, int size);
 
-    public class WaveInRecorder : IDisposable
+    public class WindowsWaveInRecorder : IDisposable
     {
         #region Constructors
-        public WaveInRecorder(int device, Windows.WaveFormat format, int bufferSize, int bufferCount, BufferDoneEventHandler doneProc)
+        public WindowsWaveInRecorder(int device, Windows.WaveFormat format, int bufferSize, int bufferCount, BufferDoneEventHandler doneProc)
         {
             this.doneProc = doneProc;
             Windows.FailOnMMError(Windows.waveInOpen(out waveInPtr, device, format, bufferProc, 0, Windows.CALLBACK_FUNCTION));
@@ -53,7 +53,7 @@ namespace Victor
             GC.SuppressFinalize(this);
         }
 
-        ~WaveInRecorder()
+        ~WindowsWaveInRecorder()
         {
             Dispose();
         }
