@@ -41,7 +41,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TTS", "TTS", "{1A9CD243-0B9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.TTS.Mimic", "TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj", "{A1E9049D-1F89-4475-8229-1FBC9AF6F212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.Tests.Mimic", "..\tests\Victor.Tests.Mimic\Victor.Tests.Mimic.csproj", "{9EB7FEAE-699A-450B-ABCF-13407005D0B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Tests.Mimic", "..\tests\Victor.Tests.Mimic\Victor.Tests.Mimic.csproj", "{9EB7FEAE-699A-450B-ABCF-13407005D0B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libsoundio-sharp", "..\ext\libsoundio-sharp\dotnetcore\libsoundio-sharp\libsoundio-sharp.csproj", "{48774F98-7704-4A32-A376-4706D649F0AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libsoundio-sharp.Tests", "..\ext\libsoundio-sharp\dotnetcore\libsoundio-sharp.Tests\libsoundio-sharp.Tests.csproj", "{C28CDB5A-3BF3-48DE-8158-193EABD1DF90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +97,14 @@ Global
 		{9EB7FEAE-699A-450B-ABCF-13407005D0B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EB7FEAE-699A-450B-ABCF-13407005D0B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EB7FEAE-699A-450B-ABCF-13407005D0B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48774F98-7704-4A32-A376-4706D649F0AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48774F98-7704-4A32-A376-4706D649F0AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48774F98-7704-4A32-A376-4706D649F0AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48774F98-7704-4A32-A376-4706D649F0AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28CDB5A-3BF3-48DE-8158-193EABD1DF90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28CDB5A-3BF3-48DE-8158-193EABD1DF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28CDB5A-3BF3-48DE-8158-193EABD1DF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28CDB5A-3BF3-48DE-8158-193EABD1DF90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +121,8 @@ Global
 		{BCE43139-AA67-4A9A-B0DE-7BD20386754B} = {4D5197B4-E735-441A-8980-023FD450CDF8}
 		{A1E9049D-1F89-4475-8229-1FBC9AF6F212} = {1A9CD243-0B95-49D8-9A69-F39E5684431C}
 		{9EB7FEAE-699A-450B-ABCF-13407005D0B4} = {9BCBB3CA-0ADC-4A7B-81C4-396CE1BDA685}
+		{48774F98-7704-4A32-A376-4706D649F0AD} = {362DD365-90F1-4344-ACDB-43D6E4CF24B0}
+		{C28CDB5A-3BF3-48DE-8158-193EABD1DF90} = {9BCBB3CA-0ADC-4A7B-81C4-396CE1BDA685}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC5685EE-DB95-4277-8DB7-6FA4A8FD811D}

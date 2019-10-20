@@ -7,11 +7,14 @@ namespace Victor
 {
     public class SerilogLogger : Logger
     {
-        public SerilogLogger(string logFileName = null, bool debug = false)
+        public SerilogLogger(bool console = false, string logFileName = null, bool debug = false)
         {
-            Config = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.File(logFileName ?? "Victor.log");
+            Config = new LoggerConfiguration();
+            if (console)
+            {
+                Config = new LoggerConfiguration().WriteTo.Console();
+            }
+            Config = Config.WriteTo.File(logFileName ?? "Victor.log");
             if (debug)
             {
                 Config = Config.MinimumLevel.Debug();

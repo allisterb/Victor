@@ -30,11 +30,11 @@ namespace Victor
         {
             if (args.Contains("--debug"))
             {
-                SetLogger(new SerilogLogger("Victor.log", true));
+                SetLogger(new SerilogLogger(console: true, debug: true));
             }
             else
             {
-                SetLogger(new SerilogLogger("Victor.log", false));
+                SetLogger(new SerilogLogger(debug: false));
             }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

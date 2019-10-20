@@ -21,7 +21,7 @@ namespace Victor
                 .AddJsonFile("config.json")
                 .AddEnvironmentVariables()
                 .Build();
-            HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Canaan/0.1");
+            HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Victor/0.1");
         }
         public Api(CancellationToken ct)
         {
