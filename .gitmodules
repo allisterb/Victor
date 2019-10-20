@@ -1,0 +1,3 @@
+[submodule "ext/libsoundio-sharp"]
+	path = ext/libsoundio-sharp
+	url = https://github.com/allisterb/libsoundio-sharp.git
