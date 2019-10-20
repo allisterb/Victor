@@ -18,14 +18,16 @@ Julius can be built as a statically-linked binary and run as a sub-process of Vi
 
 [![Victor Debug Mode](https://tt4r9w.dm.files.1drv.com/y4m2-x2RJFkx1VaXFHLqEWIUwZhBfEbfKaTlKsCQxKlnboznLObf-BnmLosDEg5Gj7qWA8JIj9wA2wjxVwJsqD4H1agM-WaIF7AfcgLOrnL43DZJ5B9r_KRe-og-njzg2a6SeOdZYGdaKA8INf67y7suXXkeUwWyxkdsnp2eEMlt-Ve-6JJmiMvoG_l3JPe6paKY6U-eNK8rTcItqLKaZ_VoQ?width=475&height=315&cropmode=none)](https://www.youtube.com/watch?v=1PFBRR15F-A "Victor Debug Mode")
 
-The desired Julius configuration is specified in a plain text file and passed to the Julius executable as a startup argument. In this way Julius can be used by any program on any hardware or operation system platform supported by Julius
+The desired Julius configuration is specified in a plain text file and passed to the Julius executable as a startup argument. In this way Julius can be used by any program on any hardware or operation system platform supported by Julius. Julius's portability and real-time input recognition capabilities make it a good choice for the ASR component of an integrated voice stack.
+
 ### SnipsNLU (NLU)
 [Snips NLU](https://github.com/snipsco/snips-nlu-rs) is a hi-speed accurate open-source NLU inference engine which can recognize intents and entities in utterances for a particular domain in real-time. It is written in Rust and has an FFI allowing it to be used by any language that call C libraries. 
-Victor interfaces with the Snips NLU engine using its C FFI e.g in C# calling a SnipsNLU function in a native DLL looks like:
+Victor [interfaces](https://github.com/allisterb/Victor/blob/master/src/NLU/Victor.NLU.Snips/SnipsApi.cs) with the Snips NLU engine using its C FFI e.g in C# calling a SnipsNLU function in a native DLL looks like:
 ```
 [DllImport("snips_nlu_ffi", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         internal static extern SNIPS_RESULT snips_nlu_engine_create_from_dir
             ([In, MarshalAs(UnmanagedType.LPStr)] string root_dir, [In, Out] ref IntPtr client);
 ```
-Abstractions over the lower-level Snips functions are built-up to avoid other code having to manage the details of calling the library code. This is the standard procedure used for Snips bindings to other languages like Python
+Abstractions over the lower-level Snips functions are built-up to avoid other code having to manage the details of calling the library code. This is the standard procedure used for Snips bindings to other languages like Python. This ability to interface with the Snips library directly removes the need for an intermediate Python interpreter or REST API makes SnipsNLU a good choice for the NLU component of an integrated voice stack.
+
 ### Mimic (TTS)
