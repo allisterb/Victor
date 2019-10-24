@@ -49,6 +49,8 @@ namespace Victor
 
         public static CancellationTokenSource Cts { get; } = new CancellationTokenSource();
 
+        public static CancellationToken Ct { get; } = Cts.Token;
+
         public static HttpClient HttpClient { get; } = new HttpClient();
 
         public static string YY = DateTime.Now.Year.ToString().Substring(2, 2);

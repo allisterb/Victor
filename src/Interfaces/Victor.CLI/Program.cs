@@ -39,10 +39,10 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
-            CO.WriteLine(FiggleFonts.Chunky.Render("Victor"), Color.Blue);
-            CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
             if (args.Contains("--debug"))
             {
+                CO.WriteLine(FiggleFonts.Chunky.Render("Victor"), Color.Blue);
+                CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
                 Info("Debug mode set.");
             }
             ParserResult<object> result = new Parser().ParseArguments<Options, NLUOptions, TTSOptions>(args);
