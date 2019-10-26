@@ -13,6 +13,7 @@
 namespace Victor
 {
     using System = global::System;
+    using System.Linq;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.1.3.0 (NJsonSchema v10.0.27.0 (Newtonsoft.Json v11.0.0.0))")]
     public partial class EDDIClient
@@ -2004,6 +2005,11 @@ namespace Victor
                         ProcessResponse(client_, response_);
 
                         var status_ = ((int)response_.StatusCode).ToString();
+                        if (status_ != "204")
+                        {
+                            throw new EDDIApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, null, headers_, null);
+                        }
+                        
                     }
                     finally
                     {
@@ -3815,8 +3821,7 @@ namespace Victor
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<DocumentDescriptor>>(response_, headers_).ConfigureAwait(false);
                             return objectResponse_.Object;
                         }
-                        else
-                        if (status_ != "200" && status_ != "204")
+                        else if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new EDDIApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
@@ -9768,7 +9773,7 @@ namespace Victor
         /// <summary>Start conversation with context.</summary>
         /// <returns>successful operation</returns>
         /// <exception cref="EDDIApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task BotsPostAsync(Environment8 environment, string botId, string userId, System.Collections.Generic.IDictionary<string, Context> body)
+        public System.Threading.Tasks.Task<string> BotsPostAsync(Environment8 environment, string botId, string userId, System.Collections.Generic.IDictionary<string, Context> body)
         {
             return BotsPostAsync(environment, botId, userId, body, System.Threading.CancellationToken.None);
         }
@@ -9777,7 +9782,7 @@ namespace Victor
         /// <summary>Start conversation with context.</summary>
         /// <returns>successful operation</returns>
         /// <exception cref="EDDIApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task BotsPostAsync(Environment8 environment, string botId, string userId, System.Collections.Generic.IDictionary<string, Context> body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<string> BotsPostAsync(Environment8 environment, string botId, string userId, System.Collections.Generic.IDictionary<string, Context> body, System.Threading.CancellationToken cancellationToken)
         {
             if (environment == null)
                 throw new System.ArgumentNullException("environment");
@@ -9823,6 +9828,17 @@ namespace Victor
                         ProcessResponse(client_, response_);
 
                         var status_ = ((int)response_.StatusCode).ToString();
+
+                        if (status_ == "201")
+                        {
+                            var l =  headers_["Location"].First();
+                            return new System.Uri(l).Segments.Last();
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new EDDIApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                        }
                     }
                     finally
                     {
@@ -11966,6 +11982,9 @@ namespace Victor
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
 
+        [Newtonsoft.Json.JsonIgnore]
+        public string ResourceId => Resource?.Segments.Last();
+
 
     }
 
@@ -12058,13 +12077,15 @@ namespace Victor
         public System.Uri CreatedBy { get; set; }
 
         [Newtonsoft.Json.JsonProperty("createdOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? CreatedOn { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? CreatedOn { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastModifiedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Uri LastModifiedBy { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastModifiedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastModifiedOn { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? LastModifiedOn { get; set; }
 
         [Newtonsoft.Json.JsonProperty("deleted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? Deleted { get; set; }
@@ -12106,7 +12127,8 @@ namespace Victor
         public object Value { get; set; }
 
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? Timestamp { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? Timestamp { get; set; }
 
 
     }
@@ -12169,7 +12191,8 @@ namespace Victor
         public System.Collections.Generic.ICollection<ConversationStepData> ConversationStep { get; set; }
 
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? Timestamp { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? Timestamp { get; set; }
 
 
     }
@@ -12243,7 +12266,8 @@ namespace Victor
         public System.Collections.Generic.ICollection<object> PossibleResults { get; set; }
 
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? Timestamp { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? Timestamp { get; set; }
 
         [Newtonsoft.Json.JsonProperty("public", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? Public { get; set; }
@@ -12268,7 +12292,8 @@ namespace Victor
         public ConversationStatusConversationState? ConversationState { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastInteraction", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastInteraction { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? LastInteraction { get; set; }
 
 
     }
@@ -13059,13 +13084,15 @@ namespace Victor
         public System.Uri CreatedBy { get; set; }
 
         [Newtonsoft.Json.JsonProperty("createdOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? CreatedOn { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? CreatedOn { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastModifiedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Uri LastModifiedBy { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastModifiedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastModifiedOn { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? LastModifiedOn { get; set; }
 
         [Newtonsoft.Json.JsonProperty("deleted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? Deleted { get; set; }
@@ -13097,7 +13124,8 @@ namespace Victor
         public TestCaseState? TestCaseState { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lastRun", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastRun { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(MillisecondEpochConverter))]
+        public System.DateTime? LastRun { get; set; }
 
         [Newtonsoft.Json.JsonProperty("expected", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public ConversationMemorySnapshot Expected { get; set; }

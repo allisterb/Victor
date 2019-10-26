@@ -9,13 +9,5 @@ namespace Victor.Tests
         {
             Api.SetDefaultLoggerIfNone();
         }
-
-        [Fact]
-        public void CanRunProcess()
-        {
-            var p = new ConsoleProcess("cmd", new[] { "/c", "dir" });
-            p.Start();
-
-        }
     }
 }
