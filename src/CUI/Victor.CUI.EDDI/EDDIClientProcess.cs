@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Victor.CUI.EDDI
+namespace Victor
 {
-    public partial class Client
+    public partial class EDDIClient
     {
         //partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         //partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
