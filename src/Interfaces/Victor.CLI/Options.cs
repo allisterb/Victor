@@ -13,11 +13,20 @@ namespace Victor
         public bool Debug { get; set; }
     }
 
-    [Verb("nlu", HelpText = "Use the default NLU feature of Victor with the default mic as the input source for speech recognition.")]
-    class NLUOptions : Options
+    [Verb("sr", HelpText = "Use the default speech recognition feature of Victor with the default mic as the input source.")]
+    class SpeechRecognitionOptions : Options
     {
 
+    }
 
+    [Verb("nlu", HelpText = "Use the NLU feature of Victor.")]
+    class NLUOptions : Options
+    {
+        [Option('m', "model", Required = true, HelpText = "The NLU model to use.")]
+        public string Model { get; set; }
+
+        [Option('t', "text", Required = true, HelpText = "The text to understand.")]
+        public string Text { get; set; }
     }
 
     [Verb("tts", HelpText = "Use the TTS feature of Victor.")]
@@ -25,7 +34,6 @@ namespace Victor
     {
         [Option('t', "text", Required = true, HelpText = "The text to synthesize speech for.")]
         public string Text { get; set; }
-
     }
 
     [Verb("cui", HelpText = "Use the CUI features of Victor.")]

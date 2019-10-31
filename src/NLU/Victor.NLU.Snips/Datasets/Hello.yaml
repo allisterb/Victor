@@ -1,0 +1,54 @@
+﻿# hello intent
+---
+type: intent
+name: hello
+utterances:
+  - Hello
+  - What's up?
+  - How's it going?
+  - Hey Victor
+  - Hi
+  - How are you
+  - Sup
+  - Yo
+  - Hi there
+  - Bro
+  - Dude what's happening
+
+# userName intent
+---
+type: intent
+name: userName
+slots:
+  - name: name
+    entity: person
+utterances:
+  - My name is [person](John)
+  - My name is [person](Henry) [person](Miller)
+  - I am [person](David)
+  - I'm [person](Mary)
+  - name's [person](Ellen)
+
+# helloUserName intent
+---
+type: intent
+name: helloUserName
+slots:
+  - name: name
+    entity: person
+utterances:
+  - Hello my name is [person](John)
+  - Hello Victor my names [person](John)
+  - Hi Victor my name is [person](Mary)
+  - Hi I'm [person](Ellen)
+ 
+# person entity
+---
+type: entity
+name: person
+automatically_extensible: yes
+values:
+- John
+- [Michael, Marvin, David]
+- [Luis, Joe, Harry]
+- [Shelly, Ellen, Carrie]

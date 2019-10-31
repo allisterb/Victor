@@ -26,7 +26,6 @@ namespace Victor
     class Program : Api
     {
         #region Entry-point
-
         static void Main(string[] args)
         {
             if (args.Contains("--debug"))
@@ -46,7 +45,7 @@ namespace Victor
                 CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, NLUOptions, TTSOptions, CUIOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -67,20 +66,20 @@ namespace Victor
                     }
                     else
                     {
-                        help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
+                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
                     Error("No input selected. Specify one of: mic.");
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -95,7 +94,7 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.UnknownOptionError))
                 {
                     UnknownOptionError error = (UnknownOptionError)errors.First(e => e.Tag == ErrorType.UnknownOptionError);
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
                     Error("Unknown option: {error}.", error.Token);
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -103,12 +102,12 @@ namespace Victor
                 else
                 {
                     Error("An error occurred parsing the program options: {errors}.", errors);
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
             })
-            .WithParsed<NLUOptions>(o =>
+            .WithParsed<SpeechRecognitionOptions>(o =>
             {
                 Recognize();
                 Exit(ExitResult.SUCCESS);
@@ -121,101 +120,115 @@ namespace Victor
             .WithParsed<CUIOptions>(o =>
             {
                 CUI(o).Wait();
+            })
+            .WithParsed<NLUOptions>(o =>
+            {
+                NLU(o);
             });
 
         }
         #endregion
 
         #region Methods
-    static void Recognize()
-    {
-        JuliusSession s = new JuliusSession();
-        if (!s.Initialized)
+        static void Recognize()
         {
-            Error("Could not initialize Julius session.");
-            Exit(ExitResult.UNKNOWN_ERROR);
-        }
-        SnipsNLUEngine engine = new SnipsNLUEngine();
-        if (!engine.Initialized)
-        {
-            Error("Could not initialize SnipsNLU engine.");
-            Exit(ExitResult.UNKNOWN_ERROR);
-        }
+            JuliusSession s = new JuliusSession();
+            if (!s.Initialized)
+            {
+                Error("Could not initialize Julius session.");
+                Exit(ExitResult.UNKNOWN_ERROR);
+            }
+            SnipsNLUEngine engine = new SnipsNLUEngine("nlu_engine_beverage");
+            if (!engine.Initialized)
+            {
+                Error("Could not initialize SnipsNLU engine.");
+                Exit(ExitResult.UNKNOWN_ERROR);
+            }
         
-        s.Recognized += (text) =>
-        {
-            engine.GetIntents(text, out string[] intents, out string json, out string error);
-            if (intents.Length > 0)
+            s.Recognized += (text) =>
             {
-                Info("Intents: {0}", intents);
-                if (!intents.First().StartsWith("None"))
+                engine.GetIntents(text, out string[] intents, out string json, out string error);
+                if (intents.Length > 0)
                 {
-                    new MimicSession(intents.First().Split(':').First()).Run();
+                    Info("Intents: {0}", intents);
+                    if (!intents.First().StartsWith("None"))
+                    {
+                        new MimicSession(intents.First().Split(':').First()).Run();
+                    }
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        Info("Slots: {0}", json);
+                    }
                 }
-                if (!string.IsNullOrEmpty(json))
+            };
+            s.Start();
+            s.WaitForExit();
+        }
+
+        static void TTS(string text)
+        {
+            new MimicSession(text).Run();
+        }
+
+        static async Task CUI(CUIOptions o)
+        {
+            EDDIClient c = new EDDIClient(Config("CUI:EDDIServerUrl"), HttpClient);
+            if (o.ListBots)
+            {
+                Info("Querying for bots...");
+                var descriptors = await c.BotstoreBotsDescriptorsGetAsync(null, null, null);
+                foreach (var d in descriptors)
                 {
-                    Info("Slots: {0}", json);
+                    System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
                 }
             }
-        };
-        s.Start();
-        s.WaitForExit();
-    }
-
-    static void TTS(string text)
-    {
-        new MimicSession(text).Run();
-    }
-
-    static async Task CUI(CUIOptions o)
-    {
-        EDDIClient c = new EDDIClient(Config("CUI:EDDIServerUrl"), HttpClient);
-        if (o.ListBots)
-        {
-            Info("Querying for bots...");
-            var descriptors = await c.BotstoreBotsDescriptorsGetAsync(null, null, null);
-            foreach (var d in descriptors)
+            else if (!string.IsNullOrEmpty(o.ExportBot))
             {
-                System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                    var r = await c.BackupExportPostAsync(o.ExportBot, 1);
+                    System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
             }
         }
-        else if (!string.IsNullOrEmpty(o.ExportBot))
+
+        static void NLU(NLUOptions o)
         {
-                var r = await c.BackupExportPostAsync(o.ExportBot, 1);
-                System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
+            SnipsNLUEngine engine = new SnipsNLUEngine("nlu_engine_beverage");
+            if (!engine.Initialized)
+            {
+                Error("Could not initialize SnipsNLU engine.");
+                Exit(ExitResult.UNKNOWN_ERROR);
+            }
+
         }
-    }
-
-    static void Exit(ExitResult result)
-    {
-
-        if (Cts != null && !Cts.Token.CanBeCanceled)
+        static void Exit(ExitResult result)
         {
-            Cts.Cancel();
-            Cts.Dispose();
+
+            if (Cts != null && !Cts.Token.CanBeCanceled)
+            {
+                Cts.Cancel();
+                Cts.Dispose();
+            }
+
+            Environment.Exit((int)result);
         }
 
-        Environment.Exit((int)result);
-    }
-
-    static int ExitWithCode(ExitResult result)
-    {
-        return (int)result;
-    }
-
-    static HelpText GetAutoBuiltHelpText(ParserResult<object> result)
-    {
-        return HelpText.AutoBuild(result, h =>
+        static int ExitWithCode(ExitResult result)
         {
-            h.AddOptions(result);
-            return h;
-        },
-        e =>
+            return (int)result;
+        }
+
+        static HelpText GetAutoBuiltHelpText(ParserResult<object> result)
         {
-            return e;
-        });
-    }
-    #endregion
+            return HelpText.AutoBuild(result, h =>
+            {
+                h.AddOptions(result);
+                return h;
+            },
+            e =>
+            {
+                return e;
+            });
+        }
+        #endregion
 
         #region Event Handlers
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

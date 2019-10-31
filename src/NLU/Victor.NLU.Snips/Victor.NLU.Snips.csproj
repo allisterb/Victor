@@ -8,4 +8,10 @@
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Engines\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -17,7 +17,7 @@ namespace Victor
         #region Constructors
         public SnipsNLUEngine(string engineDir, CancellationToken ct) : base(ct)
         {
-            EngineDir = Path.Combine(engineDir);
+            EngineDir = Path.Combine("Engines", engineDir);
             if (!Directory.Exists(EngineDir))
             {
                 Error("The directory {0} does not exist.", EngineDir);
@@ -33,13 +33,11 @@ namespace Victor
                 Error("An error occurred creating the Snips NLU engine from directory {0}: {1}.", engineDir, error);
             }
         }
+
+        public SnipsNLUEngine(string engineDir) : this(engineDir, Cts.Token) { }
         #endregion
 
         #region Properties
-        public SnipsNLUEngine(CancellationToken ct) : this(Config("SnipsNLU:EngineDir"), ct) {}
-
-        public SnipsNLUEngine() : this(Cts.Token) { }
-
         public IntPtr EnginePtr { get; } 
 
         public string EngineDir { get; }

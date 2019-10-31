@@ -1,0 +1,244 @@
+{
+  "entities": {
+    "person": {
+      "automatically_extensible": true,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "John"
+        },
+        {
+          "synonyms": [
+            "Marvin",
+            "David"
+          ],
+          "value": "Michael"
+        },
+        {
+          "synonyms": [
+            "Joe",
+            "Harry"
+          ],
+          "value": "Luis"
+        },
+        {
+          "synonyms": [
+            "Ellen",
+            "Carrie"
+          ],
+          "value": "Shelly"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "hello": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "Hello"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's up?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How's it going?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Hey Victor"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Hi"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How are you"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Sup"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Yo"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Hi there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Bro"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Dude what's happening"
+            }
+          ]
+        }
+      ]
+    },
+    "helloUserName": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "Hello my name is "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "John"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Hello Victor my names "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "John"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Hi Victor my name is "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Mary"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Hi I'm "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Ellen"
+            }
+          ]
+        }
+      ]
+    },
+    "userName": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "My name is "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "John"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "My name is "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Henry"
+            },
+            {
+              "text": " "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Miller"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I am "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "David"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I'm "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Mary"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "name's "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Ellen"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}
