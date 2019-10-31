@@ -27,6 +27,13 @@
             "Carrie"
           ],
           "value": "Shelly"
+        },
+        {
+          "synonyms": [
+            "Tim",
+            "Hubert"
+          ],
+          "value": "Sean"
         }
       ],
       "matching_strictness": 1.0,
