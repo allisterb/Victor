@@ -1,0 +1,108 @@
+{
+  "config": {
+    "ignore_stop_words": true,
+    "unit_name": "lookup_intent_parser"
+  },
+  "entity_scopes": [
+    {
+      "entity_scope": {
+        "builtin": [],
+        "custom": []
+      },
+      "intent_group": [
+        "hello"
+      ]
+    },
+    {
+      "entity_scope": {
+        "builtin": [],
+        "custom": [
+          "person"
+        ]
+      },
+      "intent_group": [
+        "helloUserName",
+        "userName"
+      ]
+    }
+  ],
+  "intents_names": [
+    "hello",
+    "helloUserName",
+    "userName"
+  ],
+  "language_code": "en",
+  "map": {
+    "-2078137563": [
+      0,
+      []
+    ],
+    "-1187682328": [
+      0,
+      []
+    ],
+    "-971657431": [
+      1,
+      [
+        0
+      ]
+    ],
+    "-483638754": [
+      1,
+      [
+        0
+      ]
+    ],
+    "216024602": [
+      2,
+      [
+        0
+      ]
+    ],
+    "326054542": [
+      0,
+      []
+    ],
+    "848724943": [
+      0,
+      []
+    ],
+    "858245183": [
+      0,
+      []
+    ],
+    "1561306207": [
+      0,
+      []
+    ],
+    "1571969885": [
+      0,
+      []
+    ],
+    "1697025267": [
+      0,
+      []
+    ],
+    "1901824644": [
+      2,
+      [
+        0,
+        0
+      ]
+    ],
+    "1903351182": [
+      0,
+      []
+    ],
+    "2121208257": [
+      2,
+      [
+        0
+      ]
+    ]
+  },
+  "slots_names": [
+    "person"
+  ],
+  "stop_words_whitelist": {}
+}
