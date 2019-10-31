@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: llvm-toolset-rhel7
+  labels:
+    app: llvm-toolset-rhel7
+  namespace: evals25-shared-7daa
+spec:
+  containers:
+    - name: llvm-toolset-rhel7   
+      image: devtools/llvm-toolset-rhel7
+      args:
+        - /bin/sh
+        - '-c'
+        - sleep 5d
+      readinessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - '-i'
+            - '-c'
+            - >-
+              ls
+        initialDelaySeconds: 3
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+        terminationMessagePath: /dev/termination-log
+      livenessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - '-i'
+            - '-c'
+            - >-
+              ls

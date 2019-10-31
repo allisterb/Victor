@@ -9224,7 +9224,7 @@ namespace Victor
         /// <summary>Deploy bot.</summary>
         /// <returns>successful operation</returns>
         /// <exception cref="EDDIApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task AdministrationDeployAsync(Environment environment, string botId, int version, bool? autoDeploy)
+        public System.Threading.Tasks.Task AdministrationDeployAsync(EDDIEnvironment environment, string botId, int version, bool? autoDeploy)
         {
             return AdministrationDeployAsync(environment, botId, version, autoDeploy, System.Threading.CancellationToken.None);
         }
@@ -9233,7 +9233,7 @@ namespace Victor
         /// <summary>Deploy bot.</summary>
         /// <returns>successful operation</returns>
         /// <exception cref="EDDIApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task AdministrationDeployAsync(Environment environment, string botId, int version, bool? autoDeploy, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task AdministrationDeployAsync(EDDIEnvironment environment, string botId, int version, bool? autoDeploy, System.Threading.CancellationToken cancellationToken)
         {
             if (environment == null)
                 throw new System.ArgumentNullException("environment");
@@ -13189,7 +13189,7 @@ namespace Victor
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v11.0.0.0)")]
-    public enum Environment
+    public enum EDDIEnvironment
     {
         [System.Runtime.Serialization.EnumMember(Value = @"restricted")]
         Restricted = 0,

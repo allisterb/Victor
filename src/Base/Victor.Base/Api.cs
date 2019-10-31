@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Victor
 {
@@ -17,10 +19,28 @@ namespace Victor
         #region Constructors
         static Api()
         {
-            Configuration = new ConfigurationBuilder()
-                .AddJsonFile("config.json")
-                .AddEnvironmentVariables()
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("KUBERNETES_PORT")) || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENSHIFT_BUILD_NAMESPACE")))
+            {
+                Configuration = new ConfigurationBuilder()
+                    .AddJsonFile("config.json", optional: true)
+                    .AddEnvironmentVariables()
+                    .Build();
+            }
+            else if (Assembly.GetEntryAssembly().GetName().Name == "Victor.CLI")
+            {
+                Configuration = new ConfigurationBuilder()
+                .AddJsonFile("config.json", optional: true)
                 .Build();
+            }
+            else
+            {
+                Configuration = new ConfigurationBuilder()
+                .AddJsonFile("config.json", optional: true)
+                .AddUserSecrets("d24251d3-99ae-4afc-a9d8-bf9eafcc0ca0")
+                .Build();
+            }
+            
+
             HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Victor/0.1");
         }
         public Api(CancellationToken ct)

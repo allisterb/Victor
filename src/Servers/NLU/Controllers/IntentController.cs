@@ -10,6 +10,11 @@ namespace Victor.Server.NLU
     [ApiController]
     public class IntentController : ControllerBase
     {
+        public IntentController(SnipsNLUService nluService) : base()
+        {
+
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()

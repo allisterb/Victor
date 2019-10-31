@@ -16,7 +16,7 @@ namespace Victor
     [Verb("nlu", HelpText = "Use the default NLU feature of Victor with the default mic as the input source for speech recognition.")]
     class NLUOptions : Options
     {
-        
+
 
     }
 
@@ -26,5 +26,12 @@ namespace Victor
         [Option('t', "text", Required = true, HelpText = "The text to synthesize speech for.")]
         public string Text { get; set; }
 
+    }
+
+    [Verb("cui", HelpText = "Use the CUI features of Victor.")]
+    class CUIOptions : Options
+    {
+        [Option("list-bots", Required = true, HelpText = "List the current chatbots on the Victor server.")]
+        public bool ListBots { get; set; }
     }
 }

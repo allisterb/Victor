@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +20,7 @@ namespace Victor.Server.NLU
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Api.SetDefaultLoggerIfNone();
         }
 
         public IConfiguration Configuration { get; }
@@ -25,6 +28,9 @@ namespace Victor.Server.NLU
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            SnipsNLUEngine.DownloadSnipsNativeLibIfMissing(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+            var enginesDir = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Engines");
+            services.AddSingleton(new SnipsNLUService(enginesDir));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -41,8 +47,10 @@ namespace Victor.Server.NLU
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
+
+
     }
 }

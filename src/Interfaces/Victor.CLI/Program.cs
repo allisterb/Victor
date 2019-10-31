@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 using Colorful;
 using CO = Colorful.Console;
@@ -34,7 +35,7 @@ namespace Victor
             }
             else
             {
-                SetLogger(new SerilogLogger(debug: false));
+                SetLogger(new SerilogLogger(console: true, debug: false));
             }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -45,7 +46,7 @@ namespace Victor
                 CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, NLUOptions, TTSOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, NLUOptions, TTSOptions, CUIOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -66,20 +67,20 @@ namespace Victor
                     }
                     else
                     {
-                        help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
+                        help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
                     Error("No input selected. Specify one of: mic.");
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -94,7 +95,7 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.UnknownOptionError))
                 {
                     UnknownOptionError error = (UnknownOptionError)errors.First(e => e.Tag == ErrorType.UnknownOptionError);
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
                     Error("Unknown option: {error}.", error.Token);
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -102,7 +103,7 @@ namespace Victor
                 else
                 {
                     Error("An error occurred parsing the program options: {errors}.", errors);
-                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions));
+                    help.AddVerbs(typeof(NLUOptions), typeof(TTSOptions), typeof(CUIOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -116,6 +117,10 @@ namespace Victor
             {
                 TTS(o.Text);
                 Exit(ExitResult.SUCCESS);
+            })
+            .WithParsed<CUIOptions>(o =>
+            {
+                CUI(o).Wait();
             });
 
         }
@@ -160,6 +165,20 @@ namespace Victor
     static void TTS(string text)
     {
         new MimicSession(text).Run();
+    }
+
+    static async Task CUI(CUIOptions o)
+    {
+        EDDIClient c = new EDDIClient(Config("CUI:EDDIServerUrl"), HttpClient);
+        if (o.ListBots)
+        {
+            Info("Querying for bots...");
+            var descriptors = await c.BotstoreBotsDescriptorsGetAsync(null, null, null);
+            foreach (var d in descriptors)
+            {
+                System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+            }
+        }
     }
 
     static void Exit(ExitResult result)

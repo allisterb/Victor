@@ -10,18 +10,24 @@ namespace Victor.SnipsNLU
 {
     public static class SnipsApi
     {
-        public static bool CreateEngineFromDir(string rootDir, out IntPtr enginePtr)
+        public static bool CreateEngineFromDir(string rootDir, out IntPtr enginePtr, out string error)
         {
             enginePtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(IntPtr))); ;
             try
             { 
                 SNIPS_RESULT r = snips_nlu_engine_create_from_dir(rootDir, ref enginePtr);
+                error = "";
                 return r == SNIPS_RESULT.SNIPS_RESULT_OK;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 enginePtr.FreeHGlobalIfNotZero();
+                error = e.Message;
                 return false;
+            }
+            finally
+            {
+             
             }
         }
 
