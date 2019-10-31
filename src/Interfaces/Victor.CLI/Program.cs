@@ -179,6 +179,11 @@ namespace Victor
                 System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
             }
         }
+        else if (!string.IsNullOrEmpty(o.ExportBot))
+        {
+                var r = await c.BackupExportPostAsync(o.ExportBot, 1);
+                System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
+        }
     }
 
     static void Exit(ExitResult result)

@@ -31,7 +31,10 @@ namespace Victor
     [Verb("cui", HelpText = "Use the CUI features of Victor.")]
     class CUIOptions : Options
     {
-        [Option("list-bots", Required = true, HelpText = "List the current chatbots on the Victor server.")]
+        [Option("list-bots", Required = false, HelpText = "List the current chatbots on the EDDI server.")]
         public bool ListBots { get; set; }
+
+        [Option('e', "export-bot", Required = false, HelpText = "Export a chatbot on the EDDI server.")]
+        public string ExportBot { get; set; }
     }
 }

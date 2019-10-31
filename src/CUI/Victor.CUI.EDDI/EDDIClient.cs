@@ -121,7 +121,7 @@ namespace Victor
 
         /// <returns>successful operation</returns>
         /// <exception cref="EDDIApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task BackupExportPostAsync(string botId, int botVersion)
+        public System.Threading.Tasks.Task<string> BackupExportPostAsync(string botId, int botVersion)
         {
             return BackupExportPostAsync(botId, botVersion, System.Threading.CancellationToken.None);
         }
@@ -129,7 +129,7 @@ namespace Victor
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>successful operation</returns>
         /// <exception cref="EDDIApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task BackupExportPostAsync(string botId, int botVersion, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<string> BackupExportPostAsync(string botId, int botVersion, System.Threading.CancellationToken cancellationToken)
         {
             if (botId == null)
                 throw new System.ArgumentNullException("botId");
@@ -168,7 +168,11 @@ namespace Victor
 
                         ProcessResponse(client_, response_);
 
-                        var status_ = ((int)response_.StatusCode).ToString();
+                        if ((int) response_.StatusCode == 200)
+                        {
+                            return headers_["Location"].First();
+                        }
+                        else throw new EDDIApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, "", headers_, null);
                     }
                     finally
                     {
