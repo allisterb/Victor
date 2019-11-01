@@ -65,9 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrowseSharp.Common", "..\ex
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Servers", "Servers", "{A99C6858-97C0-4E06-9C25-02472DCB723E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Server.WebUI", "Servers\WebUI\Victor.Server.WebUI.csproj", "{20259F9B-812A-460A-81E8-7C316B6C5020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Server.WebUI", "Servers\Victor.Server.WebUI\Victor.Server.WebUI.csproj", "{20259F9B-812A-460A-81E8-7C316B6C5020}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Server.WebAPI", "Servers\WebAPI\Victor.Server.WebAPI.csproj", "{CDE3C9FB-9023-436D-B186-290889FAB151}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Server.WebAPI", "Servers\Victor.Server.WebAPI\Victor.Server.WebAPI.csproj", "{CDE3C9FB-9023-436D-B186-290889FAB151}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.CUI.EDDI", "CUI\Victor.CUI.EDDI\Victor.CUI.EDDI.csproj", "{2032B824-F31D-40A8-A581-9C479DA7CEC7}"
 EndProject
