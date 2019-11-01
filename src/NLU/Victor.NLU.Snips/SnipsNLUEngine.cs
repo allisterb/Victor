@@ -67,7 +67,7 @@ namespace Victor
             string libWindowsUrl = "https://allisterb-victor.s3.us-east-2.amazonaws.com/snips_nlu_ffi.dll";
             if (Environment.OSVersion.Platform == PlatformID.Unix && !File.Exists(Path.Combine(assemblyDirectory, "snips_nlu_ffi.so")))
             {
-                using (var op = Begin("Downloading SnipsNLU native lib for RHEL 7"))
+                using (var op = Begin("Downloading SnipsNLU native lib for RHEL 7 to {0}", assemblyDirectory))
                 using (HttpResponseMessage response = HttpClient.GetAsync(libLinuxUrl).Result)
                 {
                     response.EnsureSuccessStatusCode();
@@ -82,7 +82,7 @@ namespace Victor
             }
             else if (Environment.OSVersion.Platform == PlatformID.Win32NT && !File.Exists(Path.Combine(assemblyDirectory, "snips_nlu_ffi.dll")))
             {
-                using (var op = Begin("Downloading SnipsNLU native lib for Windows"))
+                using (var op = Begin("Downloading SnipsNLU native lib for Windows to {0}", assemblyDirectory))
                 using (HttpResponseMessage response = HttpClient.GetAsync(libWindowsUrl).Result)
                 {
                     response.EnsureSuccessStatusCode();
