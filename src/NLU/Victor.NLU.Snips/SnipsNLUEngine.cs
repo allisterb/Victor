@@ -17,7 +17,7 @@ namespace Victor
         #region Constructors
         public SnipsNLUEngine(string engineDir, CancellationToken ct) : base(ct)
         {
-            EngineDir = Path.Combine("Engines", engineDir);
+            EngineDir = engineDir;
             if (!Directory.Exists(EngineDir))
             {
                 Error("The directory {0} does not exist.", EngineDir);

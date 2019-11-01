@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Logging;
 namespace Victor.Server.NLU
 {
     [Route("api/[controller]")]
     [ApiController]
     public class IntentController : ControllerBase
     {
-        public IntentController(SnipsNLUService nluService) : base()
-        {
+        protected SnipsNLUService NLUService { get; }
 
+        public IntentController(ILogger<IntentController> logger, SnipsNLUService nluService) : base()
+        {
+            NLUService = nluService;
         }
 
         // GET api/values

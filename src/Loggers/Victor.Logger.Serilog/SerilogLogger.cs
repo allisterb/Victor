@@ -22,7 +22,7 @@ namespace Victor
             Logger = Config.CreateLogger();
         }
 
-        public SerilogLogger(Serilog.Core.Logger logger)
+        public SerilogLogger(ILogger logger)
         {
             Logger = logger;
         }

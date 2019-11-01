@@ -19,7 +19,22 @@ namespace Victor.Server.NLU
             var dirs = EnginesDirectory.EnumerateDirectories();
             foreach(var d in dirs)
             {
-                Engines.Add(d.Name, new SnipsNLUEngine(d.FullName, Api.Ct));
+                var e = new SnipsNLUEngine(d.FullName, Api.Ct);
+                if (e.Initialized)
+                {
+                    Engines.Add(d.Name, e);
+                }
+     
+            }
+            if (Engines.Count == 0)
+            {
+                Error("Did not initialize any Snips NLU engines from directory {0}", engineDirectory);
+                return;
+            }
+            else
+            {
+                Initialized = true;
+                Info("Initialized {0} Snips NLU engines: {1}.", Engines.Count, Engines.Keys);
             }
         }
 
