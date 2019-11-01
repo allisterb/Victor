@@ -138,7 +138,7 @@ namespace Victor.SnipsNLU
         /// Results of the intent classifier
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CIntentClassifierResult
+        internal struct CIntentClassifierResult
         {
             /*
              * Name of the intent detected
@@ -153,7 +153,7 @@ namespace Victor.SnipsNLU
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CIntentlassifierResultArray
+        internal struct CIntentlassifierResultArray
         {
             internal readonly IntPtr intent_classifer_result_array_ptr;
 
@@ -164,7 +164,7 @@ namespace Victor.SnipsNLU
         /// Results of intent parsing
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CIntentParserResult
+        internal struct CIntentParserResult
         {
             /*
              * The text that was parsed
@@ -201,7 +201,7 @@ namespace Victor.SnipsNLU
         /// Struct describing a Slot
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CSlotValue
+        internal struct CSlotValue
         {
             /*
              * Points to either a *const char, a CNumberValue, a COrdinalValue,
@@ -217,7 +217,7 @@ namespace Victor.SnipsNLU
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CSlotValueArray
+        internal struct CSlotValueArray
         {
             internal readonly IntPtr slot_values_array_ptr;
 
@@ -228,7 +228,7 @@ namespace Victor.SnipsNLU
         /// Struct describing a Slot
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CSlot
+        internal struct CSlot
         {
             /*
              * The resolved value of the slot
@@ -278,7 +278,7 @@ namespace Victor.SnipsNLU
         * Wrapper around a slot list
         */
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CSlotArray
+        internal struct CSlotArray
         {
            /*
             * Pointer to the first slot of the list
@@ -295,7 +295,7 @@ namespace Victor.SnipsNLU
         /// Representation of an instant value
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CInstantTimeValue
+        internal struct CInstantTimeValue
         {
             /*
             * String representation of the instant
@@ -319,7 +319,7 @@ namespace Victor.SnipsNLU
         /// Representation of an interval value
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CTimeIntervalValue
+        internal struct CTimeIntervalValue
         {
             /*
              * String representation of the beginning of the interval
@@ -339,7 +339,7 @@ namespace Victor.SnipsNLU
         /// Representation of an amount of money value
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CAmountOfMoneyValue
+        internal struct CAmountOfMoneyValue
         {
             /*
             * The currency
@@ -363,7 +363,7 @@ namespace Victor.SnipsNLU
         /// Representation of a temperature value
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CTemperatureValue
+        internal struct CTemperatureValue
         {
             /*
              * The unit used
@@ -382,7 +382,7 @@ namespace Victor.SnipsNLU
         /// Representation of a duration value
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct CDurationValue
+        internal struct CDurationValue
         {
             /*
              * Number of years in the duration
