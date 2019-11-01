@@ -63,7 +63,7 @@ namespace Victor
 
         public static void DownloadSnipsNativeLibIfMissing(string assemblyDirectory)
         {
-            string libLinuxUrl = "https://allisterb-victor.s3.us-east-2.amazonaws.com/snips_nlu_lib.so";
+            string libLinuxUrl = "https://allisterb-victor.s3.us-east-2.amazonaws.com/snips_nlu_ffi.so";
             string libWindowsUrl = "https://allisterb-victor.s3.us-east-2.amazonaws.com/snips_nlu_ffi.dll";
             if (Environment.OSVersion.Platform == PlatformID.Unix && !File.Exists(Path.Combine(assemblyDirectory, "snips_nlu_ffi.so")))
             {
