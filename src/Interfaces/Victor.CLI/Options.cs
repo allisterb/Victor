@@ -39,10 +39,19 @@ namespace Victor
     [Verb("cui", HelpText = "Use the CUI features of Victor.")]
     class CUIOptions : Options
     {
+        [Option('v', "version", Required = false, Default = 1, HelpText = "Set the version of the object.")]
+        public int Version { get; set; }
+
         [Option("list-bots", Required = false, HelpText = "List the current chatbots on the EDDI server.")]
         public bool ListBots { get; set; }
 
         [Option('e', "export-bot", Required = false, HelpText = "Export a chatbot on the EDDI server.")]
         public string ExportBot { get; set; }
+
+        [Option("list-packages", Required = false, HelpText = "List the current packages on the EDDI server.")]
+        public bool ListPackages { get; set; }
+
+        [Option("get-package", Required = false, HelpText = "Get the package with the specified id")]
+        public string GetPackage { get; set; }
     }
 }

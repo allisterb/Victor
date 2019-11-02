@@ -36,7 +36,6 @@ namespace Victor.Server.NLU
                 logging.ClearProviders();
                 logging.AddSerilog(Log.Logger);
             })
-            //.UseSerilog()
             .UseStartup<Startup>();
                 
     }

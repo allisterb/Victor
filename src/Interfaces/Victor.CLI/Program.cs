@@ -184,8 +184,54 @@ namespace Victor
             }
             else if (!string.IsNullOrEmpty(o.ExportBot))
             {
-                    var r = await c.BackupExportPostAsync(o.ExportBot, 1);
-                    System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
+                var r = await c.BackupExportPostAsync(o.ExportBot, 1);
+                System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
+            }
+            else if (o.ListPackages)
+            {
+                Info("Querying for packages...");
+                var descriptors = await c.PackagestorePackagesDescriptorsGetAsync(null, null, null);
+                foreach (var d in descriptors)
+                {
+                    System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.GetPackage))
+            {
+                Info("Querying for package {0}...", o.GetPackage);
+                try
+                {
+                    var package = await c.PackagestorePackagesGetAsync(o.GetPackage, o.Version);
+                    foreach(var pe in package.PackageExtensions)
+                    {
+                        System.Console.WriteLine("Extension: {0}", pe.Type.ToString());
+                        if (pe.Config.Count > 0)
+                        {
+                            System.Console.Write("  Config: ");
+                            foreach (var config in pe.Config)
+                            {
+                                System.Console.Write("{0}: {1}", config.Key, config.Value);
+                            }
+                            System.Console.WriteLine("\n");
+                        }
+                        if (pe.Extensions.Count > 0)
+                        {
+                            System.Console.Write("  Extensions: ");
+                            foreach (var ex in pe.Extensions)
+                            {
+                                System.Console.Write("{0}: {1}", ex.Key, ex.Value);
+                            }
+                            System.Console.WriteLine("\n");
+                        }
+                    }
+
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error(eae, "Could not get package {0}.", o.GetPackage);
+                    return;
+                }
+
             }
         }
 
