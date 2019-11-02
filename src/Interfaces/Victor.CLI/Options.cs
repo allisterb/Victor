@@ -39,19 +39,28 @@ namespace Victor
     [Verb("cui", HelpText = "Use the CUI features of Victor.")]
     class CUIOptions : Options
     {
-        [Option('v', "version", Required = false, Default = 1, HelpText = "Set the version of the object.")]
+        [Option('v', "version", Required = false, Default = 1, HelpText = "Set the version of the object to be retrieved.")]
         public int Version { get; set; }
 
-        [Option("list-bots", Required = false, HelpText = "List the current chatbots on the EDDI server.")]
+        [Option('f', "filter", Required = false, Default = null, HelpText = "Filter the current query on this value.")]
+        public string Filter { get; set; }
+
+        [Option("get-bots", Required = false, HelpText = "List the current chatbots on the EDDI server.")]
         public bool ListBots { get; set; }
 
-        [Option('e', "export-bot", Required = false, HelpText = "Export a chatbot on the EDDI server.")]
+        [Option("export-bot", Required = false, HelpText = "Export a chatbot on the EDDI server.")]
         public string ExportBot { get; set; }
 
-        [Option("list-packages", Required = false, HelpText = "List the current packages on the EDDI server.")]
+        [Option("get-packages", Required = false, HelpText = "List the current packages on the EDDI server.")]
         public bool ListPackages { get; set; }
 
         [Option("get-package", Required = false, HelpText = "Get the package with the specified id")]
         public string GetPackage { get; set; }
+
+        [Option("get-dictionary", Required = false, HelpText = "Get the dictionary with the specified id")]
+        public string GetDictionary { get; set; }
+
+        [Option("get-behavior", Required = false, HelpText = "Get the behavior set with the specified id")]
+        public string GetBehavior { get; set; }
     }
 }

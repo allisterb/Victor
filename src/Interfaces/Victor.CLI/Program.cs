@@ -28,7 +28,8 @@ namespace Victor
         #region Entry-point
         static void Main(string[] args)
         {
-            if (args.Contains("--debug"))
+            Args = args;
+            if (Args.Contains("--debug"))
             {
                 SetLogger(new SerilogLogger(console: true, debug: true));
             }
@@ -41,15 +42,14 @@ namespace Victor
             System.Console.CancelKeyPress += Console_CancelKeyPress;
             if (args.Contains("--debug"))
             {
-                CO.WriteLine(FiggleFonts.Chunky.Render("Victor"), Color.Blue);
-                CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
+                PrintLogo();
                 Info("Debug mode set.");
             }
             ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
+                PrintLogo();
                 HelpText help = GetAutoBuiltHelpText(result);
-
                 help.Copyright = string.Empty;
                 help.AddPreOptionsLine(string.Empty);
 
@@ -63,6 +63,7 @@ namespace Victor
                     if (error.Type != null)
                     {
                         help.AddVerbs(error.Type);
+   
                     }
                     else
                     {
@@ -172,6 +173,7 @@ namespace Victor
 
         static async Task CUI(CUIOptions o)
         {
+            PrintLogo();
             EDDIClient c = new EDDIClient(Config("CUI:EDDIServerUrl"), HttpClient);
             if (o.ListBots)
             {
@@ -231,6 +233,100 @@ namespace Victor
                     Error(eae, "Could not get package {0}.", o.GetPackage);
                     return;
                 }
+            }
+            else if (!string.IsNullOrEmpty(o.GetDictionary))
+            {
+                Info("Querying for dictionary {0}...", o.GetDictionary);
+                try
+                {
+                    var dictionary = await c.RegulardictionarystoreRegulardictionariesGetAsync(o.GetDictionary, o.Version, o.Filter, null, null, null);
+                    if(dictionary.Words.Count > 0)
+                    {
+                        System.Console.WriteLine("Words:");
+                        foreach(var w in dictionary.Words)
+                        {
+                            System.Console.WriteLine("  Word: {0}", w.Word);
+                            System.Console.WriteLine("  Frequency: {0}", w.Frequency);
+                            System.Console.WriteLine("  Expressions: {0}", w.Expressions);
+                        }
+                    }
+                    if (dictionary.Phrases.Count > 0)
+                    {
+                        System.Console.WriteLine("Phrases:");
+                        foreach (var p in dictionary.Phrases)
+                        {
+                            System.Console.WriteLine("  Phrase: {0}", p.Phrase);
+                            System.Console.WriteLine("  Expressions: {0}", p.Expressions);
+                        }
+                        System.Console.WriteLine("");
+                    }
+                    if (dictionary.RegExs.Count > 0) 
+                    {
+                        System.Console.WriteLine("RegExs:");
+                        foreach (var r in dictionary.RegExs)
+                        {
+                            System.Console.WriteLine("  RegEx: {0}", r.RegEx);
+                            System.Console.WriteLine("  Expressions: {0}", r.Expressions);
+
+                        }
+                    }
+
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error(eae, "Could not get dictionary {0}.", o.GetDictionary);
+                    return;
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.GetBehavior))
+            {
+                Info("Querying for behavior set {0}...", o.GetBehavior);
+                try
+                {
+                    var behavior = await c.BehaviorstoreBehaviorsetsGetAsync(o.GetBehavior, o.Version);
+                    if (behavior.BehaviorGroups.Count > 0)
+                    {
+                        System.Console.WriteLine("Groups:");
+                        foreach (var bg in behavior.BehaviorGroups)
+                        {
+                            System.Console.WriteLine("  Name: {0}", bg.Name);
+                            System.Console.WriteLine("  Execution Strategy: {0}", bg.ExecutionStrategy);
+                            if (bg.BehaviorRules.Count > 0)
+                            {
+                                System.Console.WriteLine("  Rules:");
+                                foreach (var r in bg.BehaviorRules)
+                                {
+                                    System.Console.WriteLine("      Phrase: {0}", r.Name);
+                                    if (r.Actions.Count > 0)
+                                    {
+                                        System.Console.WriteLine("      Actions: {0}", r.Actions.Aggregate((s1, s2) => s1 +"," + s2));
+                                    }
+                                    if (r.Conditions.Count > 0)
+                                    {
+                                        foreach(var condition in r.Conditions)
+                                        {
+                                            System.Console.WriteLine("      Conditions:");
+                                            PrintBehaviorRuleCondition(condition, "         ");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error(eae, "Could not get behavior {0}.", o.GetBehavior);
+                    return;
+                }
+            }
+            else
+            {
+                HelpText help = new HelpText();
+                help.Copyright = string.Empty;
+                help.AddPreOptionsLine(string.Empty);
+                help.AddVerbs(typeof(CUIOptions));
+                Info(help);
 
             }
         }
@@ -245,6 +341,29 @@ namespace Victor
             }
 
         }
+
+        static void PrintBehaviorRuleCondition(BehaviorRuleConditionConfiguration condition, string indent)
+        {
+            System.Console.WriteLine(indent + "Type: {0}", condition.Type);
+            if (condition.Configs.Count > 0)
+            {
+                System.Console.WriteLine(indent + "Config: " + condition.Configs.Select(cfg => cfg.Key + ":" + cfg.Value).Aggregate((cfg1, cfg2) => cfg1 + " " + cfg2));
+            }
+            if (condition.Conditions != null && condition.Conditions.Count > 0)
+            {
+                foreach(var c in condition.Conditions)
+                {
+                    PrintBehaviorRuleCondition(c, indent + "   ");
+                }
+            }
+        }
+
+        static void PrintLogo()
+        {
+            CO.WriteLine(FiggleFonts.Chunky.Render("Victor"), Color.Blue);
+            CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
+        }
+
         static void Exit(ExitResult result)
         {
 
@@ -276,8 +395,11 @@ namespace Victor
         }
         #endregion
 
+        #region Properties
+        static string [] Args { get; set; }
+        #endregion
         #region Event Handlers
-    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");
         Exit(ExitResult.UNHANDLED_EXCEPTION);
