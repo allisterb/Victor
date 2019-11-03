@@ -22,4 +22,12 @@ namespace Victor
         }
 
     }
+
+    public partial class EDDIClient
+    {
+        public static T Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, new MillisecondEpochConverter());
+
+        public static string Serialize<T>(T value) => JsonConvert.SerializeObject(value, new MillisecondEpochConverter());
+
+    }
 }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -19,7 +20,8 @@ namespace Victor
         SUCCESS = 0,
         UNHANDLED_EXCEPTION = 1,
         INVALID_OPTIONS = 2,
-        UNKNOWN_ERROR = 3
+        UNKNOWN_ERROR = 3,
+        NOT_FOUND_OR_SERVER_ERROR = 4
     }
     #endregion
 
@@ -121,6 +123,7 @@ namespace Victor
             .WithParsed<CUIOptions>(o =>
             {
                 CUI(o).Wait();
+                Exit(ExitResult.SUCCESS);
             })
             .WithParsed<NLUOptions>(o =>
             {
@@ -175,63 +178,134 @@ namespace Victor
         {
             PrintLogo();
             EDDIClient c = new EDDIClient(Config("CUI:EDDIServerUrl"), HttpClient);
-            if (o.ListBots)
+            if (o.GetBots)
             {
                 Info("Querying for bots...");
-                var descriptors = await c.BotstoreBotsDescriptorsGetAsync(null, null, null);
-                foreach (var d in descriptors)
+                try
                 {
-                    System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                    var descriptors = await c.BotstoreBotsDescriptorsGetAsync(null, null, null);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(descriptors));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(descriptors));
+                    }
+                    else
+                    {
+                        foreach (var d in descriptors)
+                        {
+                            System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get bot descriptors: {0}.", eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving bot descriptors.");
+                    Exit(ExitResult.UNKNOWN_ERROR);
                 }
             }
+
             else if (!string.IsNullOrEmpty(o.ExportBot))
             {
-                var r = await c.BackupExportPostAsync(o.ExportBot, 1);
-                System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
-            }
-            else if (o.ListPackages)
-            {
-                Info("Querying for packages...");
-                var descriptors = await c.PackagestorePackagesDescriptorsGetAsync(null, null, null);
-                foreach (var d in descriptors)
+                try
                 {
-                    System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                    var r = await c.BackupExportPostAsync(o.ExportBot, 1);
+                    System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
+                    Exit(ExitResult.SUCCESS);
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not export bot: {0}: {1}", o.ExportBot, eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error exporting bot {0}.", o.ExportBot);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
+
+            else if (o.GetPackages)
+            {
+                Info("Querying for packages...");
+                try
+                {
+                    var descriptors = await c.PackagestorePackagesDescriptorsGetAsync(null, null, null);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(descriptors));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(descriptors));
+                    }
+                    else
+                    {
+                        foreach (var d in descriptors)
+                        {
+                            System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not list packages: {0}", eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving packages.");
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+            }
+
             else if (!string.IsNullOrEmpty(o.GetPackage))
             {
                 Info("Querying for package {0}...", o.GetPackage);
                 try
                 {
                     var package = await c.PackagestorePackagesGetAsync(o.GetPackage, o.Version);
-                    foreach(var pe in package.PackageExtensions)
+                    if (o.Json)
                     {
-                        System.Console.WriteLine("Extension: {0}", pe.Type.ToString());
-                        if (pe.Config.Count > 0)
+                        System.Console.WriteLine(EDDIClient.Serialize(package));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(package));
+                    }
+                    else
+                    {
+                        foreach (var pe in package.PackageExtensions)
                         {
-                            System.Console.Write("  Config: ");
-                            foreach (var config in pe.Config)
+                            System.Console.WriteLine("Extension: {0}", pe.Type.ToString());
+                            if (pe.Config.Count > 0)
                             {
-                                System.Console.Write("{0}: {1}", config.Key, config.Value);
+                                System.Console.Write("  Config: ");
+                                foreach (var config in pe.Config)
+                                {
+                                    System.Console.Write("{0}: {1}", config.Key, config.Value);
+                                }
+                                System.Console.WriteLine("\n");
                             }
-                            System.Console.WriteLine("\n");
-                        }
-                        if (pe.Extensions.Count > 0)
-                        {
-                            System.Console.Write("  Extensions: ");
-                            foreach (var ex in pe.Extensions)
+                            if (pe.Extensions.Count > 0)
                             {
-                                System.Console.Write("{0}: {1}", ex.Key, ex.Value);
+                                System.Console.Write("  Extensions: ");
+                                foreach (var ex in pe.Extensions)
+                                {
+                                    System.Console.Write("{0}: {1}", ex.Key, ex.Value);
+                                }
+                                System.Console.WriteLine("\n");
                             }
-                            System.Console.WriteLine("\n");
                         }
                     }
-
                 }
                 catch (EDDIApiException eae)
                 {
-                    Error(eae, "Could not get package {0}.", o.GetPackage);
-                    return;
+                    Error("Could not get package {0}: {1}", o.GetPackage, eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving package: {0}.", o.GetPackage);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
             else if (!string.IsNullOrEmpty(o.GetDictionary))
@@ -240,73 +314,94 @@ namespace Victor
                 try
                 {
                     var dictionary = await c.RegulardictionarystoreRegulardictionariesGetAsync(o.GetDictionary, o.Version, o.Filter, null, null, null);
-                    if(dictionary.Words.Count > 0)
+                    if (o.Json)
                     {
-                        System.Console.WriteLine("Words:");
-                        foreach(var w in dictionary.Words)
-                        {
-                            System.Console.WriteLine("  Word: {0}", w.Word);
-                            System.Console.WriteLine("  Frequency: {0}", w.Frequency);
-                            System.Console.WriteLine("  Expressions: {0}", w.Expressions);
-                        }
+                        System.Console.WriteLine(EDDIClient.Serialize(dictionary));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(dictionary));
                     }
-                    if (dictionary.Phrases.Count > 0)
+                    else
                     {
-                        System.Console.WriteLine("Phrases:");
-                        foreach (var p in dictionary.Phrases)
+                        if (dictionary.Words.Count > 0)
                         {
-                            System.Console.WriteLine("  Phrase: {0}", p.Phrase);
-                            System.Console.WriteLine("  Expressions: {0}", p.Expressions);
+                            System.Console.WriteLine("Words:");
+                            foreach (var w in dictionary.Words)
+                            {
+                                System.Console.WriteLine("  Word: {0}", w.Word);
+                                System.Console.WriteLine("  Frequency: {0}", w.Frequency);
+                                System.Console.WriteLine("  Expressions: {0}", w.Expressions);
+                            }
                         }
-                        System.Console.WriteLine("");
-                    }
-                    if (dictionary.RegExs.Count > 0) 
-                    {
-                        System.Console.WriteLine("RegExs:");
-                        foreach (var r in dictionary.RegExs)
+                        if (dictionary.Phrases.Count > 0)
                         {
-                            System.Console.WriteLine("  RegEx: {0}", r.RegEx);
-                            System.Console.WriteLine("  Expressions: {0}", r.Expressions);
+                            System.Console.WriteLine("Phrases:");
+                            foreach (var p in dictionary.Phrases)
+                            {
+                                System.Console.WriteLine("  Phrase: {0}", p.Phrase);
+                                System.Console.WriteLine("  Expressions: {0}", p.Expressions);
+                            }
+                            System.Console.WriteLine("");
+                        }
+                        if (dictionary.RegExs.Count > 0)
+                        {
+                            System.Console.WriteLine("RegExs:");
+                            foreach (var r in dictionary.RegExs)
+                            {
+                                System.Console.WriteLine("  RegEx: {0}", r.RegEx);
+                                System.Console.WriteLine("  Expressions: {0}", r.Expressions);
 
+                            }
                         }
                     }
-
                 }
                 catch (EDDIApiException eae)
                 {
                     Error(eae, "Could not get dictionary {0}.", o.GetDictionary);
-                    return;
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving dictionary {0}", o.GetDictionary);
+                    Exit(ExitResult.UNKNOWN_ERROR);
                 }
             }
+
             else if (!string.IsNullOrEmpty(o.GetBehavior))
             {
                 Info("Querying for behavior set {0}...", o.GetBehavior);
                 try
                 {
                     var behavior = await c.BehaviorstoreBehaviorsetsGetAsync(o.GetBehavior, o.Version);
-                    if (behavior.BehaviorGroups.Count > 0)
+                    if (o.Json)
                     {
-                        System.Console.WriteLine("Groups:");
-                        foreach (var bg in behavior.BehaviorGroups)
+                        System.Console.WriteLine(EDDIClient.Serialize(behavior));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(behavior));
+                    }
+                    else
+                    {
+                        if (behavior.BehaviorGroups.Count > 0)
                         {
-                            System.Console.WriteLine("  Name: {0}", bg.Name);
-                            System.Console.WriteLine("  Execution Strategy: {0}", bg.ExecutionStrategy);
-                            if (bg.BehaviorRules.Count > 0)
+                            System.Console.WriteLine("Groups:");
+                            foreach (var bg in behavior.BehaviorGroups)
                             {
-                                System.Console.WriteLine("  Rules:");
-                                foreach (var r in bg.BehaviorRules)
+                                System.Console.WriteLine("  Name: {0}", bg.Name);
+                                System.Console.WriteLine("  Execution Strategy: {0}", bg.ExecutionStrategy);
+                                if (bg.BehaviorRules.Count > 0)
                                 {
-                                    System.Console.WriteLine("      Phrase: {0}", r.Name);
-                                    if (r.Actions.Count > 0)
+                                    System.Console.WriteLine("  Rules:");
+                                    foreach (var r in bg.BehaviorRules)
                                     {
-                                        System.Console.WriteLine("      Actions: {0}", r.Actions.Aggregate((s1, s2) => s1 +"," + s2));
-                                    }
-                                    if (r.Conditions.Count > 0)
-                                    {
-                                        foreach(var condition in r.Conditions)
+                                        System.Console.WriteLine("      Phrase: {0}", r.Name);
+                                        if (r.Actions.Count > 0)
                                         {
-                                            System.Console.WriteLine("      Conditions:");
-                                            PrintBehaviorRuleCondition(condition, "         ");
+                                            System.Console.WriteLine("      Actions: {0}", r.Actions.Aggregate((s1, s2) => s1 + " " + s2));
+                                        }
+                                        if (r.Conditions.Count > 0)
+                                        {
+                                            foreach (var condition in r.Conditions)
+                                            {
+                                                System.Console.WriteLine("      Conditions:");
+                                                PrintBehaviorRuleCondition(condition, "         ");
+                                            }
                                         }
                                     }
                                 }
@@ -316,9 +411,98 @@ namespace Victor
                 }
                 catch (EDDIApiException eae)
                 {
-                    Error(eae, "Could not get behavior {0}.", o.GetBehavior);
-                    return;
+                    Error("Could not get behavior {0} : {1}.", o.GetBehavior, eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
                 }
+            }
+
+            else if (!string.IsNullOrEmpty(o.GetOutput))
+            {
+                Info("Querying for output set {0}...", o.GetOutput);
+                try
+                {
+                    var outputSet = await c.OutputstoreOutputsetsGetAsync(o.GetOutput, o.Version, o.Filter, null, null, null);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(outputSet));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(outputSet));
+                    }
+                    else
+                    {
+                        if (outputSet.OutputSet != null && outputSet.OutputSet.Count > 0)
+                        {
+                            foreach (var oc in outputSet.OutputSet)
+                            {
+                                System.Console.WriteLine("Action: {0}", oc.Action);
+                                System.Console.WriteLine("Times Occurred: {0}", oc.TimesOccurred);
+                                if (oc.Outputs.Count > 0)
+                                {
+                                    System.Console.WriteLine("Outputs: ");
+                                    foreach (var output in oc.Outputs)
+                                    {
+                                        System.Console.WriteLine("  Type: {0}. Alternatives: {1}", output.Type, output.ValueAlternatives.Select(va => va.ToString()).Aggregate((s1, s2) => s1 + "=" + s2));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get output {0}: {1}", o.GetOutput, eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving output {0}.", o.GetOutput);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.GetProperty))
+            {
+                Info("Querying for property {0}...", o.GetProperty);
+                try
+                {
+                    var prop = await c.PropertysetterstorePropertysettersGetAsync(o.GetProperty, o.Version);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(prop));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(prop));
+                    }
+                    else
+                    {
+                        if (prop.SetOnActions != null && prop.SetOnActions.Count > 0)
+                        {
+                            foreach (var soa in prop.SetOnActions)
+                            {
+                                System.Console.WriteLine("Actions: {0}", soa.Actions.Aggregate((a1, a2) => a1 + " " + a2));
+                                if (soa.SetProperties.Count > 0)
+                                {
+                                    System.Console.WriteLine("Set Properties: ");
+                                    foreach (var ap in soa.SetProperties)
+                                    {
+                                        System.Console.WriteLine("  " + EDDIClient.Serialize(ap));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get property {0}: {1}", o.GetProperty, eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving property {0}.", o.GetProperty);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+
+            }
+            else if (!string.IsNullOrEmpty(o.CreateDictionary))
+            {
+                await c.RegulardictionarystoreRegulardictionariesPostAsync(EDDIClient.Deserialize<RegularDictionaryConfiguration>(o.CreateDictionary));
             }
             else
             {
@@ -358,6 +542,21 @@ namespace Victor
             }
         }
 
+        static void WriteToFileIfRequired(CUIOptions o, string s)
+        {
+            if (!string.IsNullOrEmpty(o.File))
+            {
+                if (File.Exists(o.File) && !o.Overwrite)
+                {
+                    Error("The file {0} already exists.", o.File);
+                }
+                else
+                {
+                    File.WriteAllText(o.File, s);
+                    Info("Wrote to {0}.", o.File);
+                }
+            }
+        }
         static void PrintLogo()
         {
             CO.WriteLine(FiggleFonts.Chunky.Render("Victor"), Color.Blue);
