@@ -500,9 +500,20 @@ namespace Victor
                 }
 
             }
-            else if (!string.IsNullOrEmpty(o.CreateDictionary))
+            else if (o.CreateDictionary)
             {
-                await c.RegulardictionarystoreRegulardictionariesPostAsync(EDDIClient.Deserialize<RegularDictionaryConfiguration>(o.CreateDictionary));
+                Info("Creating dictionary...");
+                await c.RegulardictionarystoreRegulardictionariesPostAsync(ReadFromFileIfRequired<RegularDictionaryConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Created dictionary at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not create dictionary. HTTP status code {0}.", s);
+                }
             }
             else
             {
@@ -557,6 +568,20 @@ namespace Victor
                 }
             }
         }
+
+        static T ReadFromFileIfRequired<T>(CUIOptions o)
+        {
+            if (!string.IsNullOrEmpty(o.File))
+            {
+                Info("Using {0} as input.", o.File);
+                return EDDIClient.Deserialize<T>(File.ReadAllText(o.File)); 
+            }
+            else
+            {
+                return EDDIClient.Deserialize<T>(File.ReadAllText(o.Input));
+            }
+        }
+            
         static void PrintLogo()
         {
             CO.WriteLine(FiggleFonts.Chunky.Render("Victor"), Color.Blue);
@@ -597,6 +622,7 @@ namespace Victor
         #region Properties
         static string [] Args { get; set; }
         #endregion
+
         #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {

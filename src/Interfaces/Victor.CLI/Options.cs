@@ -73,7 +73,7 @@ namespace Victor
         public string GetDictionary { get; set; }
 
         [Option("create-dictionary", Required = false, HelpText = "Create a dictionary from the specified input.")]
-        public string CreateDictionary { get; set; }
+        public bool CreateDictionary { get; set; }
 
         [Option("get-behavior", Required = false, HelpText = "Get the behavior set with the specified id.")]
         public string GetBehavior { get; set; }
