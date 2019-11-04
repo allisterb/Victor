@@ -4,3 +4,9 @@
 [submodule "ext/BrowserSharp"]
 	path = ext/BrowserSharp
 	url = https://github.com/allisterb/BrowseSharp.git
+[submodule "ext/RtAudioNet"]
+	path = ext/RtAudioNet
+	url = https://github.com/allisterb/RtAudioNet.git
+[submodule "ext/PortAudio.Net"]
+	path = ext/PortAudio.Net
+	url = https://github.com/allisterb/PortAudio.Net.git
