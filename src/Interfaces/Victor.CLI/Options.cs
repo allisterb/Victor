@@ -7,7 +7,7 @@ using CommandLine.Text;
 
 namespace Victor
 {
-    class Options
+    public class Options
     {
         [Option('d', "debug", Required = false, HelpText = "Enable debug mode.")]
         public bool Debug { get; set; }
@@ -110,7 +110,7 @@ namespace Victor
     }
 
     [Verb("cx", HelpText = "Use the CX features of Victor.")]
-    public class CXOptions
+    public class CXOptions : Options
     {
 
     }

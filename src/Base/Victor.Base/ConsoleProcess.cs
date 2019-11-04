@@ -121,7 +121,7 @@ namespace Victor
             Process.BeginErrorReadLine();
             Process.BeginOutputReadLine();
             IsStarted = true;
-            Info("Process {0} started.", Cmd);
+            Debug("Process {0} started.", Cmd);
         }
 
         public void Stop()
@@ -130,7 +130,7 @@ namespace Victor
             ThrowIfNotStarted();
             Process.Kill();
             Process.Dispose();
-            Info("Process {0} stopped.", Cmd);
+            Debug("Process {0} stopped.", Cmd);
         }
 
         public void WaitForExit()

@@ -33,7 +33,11 @@ namespace Victor
         static void Main(string[] args)
         {
             Args = args;
-            if (Args.Contains("--debug"))
+            if (Args.Contains("cx"))
+            {
+                SetLogger(new SerilogLogger(console: false, debug: true));
+            }
+            else if (Args.Contains("--debug"))
             {
                 SetLogger(new SerilogLogger(console: true, debug: true));
             }
@@ -692,7 +696,7 @@ namespace Victor
             CO.WriteLine("v{0}", AssemblyVersion.ToString(3), Color.Blue);
         }
 
-        static void Exit(ExitResult result)
+        public static void Exit(ExitResult result)
         {
 
             if (Cts != null && !Cts.Token.CanBeCanceled)

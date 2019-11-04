@@ -74,7 +74,7 @@ namespace Victor
                 IsPass1Recognizing = false;
                 IsPass1Complete = true;
                 Pass1Text = line.Replace("sentence1: <s> ", "").Replace("</s>", "").Trim();
-                Info("Recognized text: {0}", Pass1Text);
+                Debug("Recognized text: {0}", Pass1Text);
                 Recognized?.Invoke(Pass1Text);
             }
             /*

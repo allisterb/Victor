@@ -38,6 +38,8 @@ namespace Victor.CLI
 
         protected Tuple<DateTime, string> Context { get; set; }
 
+        protected bool InputEnabled { get; set; }
+
         public void SetContext(string c) => Context = new Tuple<DateTime, string>(DateTime.Now, c);
         #endregion
 
@@ -57,18 +59,46 @@ namespace Victor.CLI
 
         public void HandleInput(DateTime time, string input)
         {
+            InputEnabled = false;
+            
             GeneralNLU.GetIntents(input, out string[] intents, out string json, out string error);
-            ReadLine.Send(json);
+            Debug("Intents:{0}", json);
+            switch (input)
+            {
+                case "exit":
+                    JuliusSession.Stop();
+                    Program.Exit(ExitResult.SUCCESS);
+                    break;
+                case "help":
+                    WriteLine("Help");
+                    break;
+                default:
+                    WriteLine("Sorry I don't know what you mean");
+                    break;
+            }
+            Prompt();
         }
 
         public void WriteLine(string s) => Co.WriteLine(s, Color.PaleGoldenrod);
-        
-        public string Prompt() => ReadLine.Read("|> ");
+
+        public void Prompt()
+        {
+            InputEnabled = true;
+            string i = ReadLine.Read("|> ");
+            HandleInput(DateTime.Now, i);
+        }
 
         #endregion
 
         #region Event Handlers
-        private void JuliusSession_Recognized(string sentence) => HandleInput(DateTime.Now, sentence);
+        private void JuliusSession_Recognized(string sentence)
+        {
+            if (InputEnabled)
+            {
+                ReadLine.Send(sentence);
+                ReadLine.Send(ConsoleKey.Enter);
+            }
+        }
         #endregion
     }
 }
