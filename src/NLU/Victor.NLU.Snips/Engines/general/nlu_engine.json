@@ -197,15 +197,22 @@
   "custom_entity_parser": "custom_entity_parser",
   "dataset_metadata": {
     "entities": {
+      "feature": {
+        "automatically_extensible": false
+      },
       "person": {
         "automatically_extensible": true
       }
     },
     "language_code": "en",
     "slot_name_mappings": {
+      "exit": {},
       "hello": {},
       "helloUserName": {
         "person": "person"
+      },
+      "help": {
+        "feature": "feature"
       },
       "userName": {
         "person": "person"

@@ -34,7 +34,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>Response</returns>
-        Response ManageContainer (string containerId, string body);
+        Response ExecuteContainerRules(string containerId, string body);
 
         /// <summary>
         /// Executes one or more runtime commands
@@ -46,8 +46,9 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> ManageContainerWithHttpInfo (string containerId, string body);
+        ApiResponse<Response> ExecuteContainerRulesWithHttpInfo (string containerId, string body);
         #endregion Synchronous Operations
+
         #region Asynchronous Operations
         /// <summary>
         /// Executes one or more runtime commands
@@ -59,7 +60,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> ManageContainerAsync (string containerId, string body);
+        System.Threading.Tasks.Task<Response> ExecuteContainerRulesAsync (string containerId, string body);
 
         /// <summary>
         /// Executes one or more runtime commands
@@ -71,7 +72,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> ManageContainerAsyncWithHttpInfo (string containerId, string body);
+        System.Threading.Tasks.Task<ApiResponse<Response>> ExecuteContainerRulesAsyncWithHttpInfo (string containerId, string body);
         #endregion Asynchronous Operations
     }
 
@@ -179,9 +180,9 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>Response</returns>
-        public Response ManageContainer (string containerId, string body)
+        public Response ExecuteContainerRules(string containerId, string body)
         {
-             ApiResponse<Response> localVarResponse = ManageContainerWithHttpInfo(containerId, body);
+             ApiResponse<Response> localVarResponse = ExecuteContainerRulesWithHttpInfo(containerId, body);
              return localVarResponse.Data;
         }
 
@@ -192,7 +193,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > ManageContainerWithHttpInfo (string containerId, string body)
+        public ApiResponse< Response > ExecuteContainerRulesWithHttpInfo (string containerId, string body)
         {
             // verify the required parameter 'containerId' is set
             if (containerId == null)
@@ -261,9 +262,9 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> ManageContainerAsync (string containerId, string body)
+        public async System.Threading.Tasks.Task<Response> ExecuteContainerRulesAsync (string containerId, string body)
         {
-             ApiResponse<Response> localVarResponse = await ManageContainerAsyncWithHttpInfo(containerId, body);
+             ApiResponse<Response> localVarResponse = await ExecuteContainerRulesAsyncWithHttpInfo(containerId, body);
              return localVarResponse.Data;
 
         }
@@ -275,7 +276,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <param name="containerId">Container id where rules should be evaluated on</param>
         /// <param name="body">Commands to be executed on rule engine given as BatchExecutionCommand type</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> ManageContainerAsyncWithHttpInfo (string containerId, string body)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> ExecuteContainerRulesAsyncWithHttpInfo (string containerId, string body)
         {
             // verify the required parameter 'containerId' is set
             if (containerId == null)

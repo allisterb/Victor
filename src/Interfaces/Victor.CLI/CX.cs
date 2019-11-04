@@ -89,21 +89,27 @@ namespace Victor.CLI
             else
             {
                 var intents = GeneralNLU.GetIntents(input);
-                
-                switch (input)
+                if (intents.IsNone)
                 {
-                    case "exit":
-                        Exit();
-                        break;
-                    case "help":
-                        Help();
-                        break;
-                    case "get bots":
-                        GetBots();
-                        break;
-                    default:
-                        WriteLine("Sorry I don't know what you mean");
-                        break;
+                    WriteLine("Sorry I don't know what you mean");
+                }
+                else 
+                {
+                    switch (intents.Top.Item1)
+                    {
+                        case "exit":
+                            Exit();
+                            break;
+                        case "help":
+                            Help();
+                            break;
+                        case "get bots":
+                            GetBots();
+                            break;
+                        default:
+
+                            break;
+                    }
                 }
             }
             Prompt();

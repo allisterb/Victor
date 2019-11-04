@@ -19,7 +19,7 @@ using NUnit.Framework;
 
 using Victor.CUI.RHDM.KIE.Client;
 using Victor.CUI.RHDM.KIE.Api;
-using Victor.CUI.RHDM.KIE.Model;
+using Victor.CUI.RHDM.KIE.Model.LoanDemo;
 
 namespace Victor.Tests.RHDM
 {
@@ -41,7 +41,11 @@ namespace Victor.Tests.RHDM
         [SetUp]
         public void Init()
         {
-            instance = new KIESessionAssetsApi();
+            var config = new Configuration();
+            config.BasePath = "https://victor-kieserver-evals25-shared-7daa.apps.hackathon.rhmi.io/";
+            config.Username = "allisterb2";
+            config.Password = "allisterb2";
+            instance = new KIESessionAssetsApi(config);
         }
 
         /// <summary>
@@ -63,18 +67,65 @@ namespace Victor.Tests.RHDM
             //Assert.IsInstanceOfType(typeof(KIESessionAssetsApi), instance, "instance is a KIESessionAssetsApi");
         }
 
-        
+
         /// <summary>
         /// Test ManageContainer
         /// </summary>
         [Test]
-        public void ManageContainerTest()
+        public void ExecuteContainerRulesTest()
         {
             // TODO uncomment below to test the method and replace null with proper value
             //string containerId = null;
             //string body = null;
             //var response = instance.ManageContainer(containerId, body);
             //Assert.IsInstanceOf<Response> (response, "response is Response");
+            /*
+            var lr = new LoanDemoRequest()
+            {
+                Lookup = "",
+                Commands = new Command[]
+                {
+                    new Command()
+                    {
+                        Insert = new InsertLoanApplicant()
+                        {
+                            Object = new LoanApplicant()
+                            {
+                                ComRedhatDemosDmLoanModelApplicant = new Applicant()
+                                {
+                                    Name = "Jim",
+                                    CreditScore = 400
+                                }
+                            }
+                        },
+                        FireAllRules = new Dispose(),
+                        GetObjects = new GetObjects() { OutIdentifier = "applicant"},
+                        
+                    },
+                    new Command()
+                    {
+                        Insert = new Ins
+                        {
+
+                        }
+                    }
+                }
+            };*/
+           /*
+            dynamic
+            Dictionary<string, object> commands = new Dictionary<string, object>() {
+                {"Lookup", "" },
+                {"commands", new Dictionary<string, object>( m,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,{
+                        "insert", new Dictionary<string, object>()
+                        {
+
+                        }
+                    }
+                }
+            };
+            */
+        } 
+            //instance.ExecuteContainerRules("loan-application_1.1.0", )
         }
         
     }

@@ -15,7 +15,43 @@ utterances:
   - Bro
   - Dude what's happening
 
-# userName intent
+# exit intent
+---
+type: intent
+name: exit
+
+utterances:
+  - exit
+  - bye
+  - l8r dude
+  - let me out
+  - goodbye
+  - quit
+  - stop
+  - shutdown
+  - close
+  - end
+
+# help intent
+---
+type: intent
+name: help
+slots:
+  - name: feature
+    entity: feature
+utterances:
+  - help
+  - help me
+  - What's this
+  - How do I use this
+  - What does this do
+  - What is this
+  - How do I [feature](apply for a loan)
+  - Can I [feature](send email)
+  - How do I [feature](end)
+  - How can I [feature](exit) the program
+
+ # userName intent
 ---
 type: intent
 name: userName
@@ -43,7 +79,6 @@ utterances:
   - Hi Victor my name is [person](Mary)
   - Hi I'm [person](Ellen)
 
- 
 # person entity
 ---
 type: entity
@@ -55,3 +90,11 @@ values:
 - [Luis, Joe, Harry]
 - [Shelly, Ellen, Carrie]
 - [Sean, Tim, Hubert]
+
+# feature entity
+---
+type: entity
+name: feature
+automatically_extensible: no
+values:
+- [services, bots, debug]

@@ -1,5 +1,19 @@
 {
   "entities": {
+    "feature": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "bots",
+            "debug"
+          ],
+          "value": "services"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
     "person": {
       "automatically_extensible": true,
       "data": [
@@ -41,6 +55,80 @@
     }
   },
   "intents": {
+    "exit": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "exit"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "bye"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "l8r dude"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "let me out"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goodbye"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "quit"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "stop"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "shutdown"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "close"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "end"
+            }
+          ]
+        }
+      ]
+    },
     "hello": {
       "utterances": [
         {
@@ -169,6 +257,103 @@
               "entity": "person",
               "slot_name": "person",
               "text": "Ellen"
+            }
+          ]
+        }
+      ]
+    },
+    "help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "help"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help me"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What does this do"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "apply for a loan"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Can I "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "send email"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "end"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How can I "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "exit"
+            },
+            {
+              "text": " the program"
             }
           ]
         }

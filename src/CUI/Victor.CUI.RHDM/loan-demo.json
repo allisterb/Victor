@@ -1,0 +1,40 @@
+﻿{
+  "lookup": "default-stateless-ksession",
+  "commands": [
+    {
+      "insert": {
+        "object": {
+          "com.redhat.demos.dm.loan.model.Applicant": {
+            "creditScore": "$CREDIT_SCORE",
+            "name": "Jim Whitehurst"
+          }
+        },
+        "out-identifier": "applicant"
+      }
+    },
+    {
+      "insert": {
+        "object": {
+          "com.redhat.demos.dm.loan.model.Loan": {
+            "amount": "$AMOUNT",
+            "approved": "$APPROVED",
+            "duration": "$DURATION",
+            "interestRate": "$INTEREST_RATE"
+          }
+        },
+        "out-identifier": "loan"
+      }
+    },
+    {
+      "fire-all-rules": {}
+    },
+    {
+      "get-objects": {
+        "out-identifier": "objects"
+      }
+    },
+    {
+      "dispose": {}
+    }
+  ]
+}

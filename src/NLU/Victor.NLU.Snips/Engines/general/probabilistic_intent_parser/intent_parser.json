@@ -186,20 +186,24 @@
   },
   "slot_fillers": [
     {
-      "intent": "hello",
+      "intent": "exit",
       "slot_filler_name": "slot_filler_0"
     },
     {
-      "intent": "helloUserName",
+      "intent": "hello",
       "slot_filler_name": "slot_filler_1"
     },
     {
-      "intent": "help",
+      "intent": "helloUserName",
       "slot_filler_name": "slot_filler_2"
     },
     {
-      "intent": "userName",
+      "intent": "help",
       "slot_filler_name": "slot_filler_3"
+    },
+    {
+      "intent": "userName",
+      "slot_filler_name": "slot_filler_4"
     }
   ]
 }

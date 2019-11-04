@@ -31,7 +31,7 @@ namespace Victor.Tests.RHDM
     /// Please update the test case below to test the API endpoint.
     /// </remarks>
     [TestFixture]
-    public class KIEServerAndKIEContainersApiTests
+    public class KIEServerAndKIEContainersApiTests 
     {
         private KIEServerAndKIEContainersApi instance;
 

@@ -71,11 +71,11 @@ namespace Victor
 
         public static void DownloadSnipsNativeLibIfMissing(string assemblyDirectory)
         {
-            string libLinuxUrl = "https://allisterb-victor.s3.us-east-2.amazonaws.com/snips_nlu_ffi.so";
+            string libLinuxUrl = "https://drive.google.com/uc?id=1adxadKT2inu6I4pI5iahUr86sUY4cBVA&export=download";
             string libWindowsUrl = "https://allisterb-victor.s3.us-east-2.amazonaws.com/snips_nlu_ffi.dll";
             if (Environment.OSVersion.Platform == PlatformID.Unix && !File.Exists(Path.Combine(assemblyDirectory, "snips_nlu_ffi.so")))
             {
-                using (var op = Begin("Downloading SnipsNLU native lib for RHEL 7 to {0}", assemblyDirectory))
+                using (var op = Begin("Downloading SnipsNLU native lib for RHEL 7 at {0} to {1}", libLinuxUrl, assemblyDirectory))
                 using (HttpResponseMessage response = HttpClient.GetAsync(libLinuxUrl).Result)
                 {
                     response.EnsureSuccessStatusCode();

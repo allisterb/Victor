@@ -1,8 +1,12 @@
 {
   "parsers_metadata": [
     {
-      "entity_identifier": "person",
+      "entity_identifier": "feature",
       "entity_parser": "parser_1"
+    },
+    {
+      "entity_identifier": "person",
+      "entity_parser": "parser_2"
     }
   ]
 }

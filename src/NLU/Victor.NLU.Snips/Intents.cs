@@ -17,6 +17,8 @@ namespace Victor
 
         public Tuple<string, double>[] Scores { get; }
 
+        public bool IsNone => Scores.First().Item1 == "None";
+
         public IntentEntity[] Entities { get; }
     }
 }
