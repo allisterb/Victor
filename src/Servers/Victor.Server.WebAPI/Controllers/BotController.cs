@@ -2,26 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-using Microsoft.EntityFrameworkCore;
 
-using MyApp.Models;
-
-namespace MyApp.Controllers
+namespace Victor.Server.WebAPI
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class FruitsController : ControllerBase
+    public class BotController : ControllerBase
     {
 
-        private readonly FruitsContext _context;
-
-        public FruitsController(FruitsContext context)
+       
+        public BotController(ILogger<BotController> logger, EDDIClient c)
         {
-            _context = context;
+           
         }
-
+        /*
         // GET api/fruits
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Fruit>>> Get()
@@ -62,6 +61,7 @@ namespace MyApp.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<Fruit>> Put(long id, [FromBody] Fruit fruit)
         {
+            
             if (!ModelState.IsValid)
             {
                 return UnprocessableEntity();
@@ -97,22 +97,8 @@ namespace MyApp.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity();
-            }
-
-            var fruit = await _context.Fruits.FindAsync(id);
-
-            if (fruit == null)
-            {
-                return NotFound();
-            }
-
-            _context.Fruits.Remove(fruit);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            
         }
+        */
     }
 }

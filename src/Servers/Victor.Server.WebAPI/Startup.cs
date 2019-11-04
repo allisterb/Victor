@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MyApp.Models;
+
 
 namespace Victor.Server.WebAPI
 {
@@ -23,16 +23,13 @@ namespace Victor.Server.WebAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add any DbContext here
-
             services.AddHealthChecks();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            //services.AddSingleton()
+            services.AddScoped((provider) => new EDDIClient("http://victor-webapi-evals25-shared-7daa.apps.hackathon.rhmi.io/", Api.HttpClient));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

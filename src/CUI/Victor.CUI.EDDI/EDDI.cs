@@ -16,8 +16,7 @@ namespace Victor
 
         public EDDI(Uri baseUrl) : this(baseUrl, Api.Ct) { }
 
-        public Dictionary<string, string> GetBots()
-        { }
+        
 
         public EDDIClient Client { get; }
     }

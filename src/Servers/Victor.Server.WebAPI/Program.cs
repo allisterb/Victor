@@ -35,7 +35,7 @@ namespace Victor.Server.WebAPI
                     logging.ClearProviders();
                     logging.AddSerilog(Log.Logger);
                 })
-                .UseKestrel(options => options.Listen(IPAddress.Any, 8080))
+                //.UseKestrel(options => options.Listen(IPAddress.Any, 8080))
                 .UseStartup<Startup>();
     }
 }
