@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyApp.Models;
 
-namespace MyApp
+namespace Victor.Server.WebAPI
 {
     public class Startup
     {

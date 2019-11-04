@@ -13,13 +13,13 @@ namespace Victor
         public bool Debug { get; set; }
     }
 
-    [Verb("sr", HelpText = "Use the default speech recognition feature of Victor with the default mic as the input source.")]
+    [Verb("sr", HelpText = "Test the default speech recognition feature of Victor with the default mic as the input source.")]
     class SpeechRecognitionOptions : Options
     {
 
     }
 
-    [Verb("nlu", HelpText = "Use the NLU feature of Victor.")]
+    [Verb("nlu", HelpText = "Test the NLU feature of Victor.")]
     class NLUOptions : Options
     {
         [Option('m', "model", Required = true, HelpText = "The NLU model to use.")]
@@ -29,7 +29,7 @@ namespace Victor
         public string Text { get; set; }
     }
 
-    [Verb("tts", HelpText = "Use the TTS feature of Victor.")]
+    [Verb("tts", HelpText = "Test the TTS feature of Victor.")]
     class TTSOptions : Options
     {
         [Option('t', "text", Required = true, HelpText = "The text to synthesize speech for.")]
@@ -72,9 +72,6 @@ namespace Victor
         [Option("get-dictionary", Required = false, HelpText = "Get the dictionary with the specified id.")]
         public string GetDictionary { get; set; }
 
-        [Option("create-dictionary", Required = false, HelpText = "Create a dictionary from the specified input.")]
-        public bool CreateDictionary { get; set; }
-
         [Option("get-behavior", Required = false, HelpText = "Get the behavior set with the specified id.")]
         public string GetBehavior { get; set; }
 
@@ -83,5 +80,38 @@ namespace Victor
 
         [Option("get-property", Required = false, HelpText = "Get the property with the specified id.")]
         public string GetProperty { get; set; }
+
+        [Option("create-dictionary", Required = false, HelpText = "Create a dictionary from the specified input.")]
+        public bool CreateDictionary { get; set; }
+
+        [Option("create-behavior", Required = false, HelpText = "Create a behavior set from the specified input.")]
+        public bool CreateBehavior { get; set; }
+
+        [Option("create-output", Required = false, HelpText = "Create an output set from the specified input.")]
+        public bool CreateOutput { get; set; }
+
+        [Option("create-package", Required = false, HelpText = "Create a package from the specified input.")]
+        public bool CreatePackage { get; set; }
+
+        [Option("start-convo", Required = false, HelpText = "Start a conversation with a bot.")]
+        public string StartConversation { get; set; }
+
+        [Option("get-convo", Required = false, HelpText = "Start a conversation with a bot.")]
+        public string GetConversation { get; set; }
+
+        [Option('t', "talk", Required = false, HelpText = "Respond to a particular coversation.")]
+        public string Talk { get; set; }
+
+        [Option("bid", Required = false, HelpText = "Bot id")]
+        public string BotId { get; set; }
+
+        [Option("cid", Required = false, HelpText = "Conservation id")]
+        public string ConversationId { get; set; }
+    }
+
+    [Verb("cx", HelpText = "Use the CX features of Victor.")]
+    class CXOptions
+    {
+
     }
 }

@@ -47,10 +47,13 @@ namespace Victor
                 PrintLogo();
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions, CXOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
-                PrintLogo();
+                if (!args.Contains("--debug"))
+                {
+                    PrintLogo();
+                }
                 HelpText help = GetAutoBuiltHelpText(result);
                 help.Copyright = string.Empty;
                 help.AddPreOptionsLine(string.Empty);
@@ -65,25 +68,24 @@ namespace Victor
                     if (error.Type != null)
                     {
                         help.AddVerbs(error.Type);
-   
                     }
                     else
                     {
-                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
+                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
+                    HelpRequestedError error = (HelpRequestedError)errors.First(e => e.Tag == ErrorType.HelpRequestedError);
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
-                    Error("No input selected. Specify one of: mic.");
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -97,7 +99,7 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.UnknownOptionError))
                 {
                     UnknownOptionError error = (UnknownOptionError)errors.First(e => e.Tag == ErrorType.UnknownOptionError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
                     Error("Unknown option: {error}.", error.Token);
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -105,7 +107,7 @@ namespace Victor
                 else
                 {
                     Error("An error occurred parsing the program options: {errors}.", errors);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -515,14 +517,108 @@ namespace Victor
                     Error("Did not create dictionary. HTTP status code {0}.", s);
                 }
             }
+            else if (o.CreateBehavior)
+            {
+                Info("Creating behavior...");
+                await c.BehaviorstoreBehaviorsetsPostAsync(ReadFromFileIfRequired<BehaviorConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Created behavior set at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not create behavior set. HTTP status code {0}.", s);
+                }
+            }
+            else if (o.CreateOutput)
+            {
+                Info("Creating output...");
+                await c.OutputstoreOutputsetsPostAsync(ReadFromFileIfRequired<OutputConfigurationSet>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Created output configuration set at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not create output configuration set. HTTP status code {0}.", s);
+                }
+            }
+
+            else if (o.CreatePackage)
+            {
+                Info("Creating package...");
+                await c.PackagestorePackagesPostAsync(ReadFromFileIfRequired<PackageConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Created package at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not create package. HTTP status code {0}.", s);
+                }
+            }
+           
+            else if(!string.IsNullOrEmpty(o.StartConversation))
+            {
+                Info("Starting conversation with bot {0}...", o.StartConversation);
+                await c.BotsPostAsync(Environment8.Test, o.StartConversation, "", null);
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Started conversation at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not start conversation. HTTP status code {0}.", s);
+                }
+            }
+
+            else if (!string.IsNullOrEmpty(o.GetConversation))
+            {
+                try
+                {
+                    Info("Getting conversation {0}...", o.GetConversation);
+                    var convo = await c.ConversationstoreConversationsSimpleAsync(o.GetConversation, true, true, null);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(convo));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(convo));
+
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("BotId:{0}, BotVersion:{1}, BotEnvironment:{2}.", convo.BotId, convo.BotVersion, convo.Environment.ToString());
+                    }
+                    
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get conversation: {0}: {1}", o.GetConversation, eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error getting conversation {0}.", o.GetConversation);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+            }
+
             else
             {
+                Error("Select the CUI operation and options you want to use.");
                 HelpText help = new HelpText();
                 help.Copyright = string.Empty;
                 help.AddPreOptionsLine(string.Empty);
                 help.AddVerbs(typeof(CUIOptions));
+                help.AddOptions(new Parser().ParseArguments<CUIOptions>(Args));
                 Info(help);
-
             }
         }
 
