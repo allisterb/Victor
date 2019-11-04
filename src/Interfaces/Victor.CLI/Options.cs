@@ -110,7 +110,7 @@ namespace Victor
     }
 
     [Verb("cx", HelpText = "Use the CX features of Victor.")]
-    class CXOptions
+    public class CXOptions
     {
 
     }

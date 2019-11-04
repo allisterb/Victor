@@ -15,7 +15,7 @@ namespace Victor.Server.WebAPI
     public class BotController : ControllerBase
     {
 
-       
+ 
         public BotController(ILogger<BotController> logger, EDDIClient c)
         {
            

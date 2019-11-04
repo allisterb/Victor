@@ -12,6 +12,8 @@ using Figgle;
 using CommandLine;
 using CommandLine.Text;
 
+using Victor.CLI;
+
 namespace Victor
 {
     #region Enums
@@ -130,6 +132,11 @@ namespace Victor
             .WithParsed<NLUOptions>(o =>
             {
                 NLU(o);
+            })
+            .WithParsed<CXOptions>(o =>
+            {
+                new CX(o).Start();
+                Exit(ExitResult.SUCCESS);
             });
 
         }
@@ -633,6 +640,7 @@ namespace Victor
 
         }
 
+      
         static void PrintBehaviorRuleCondition(BehaviorRuleConditionConfiguration condition, string indent)
         {
             System.Console.WriteLine(indent + "Type: {0}", condition.Type);
