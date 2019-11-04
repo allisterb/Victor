@@ -29,7 +29,8 @@
   "intents_names": [
     "hello",
     "helloUserName",
-    "userName"
+    "userName",
+    "help"
   ],
   "language_code": "en",
   "map": {
@@ -102,7 +103,8 @@
     ]
   },
   "slots_names": [
-    "person"
+    "person",
+    "feature"
   ],
   "stop_words_whitelist": {}
 }

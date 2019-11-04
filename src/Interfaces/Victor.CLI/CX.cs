@@ -88,8 +88,8 @@ namespace Victor.CLI
             }
             else
             {
-                GeneralNLU.GetIntents(input, out string[] intents, out string json, out string error);
-                Debug("Intents:{0}", json);
+                var intents = GeneralNLU.GetIntents(input);
+                
                 switch (input)
                 {
                     case "exit":

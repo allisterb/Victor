@@ -29,24 +29,6 @@ utterances:
   - I'm [person](Mary)
   - name's [person](Ellen)
 
-# help intent
----
-type: intent
-name: help
-slots:
-  - name: feature
-    entity: feature
-utterances:
-  - help
-  - help me
-  - What's this
-  - How do I use this
-  - What does this do
-  - What is this
-  - How do I [feature](apply for a loan)
-  - Can I [feature](send email)
-  - How do I [feature](end)
-  - How can I [feature](exit) the program
 
 # helloUserName intent
 ---

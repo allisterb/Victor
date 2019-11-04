@@ -44,21 +44,29 @@ namespace Victor
         #endregion
 
         #region Methods
-        public void GetIntents(string input, out string[] intents, out string json, out string error)
+        public void GetIntents(string input, out string[] intents, out string slots_json, out string error)
         {
             ThrowIfNotInitialized();
             error = "";
             intents = Array.Empty<string>();
-            json = "";
+            slots_json = "";
             if (SnipsApi.GetIntents(EnginePtr, input, out libsnips.CIntentClassifierResult[] results) && results.Count() > 0)
             {
                 intents = results.Select(r => (string.IsNullOrEmpty(r.intent_name) ? "None" : r.intent_name) + ":" + r.confidence_score.ToString("N2")).ToArray();
                 var topIntent = results.OrderByDescending(r => r.confidence_score).First();
                 if (!string.IsNullOrEmpty(topIntent.intent_name))
                 {
-                    SnipsApi.GetSlotsIntoJson(EnginePtr, input, topIntent.intent_name, out json, out error);
+                    SnipsApi.GetSlotsIntoJson(EnginePtr, input, topIntent.intent_name, out slots_json, out error);
                 }
             }
+        }
+
+        public Intents GetIntents(string input)
+        {
+            ThrowIfNotInitialized();
+            GetIntents(input, out string[] scores, out string json, out string error);
+            var entities = !string.IsNullOrEmpty(json) ? IntentEntity.FromJson(json) : Array.Empty<IntentEntity>();
+            return new Intents(scores, entities);
         }
 
         public static void DownloadSnipsNativeLibIfMissing(string assemblyDirectory)

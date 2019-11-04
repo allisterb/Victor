@@ -194,8 +194,12 @@
       "slot_filler_name": "slot_filler_1"
     },
     {
-      "intent": "userName",
+      "intent": "help",
       "slot_filler_name": "slot_filler_2"
+    },
+    {
+      "intent": "userName",
+      "slot_filler_name": "slot_filler_3"
     }
   ]
 }
