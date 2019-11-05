@@ -206,19 +206,18 @@
     },
     "language_code": "en",
     "slot_name_mappings": {
+      "disable": {
+        "feature": "feature"
+      },
       "enable": {
         "feature": "feature"
       },
       "exit": {},
-      "hello": {},
-      "helloUserName": {
+      "hello": {
         "person": "person"
       },
       "help": {
         "feature": "feature"
-      },
-      "userName": {
-        "person": "person"
       }
     }
   },

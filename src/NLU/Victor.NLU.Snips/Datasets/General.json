@@ -96,12 +96,12 @@
     }
   },
   "intents": {
-    "enable": {
+    "disable": {
       "utterances": [
         {
           "data": [
             {
-              "text": "enable "
+              "text": "disable "
             },
             {
               "entity": "feature",
@@ -113,24 +113,27 @@
         {
           "data": [
             {
-              "text": "turn on "
+              "text": "disable "
             },
             {
               "entity": "feature",
               "slot_name": "feature",
               "text": "debug"
+            },
+            {
+              "text": " now"
             }
           ]
         },
         {
           "data": [
             {
-              "text": "turn on "
+              "text": "turn off "
             },
             {
               "entity": "feature",
               "slot_name": "feature",
-              "text": "asr"
+              "text": "debug"
             }
           ]
         },
@@ -149,7 +152,7 @@
         {
           "data": [
             {
-              "text": "enable "
+              "text": "disable "
             },
             {
               "entity": "feature",
@@ -161,7 +164,194 @@
         {
           "data": [
             {
-              "text": "disable "
+              "text": "turn "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "asr"
+            },
+            {
+              "text": " off"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "turn "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            },
+            {
+              "text": " off"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "turn "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "asr"
+            },
+            {
+              "text": " off please"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "disabke "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            },
+            {
+              "text": " now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "asr"
+            },
+            {
+              "text": " off now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I don't want "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "asr"
+            },
+            {
+              "text": " now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to turn off "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            },
+            {
+              "text": " now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to disable "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "asr"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Please disable "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            },
+            {
+              "text": " now"
+            }
+          ]
+        }
+      ]
+    },
+    "enable": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "enable "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "enable "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            },
+            {
+              "text": " now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "turn on "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "turn on "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "asr"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "enable "
             },
             {
               "entity": "feature",
@@ -196,7 +386,7 @@
               "text": "debug"
             },
             {
-              "text": " enable"
+              "text": " on"
             }
           ]
         },
@@ -226,7 +416,7 @@
               "text": "debug"
             },
             {
-              "text": "  now"
+              "text": " now"
             }
           ]
         },
@@ -242,6 +432,33 @@
             },
             {
               "text": " on now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to turn on "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            },
+            {
+              "text": " now"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to enable "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
             }
           ]
         },
@@ -442,11 +659,7 @@
               "text": "Dude what's happening"
             }
           ]
-        }
-      ]
-    },
-    "helloUserName": {
-      "utterances": [
+        },
         {
           "data": [
             {
@@ -462,7 +675,7 @@
         {
           "data": [
             {
-              "text": "Hello Victor my names "
+              "text": "Hello Victor my name's "
             },
             {
               "entity": "person",
@@ -487,6 +700,74 @@
           "data": [
             {
               "text": "Hi I'm "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Ellen"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "My name is "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "John"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "My name is "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Henry"
+            },
+            {
+              "text": " "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Miller"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I am "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "David"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I'm "
+            },
+            {
+              "entity": "person",
+              "slot_name": "person",
+              "text": "Mary"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "name's "
             },
             {
               "entity": "person",
@@ -662,78 +943,6 @@
               "entity": "feature",
               "slot_name": "feature",
               "text": "nlu"
-            }
-          ]
-        }
-      ]
-    },
-    "userName": {
-      "utterances": [
-        {
-          "data": [
-            {
-              "text": "My name is "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "John"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "My name is "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "Henry"
-            },
-            {
-              "text": " "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "Miller"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "I am "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "David"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "I'm "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "Mary"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "name's "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "Ellen"
             }
           ]
         }

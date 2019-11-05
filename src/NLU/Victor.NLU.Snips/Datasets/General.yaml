@@ -14,6 +14,15 @@ utterances:
   - Hi there
   - Bro
   - Dude what's happening
+  - Hello my name is [person](John)
+  - Hello Victor my name's [person](John)
+  - Hi Victor my name is [person](Mary)
+  - Hi I'm [person](Ellen)
+  - My name is [person](John)
+  - My name is [person](Henry) [person](Miller)
+  - I am [person](David)
+  - I'm [person](Mary)
+  - name's [person](Ellen)
 
 # exit intent
 ---
@@ -68,46 +77,41 @@ slots:
     entity: feature
 utterances:
   - enable [feature](debug)
+  - enable [feature](debug) now
   - turn on [feature](debug)
   - turn on [feature](asr)
-  - turn off [feature](asr)
   - enable [feature](asr)
-  - disable [feature](asr)
   - turn [feature](asr) on
-  - turn [feature](debug) enable
+  - turn [feature](debug) on
   - turn [feature](asr) on please
-  - enable [feature](debug)  now
+  - enable [feature](debug) now
   - I want [feature](asr) on now
+  - I want to turn on [feature](debug) now
+  - I want to enable [feature](debug)
   - Please [feature](debug) now
- 
 
- # userName intent
+# disable intent
 ---
 type: intent
-name: userName
+name: disable
 slots:
-  - name: name
-    entity: person
+  - name: feature
+    entity: feature
 utterances:
-  - My name is [person](John)
-  - My name is [person](Henry) [person](Miller)
-  - I am [person](David)
-  - I'm [person](Mary)
-  - name's [person](Ellen)
-
-
-# helloUserName intent
----
-type: intent
-name: helloUserName
-slots:
-  - name: name
-    entity: person
-utterances:
-  - Hello my name is [person](John)
-  - Hello Victor my names [person](John)
-  - Hi Victor my name is [person](Mary)
-  - Hi I'm [person](Ellen)
+  - disable [feature](debug)
+  - disable [feature](debug) now
+  - turn off [feature](debug)
+  - turn off [feature](asr)
+  - disable [feature](asr)
+  - turn [feature](asr) off
+  - turn [feature](debug) off
+  - turn [feature](asr) off please
+  - disabke [feature](debug) now
+  - I want [feature](asr) off now
+  - I don't want [feature](asr) now
+  - I want to turn off [feature](debug) now
+  - I want to disable [feature](asr)
+  - Please disable [feature](debug) now 
 
 # person entity
 ---

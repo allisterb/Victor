@@ -64,7 +64,7 @@ namespace Victor.CLI
 
         #region Methods
 
-        #region UI
+        #region UI and Input
         public void Start()
         {
             ThrowIfNotInitialized();
@@ -96,11 +96,11 @@ namespace Victor.CLI
                 {
                     WriteInfoLine("Sorry I don't know what you mean");
                 }
-                else if(intents.Top.Item2 < 0.5)
+                else if (intents.Top.Item2 < 0.5)
                 {
                     WriteInfoLine("Sorry I'm not sure what you mean. Do you mean {0}?", intents.Top.Item1);
                 }
-                else 
+                else
                 {
                     if (NLUDebug)
                     {
@@ -109,7 +109,15 @@ namespace Victor.CLI
                         {
                             WriteInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value.ValueValue);
                         }
+                        if (intents.Top.Item1 == "enable")
+                        {
+                            Enable(intents);
 
+                        }
+                        else if (intents.Top.Item1 == "disable")
+                        {
+                            Disable(intents);
+                        }
                     }
                     else
                     {
@@ -121,8 +129,14 @@ namespace Victor.CLI
                             case "help":
                                 Help(intents);
                                 break;
+                            case "hello":
+                                Hello(intents);
+                                break;
                             case "enable":
                                 Enable(intents);
+                                break;
+                            case "disable":
+                                Disable(intents);
                                 break;
                             case "get bots":
                                 GetBots();
@@ -172,15 +186,26 @@ namespace Victor.CLI
         public void Exit()
         {
             WriteInfoLine("Shutting down...");
-            JuliusSession.Stop();
+            if (JuliusSession != null && JuliusSession.IsStarted)
+            {
+                JuliusSession.Stop();
+            }
             Program.Exit(ExitResult.SUCCESS);
         }
+
+        public void Hello(Intents intents)
+        {
+            var name = intents.Entities.Length > 0 ? intents.Entities.First().Value.ValueValue : "";
+            WriteInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
+        }
+
         public void Help(Intents intents)
         {
             var feature = intents.Entities.Length > 0 ? intents.Entities.First().RawValue : null;
             switch (feature)
             {
                 case null:
+                case "?":
                     WriteInfoLine("Victor CX is an auditory conversational user interface for interacting with an organisation\'s online services like product registration and on-boarding, product documentation, customer service and support.");
                     break;
                 case "nlu":
@@ -202,8 +227,44 @@ namespace Victor.CLI
                 switch (intents.Entities.First().Value.ValueValue)
                 {
                     case "debug":
-                        NLUDebug = true;
-                        WriteErrorLine("NLU debug enabled. NLU information will be output and commands won't be executed ");
+                        if (!NLUDebug)
+                        {
+                            NLUDebug = true;
+                            WriteInfoLine("NLU debug enabled. NLU information will be output and commands won't be executed ");
+                            break;
+                        }
+                        else
+                        {
+                            WriteErrorLine("NLU debug is already enabled.");
+                        }
+                        break;
+                    default:
+                        WriteErrorLine("Sorry I don't know how to enable that.");
+                        break;
+                }
+            }
+        }
+
+        public void Disable(Intents intents)
+        {
+            if (intents.Entities.Length == 0)
+            {
+                WriteErrorLine("Sorry I don't know what you want to disable.");
+            }
+            else
+            {
+                switch (intents.Entities.First().Value.ValueValue)
+                {
+                    case "debug":
+                        if (NLUDebug)
+                        {
+                            NLUDebug = false;
+                            WriteInfoLine("NLU debug disabled. Commands will be executed.");
+                        }
+                        else
+                        {
+                            WriteErrorLine("NLU debug is not enabled.");
+                        }
                         break;
                     default:
                         WriteErrorLine("Sorry I don't know how to enable that.");
@@ -266,7 +327,7 @@ namespace Victor.CLI
         }
         #endregion
 
-#endregion
+        #endregion
 
         #region Event Handlers
         private void JuliusSession_Recognized(string sentence)
