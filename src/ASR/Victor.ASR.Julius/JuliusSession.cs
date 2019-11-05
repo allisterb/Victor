@@ -39,6 +39,8 @@ namespace Victor
 
         public IEnumerable<string> JuliusArgs { get; }
 
+        public bool IsStarted { get; protected set; } = false;
+
         public bool IsListening { get; protected set; } = false;
 
         public bool IsPass1Recognizing { get; protected set; } = false;
@@ -55,12 +57,22 @@ namespace Victor
         #region Methods
         public void Start()
         {
+            if (IsStarted)
+            {
+                throw new InvalidOperationException("The Julius session is already started.");
+            }
             JuliusProcess.Start();
+            IsStarted = true;
         }
 
         public void Stop()
         {
+            if (!IsStarted)
+            {
+                throw new InvalidOperationException("The Julius session is not started.");
+            }
             JuliusProcess.Stop();
+            IsStarted = false;
         }
 
         public void WaitForExit()
