@@ -12,4 +12,14 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="loan-demo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

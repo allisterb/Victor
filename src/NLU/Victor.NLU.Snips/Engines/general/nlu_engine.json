@@ -198,7 +198,7 @@
   "dataset_metadata": {
     "entities": {
       "feature": {
-        "automatically_extensible": false
+        "automatically_extensible": true
       },
       "person": {
         "automatically_extensible": true
@@ -206,6 +206,9 @@
     },
     "language_code": "en",
     "slot_name_mappings": {
+      "enable": {
+        "feature": "feature"
+      },
       "exit": {},
       "hello": {},
       "helloUserName": {

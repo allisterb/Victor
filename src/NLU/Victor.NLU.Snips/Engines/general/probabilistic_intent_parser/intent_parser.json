@@ -186,24 +186,28 @@
   },
   "slot_fillers": [
     {
-      "intent": "exit",
+      "intent": "enable",
       "slot_filler_name": "slot_filler_0"
     },
     {
-      "intent": "hello",
+      "intent": "exit",
       "slot_filler_name": "slot_filler_1"
     },
     {
-      "intent": "helloUserName",
+      "intent": "hello",
       "slot_filler_name": "slot_filler_2"
     },
     {
-      "intent": "help",
+      "intent": "helloUserName",
       "slot_filler_name": "slot_filler_3"
     },
     {
-      "intent": "userName",
+      "intent": "help",
       "slot_filler_name": "slot_filler_4"
+    },
+    {
+      "intent": "userName",
+      "slot_filler_name": "slot_filler_5"
     }
   ]
 }

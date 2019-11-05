@@ -19,7 +19,6 @@ utterances:
 ---
 type: intent
 name: exit
-
 utterances:
   - exit
   - bye
@@ -31,6 +30,10 @@ utterances:
   - shutdown
   - close
   - end
+  - I want to quit
+  - I want to leave
+  - I'm leaving
+  - bye bye
 
 # help intent
 ---
@@ -40,9 +43,11 @@ slots:
   - name: feature
     entity: feature
 utterances:
-  - help
+  - help [feature](bots)
+  - help [feature](nlp)
+  - help on [feature](menu)
   - help me
-  - What's this
+  - What's [feature](this)
   - How do I use this
   - What does this do
   - What is this
@@ -50,6 +55,31 @@ utterances:
   - Can I [feature](send email)
   - How do I [feature](end)
   - How can I [feature](exit) the program
+  - How do I use [feature](email)
+  - How does the [feature](calendar) work
+  - What is [feature](nlu)
+
+# enable intent
+---
+type: intent
+name: enable
+slots:
+  - name: feature
+    entity: feature
+utterances:
+  - enable [feature](debug)
+  - turn on [feature](debug)
+  - turn on [feature](asr)
+  - turn off [feature](asr)
+  - enable [feature](asr)
+  - disable [feature](asr)
+  - turn [feature](asr) on
+  - turn [feature](debug) enable
+  - turn [feature](asr) on please
+  - enable [feature](debug)  now
+  - I want [feature](asr) on now
+  - Please [feature](debug) now
+ 
 
  # userName intent
 ---
@@ -86,6 +116,8 @@ name: person
 automatically_extensible: yes
 values:
 - John
+- Allister
+- Marge
 - [Michael, Marvin, David]
 - [Luis, Joe, Harry]
 - [Shelly, Ellen, Carrie]
@@ -95,6 +127,15 @@ values:
 ---
 type: entity
 name: feature
-automatically_extensible: no
+automatically_extensible: yes
 values:
-- [services, bots, debug]
+- services
+- bots
+- menu
+- debug
+- send email
+- nlp
+- nlu
+- debug
+- asr
+- apply for a loan

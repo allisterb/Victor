@@ -41,7 +41,11 @@ namespace Victor.CLI
 
         #region Properties
         public CXOptions Options { get; }
+
+        public bool NLUDebug { get; protected set; }
+
         protected EDDIClient Client { get;  }
+        
         protected JuliusSession JuliusSession { get; }
 
         public bool ASRReady { get; protected set; }
@@ -52,7 +56,7 @@ namespace Victor.CLI
 
         protected bool InputEnabled { get; set; }
 
-        protected string[] Commands = { "help", "exit" };
+        protected string[] Commands = { "help", "exit", "enable" };
         protected Dictionary<string, Action<int>> MenuHandlers { get; } = new Dictionary<string, Action<int>>();
 
         protected Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
@@ -93,15 +97,26 @@ namespace Victor.CLI
                 {
                     WriteLine("Sorry I don't know what you mean");
                 }
+                else if(intents.Top.Item2 < 0.5)
+                {
+                    WriteLine("Sorry I'm not sure what you mean. Do you mean {0}?", intents.Top.Item1);
+                }
                 else 
                 {
+                    WriteLine("intent: {0} score: {1}.", intents.Top.Item1, intents.Top.Item2);
+                    
+                    foreach(var e in intents.Entities)
+                    {
+                        WriteLine("entity:{0} value:{1}.", e.Entity, e.Value.ValueValue);
+                    }
+                    
                     switch (intents.Top.Item1)
                     {
                         case "exit":
                             Exit();
                             break;
                         case "help":
-                            Help();
+                            //Help();
                             break;
                         case "get bots":
                             GetBots();

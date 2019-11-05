@@ -43,8 +43,9 @@ namespace Victor.Tests.RHDM
         {
             var config = new Configuration();
             config.BasePath = "https://victor-kieserver-evals25-shared-7daa.apps.hackathon.rhmi.io/";
-            config.Username = "allisterb2";
-            config.Password = "allisterb2";
+            config.Username = Api.Config("KIE_ADMIN_USER");
+            config.Password = Api.Config("KIE_ADMIN_PWD");
+            config.ApiClient.RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(config.Username, config.Password);
             instance = new KIESessionAssetsApi(config);
         }
 
@@ -74,6 +75,10 @@ namespace Victor.Tests.RHDM
         [Test]
         public void ExecuteContainerRulesTest()
         {
+            string body = File.ReadAllText("loan-demo.json");
+            Assert.False(string.IsNullOrEmpty(body));
+            var r = instance.ExecuteContainerRules("loan-application_1.1.0", body);
+            
             // TODO uncomment below to test the method and replace null with proper value
             //string containerId = null;
             //string body = null;
@@ -124,7 +129,7 @@ namespace Victor.Tests.RHDM
                 }
             };
             */
-        } 
+        
             //instance.ExecuteContainerRules("loan-application_1.1.0", )
         }
         

@@ -70,7 +70,7 @@ namespace Victor.CUI.RHDM.KIE.Model
         /// <param name="status">status.</param>
         /// <param name="score">score.</param>
         /// <param name="bestSolution">bestSolution.</param>
-        public SolverInstance(string containerId = default(string), string solverId = default(string), string solverConfigFile = default(string), StatusEnum? status = default(StatusEnum?), ScoreWrapper score = default(ScoreWrapper), LoanApplicant bestSolution = default(LoanApplicant))
+        public SolverInstance(string containerId = default(string), string solverId = default(string), string solverConfigFile = default(string), StatusEnum? status = default(StatusEnum?), ScoreWrapper score = default(ScoreWrapper), Object bestSolution = default(Object))
         {
             this.ContainerId = containerId;
             this.SolverId = solverId;
@@ -109,7 +109,7 @@ namespace Victor.CUI.RHDM.KIE.Model
         /// Gets or Sets BestSolution
         /// </summary>
         [DataMember(Name="best-solution", EmitDefaultValue=false)]
-        public LoanApplicant BestSolution { get; set; }
+        public Object BestSolution { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

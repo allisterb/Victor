@@ -18,7 +18,6 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Web;
 using System.Linq;
-using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 using RestSharp;
@@ -178,6 +177,7 @@ namespace Victor.CUI.RHDM.KIE.Client
 
             RestClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true; ;
             InterceptRequest(request);
+            
             var response = RestClient.Execute(request);
             InterceptResponse(request, response);
 
