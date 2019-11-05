@@ -76,6 +76,7 @@ namespace Victor.CLI
             Sc.Beep();
             WriteInfoLine("Welcome to Victor CX");
             SetContext("Welcome");
+            ReadLine.HistoryEnabled = true;
             Prompt();
         }
 
@@ -94,7 +95,7 @@ namespace Victor.CLI
                 var intents = GeneralNLU.GetIntents(input);
                 if (intents.IsNone)
                 {
-                    WriteInfoLine("Sorry I don't know what you mean");
+                    WriteInfoLine("Sorry I don't know what you mean.");
                 }
                 else if (intents.Top.Item2 < 0.5)
                 {
@@ -230,7 +231,7 @@ namespace Victor.CLI
                         if (!NLUDebug)
                         {
                             NLUDebug = true;
-                            WriteInfoLine("NLU debug enabled. NLU information will be output and commands won't be executed ");
+                            WriteInfoLine("NLU debug enabled. NLU information will be output and commands won't be executed.");
                             break;
                         }
                         else
