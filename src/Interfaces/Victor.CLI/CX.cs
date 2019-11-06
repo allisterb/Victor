@@ -54,6 +54,8 @@ namespace Victor.CLI
 
         public bool NLUDebug { get; protected set; }
 
+        public bool BeeperOn { get; protected set; }
+
         protected Stack<Tuple<DateTime, string>> Context { get; } = new Stack<Tuple<DateTime, string>>();
 
         protected string[] Commands = { "help", "exit", "enable" };
@@ -75,11 +77,11 @@ namespace Victor.CLI
             {
                 Sc.Clear();
             }
-            Sc.Beep();
-            Sc.Beep();
+            
             WriteInfoLine("Welcome to Victor CX");
             SetContext("Welcome");
             ReadLine.HistoryEnabled = true;
+            if (Program.beeperOn) Program.StopBeeper();
             Prompt();
         }
 
@@ -91,7 +93,7 @@ namespace Victor.CLI
             InputEnabled = false;
             if (Int32.TryParse(input, out int result) && Context.Peek().Item2.StartsWith("MENU"))
             {
-                DispatchToMenuItem(Context.Pop().Item2, result);
+                DispatchToMenuItem(Context.Peek().Item2, result);
             }
             else
             {
@@ -164,9 +166,6 @@ namespace Victor.CLI
                                 case "disable":
                                     Disable(intents);
                                     break;
-                                case "bots":
-                                    Bots(intents);
-                                    break;
                                 default:
                                     break;
                             }
@@ -183,11 +182,12 @@ namespace Victor.CLI
             {
                 if (i < 0 || i > MenuIndexes[c])
                 {
-                    WriteInfoLine("Enter a number between 0 and {0}.", MenuIndexes[c]);
+                    WriteInfoLine("Enter a number between {1} and {0}.", 0, MenuIndexes[c]);
                     return;
                 }
                 else
                 {
+                    Context.Pop();
                     MenuHandlers[c].Invoke(i);
                 }
             }
@@ -233,7 +233,6 @@ namespace Victor.CLI
 
             }
         }
-
         #endregion
 
         #region Features
@@ -258,13 +257,24 @@ namespace Victor.CLI
         public void Help(Intents intents)
         {
             var feature = intents.Entities.Length > 0 ? intents.Entities.First().RawValue : null;
+            var context = Context.Count > 0 ? Context.Peek().Item2 : string.Empty;
             switch (feature)
             {
                 case null:
                 case "":
                 case "?":
                 case "this":
-                    WriteInfoLine("Victor CX is an auditory conversational user interface for interacting with an organisation\'s online services like product registration and on-boarding, product documentation, customer service and support.");
+                    switch (context)
+                    {
+                        case "WELCOME":
+                            WriteInfoLine("Victor CX is an auditory conversational user interface for interacting with an organisation\'s online services like product registration and on-boarding, product documentation, customer service and support.");
+                            break;
+                        case "MENU_BOTS":
+                            WriteInfoLine("Enter a number between {0} and {1} to select the bot you want to talk to.", 0, MenuIndexes["MENU_BOTS"]);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case "nlu":
                     WriteInfoLine("Victor CX uses natural language understading to understand a user's intent and the entities that are part of that intent.");
@@ -348,27 +358,29 @@ namespace Victor.CLI
                         if (descriptors == null)
                         {
                             WriteInfoLine("Sorry I couldn't get a proper response from the server.");
-                            return;
                         }
-                        if (descriptors.Count == 0)
+                        else if (descriptors.Count == 0)
                         {
                             WriteInfoLine("Sorry the server says there are zero bots.");
-                            return;
                         }
-                        WriteInfoLine("There are {0} bots on the server.", descriptors.Count());
-
-                        for (int i = 1; i <= descriptors.Count; i++)
+                        else
                         {
-                            WriteInfoLine("{0}. {1}", i, descriptors.ElementAt(i).Name);
+                            WriteInfoLine("There are {0} bots on the server.", descriptors.Count());
+
+                            for (int i = 1; i <= descriptors.Count; i++)
+                            {
+                                WriteInfoLine("{0}. {1}", i, descriptors.ElementAt(i - 1).Name);
+                            }
+                            WriteInfoLine("You can now enter the number of the bot you want talk to.");
+                            Context.PopIfNotEmpty();
+                            MenuIndexes["MENU_BOTS"] = descriptors.Count - 1;
+                            SetContext("MENU_BOTS");
                         }
-                        SetContext("MENU_BOTS");
                     }
                     break;
                 default:
                     break;
-
             }
-
         }
 
         public void GetBot(int i)
@@ -392,5 +404,6 @@ namespace Victor.CLI
             }
         }
         #endregion
+
     }
 }

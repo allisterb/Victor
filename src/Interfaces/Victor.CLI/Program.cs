@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Colorful;
@@ -48,6 +49,7 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
+            EnableBeeper();
             if (args.Contains("--debug"))
             {
                 PrintLogo();
@@ -139,6 +141,7 @@ namespace Victor
             })
             .WithParsed<CXOptions>(o =>
             {
+                StartBeeper();
                 new CX(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
@@ -644,7 +647,6 @@ namespace Victor
 
         }
 
-      
         static void PrintBehaviorRuleCondition(BehaviorRuleConditionConfiguration condition, string indent)
         {
             System.Console.WriteLine(indent + "Type: {0}", condition.Type);
@@ -713,6 +715,35 @@ namespace Victor
             return (int)result;
         }
 
+        static void EnableBeeper()
+        {
+            _signalBeep = new ManualResetEvent(false);
+            _beeperThread = new Thread(() =>
+            {
+                while (true)
+                {
+                    _signalBeep.WaitOne();
+                    System.Console.Beep();
+                    Thread.Sleep(500);
+                }
+            }, 1);
+            _beeperThread.Name = "Beeper";
+            _beeperThread.IsBackground = true;
+            _beeperThread.Start();
+        }
+
+        public static void StartBeeper()
+        {
+            _signalBeep.Set();
+            beeperOn = true;
+        }
+
+        public static void StopBeeper()
+        {
+            _signalBeep.Reset();
+            beeperOn = false;
+        }
+
         static HelpText GetAutoBuiltHelpText(ParserResult<object> result)
         {
             return HelpText.AutoBuild(result, h =>
@@ -733,18 +764,25 @@ namespace Victor
 
         #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-    {
-        Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");
-        Exit(ExitResult.UNHANDLED_EXCEPTION);
-    }
+        {
+            Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");
+            Exit(ExitResult.UNHANDLED_EXCEPTION);
+        }
         
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            Info("Ctrl-C pressed. Exiting.");
+            Cts.Cancel();
+            Exit(ExitResult.SUCCESS);
+        }
+        #endregion
 
-    private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
-    {
-        Info("Ctrl-C pressed. Exiting.");
-        Cts.Cancel();
-        Exit(ExitResult.SUCCESS);
-    }
-    #endregion
+        #region Fields
+        static Thread _beeperThread;
+
+        static ManualResetEvent _signalBeep;
+
+        public static bool beeperOn;
+        #endregion
     }
 }
