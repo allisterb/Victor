@@ -1,0 +1,82 @@
+{
+  "config": {
+    "ignore_stop_words": true,
+    "unit_name": "lookup_intent_parser"
+  },
+  "entity_scopes": [
+    {
+      "entity_scope": {
+        "builtin": [],
+        "custom": [
+          "bot"
+        ]
+      },
+      "intent_group": [
+        "info"
+      ]
+    }
+  ],
+  "intents_names": [
+    "hello",
+    "helloUserName",
+    "userName",
+    "help",
+    "exit",
+    "enable",
+    "disable",
+    "bots",
+    "info"
+  ],
+  "language_code": "en",
+  "map": {
+    "-1269180855": [
+      8,
+      [
+        3
+      ]
+    ],
+    "-1244143338": [
+      8,
+      [
+        3
+      ]
+    ],
+    "-848243929": [
+      8,
+      []
+    ],
+    "-775488832": [
+      8,
+      [
+        3
+      ]
+    ],
+    "1114899911": [
+      8,
+      []
+    ],
+    "1297816158": [
+      8,
+      []
+    ],
+    "1326936799": [
+      8,
+      [
+        3
+      ]
+    ],
+    "2127844634": [
+      8,
+      [
+        3
+      ]
+    ]
+  },
+  "slots_names": [
+    "person",
+    "feature",
+    "this",
+    "bot"
+  ],
+  "stop_words_whitelist": {}
+}

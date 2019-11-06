@@ -1,0 +1,137 @@
+{
+  "entities": {
+    "bot": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "news"
+        },
+        {
+          "synonyms": [],
+          "value": "email"
+        },
+        {
+          "synonyms": [],
+          "value": "loan application"
+        },
+        {
+          "synonyms": [],
+          "value": "calendar"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "info": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "What bots are there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "apply"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How does the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "news"
+            },
+            {
+              "text": " bot work?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "news"
+            },
+            {
+              "text": " bot?"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}

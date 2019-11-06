@@ -52,22 +52,25 @@ slots:
   - name: feature
     entity: feature
 utterances:
-  - help [feature](bots)
+  - help
   - help [feature](nlp)
   - help on [feature](menu)
-  - help me
+  - help me on [feature](bots)
   - What's [feature](this)
   - How do I use this
   - What does this do
-  - What is this
+  - What is [feature](this)
+  - What is [feature](nlu)
+  - What are [feature](bots)
+  - Tell me about [feature](bots)
+  - Talk about [feature](bots)
   - How do I [feature](apply for a loan)
   - Can I [feature](send email)
-  - How do I [feature](end)
+  - How do I [feature](end this)
   - How can I [feature](exit) the program
   - How do I use [feature](email)
   - How does the [feature](calendar) work
-  - What is [feature](nlu)
-
+  
 # enable intent
 ---
 type: intent
@@ -88,6 +91,7 @@ utterances:
   - I want [feature](asr) on now
   - I want to turn on [feature](debug) now
   - I want to enable [feature](debug)
+  - Please turn on [feature](debug) now
   - Please [feature](debug) now
 
 # disable intent
@@ -112,6 +116,7 @@ utterances:
   - I want to turn off [feature](debug) now
   - I want to disable [feature](asr)
   - Please disable [feature](debug) now 
+  - Please turn off [feature](debug) now
 
 # person entity
 ---
@@ -133,6 +138,7 @@ type: entity
 name: feature
 automatically_extensible: yes
 values:
+- this
 - services
 - bots
 - menu

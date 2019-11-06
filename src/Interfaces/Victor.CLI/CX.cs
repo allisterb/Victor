@@ -31,6 +31,7 @@ namespace Victor.CLI
             Options = options;
             Client = new EDDIClient("http://eddi-evals25-shared-7daa.apps.hackathon.rhmi.io", HttpClient);
             GeneralNLU = new SnipsNLUEngine(Path.Combine("Engines", "general"));
+            BotsNLU = new SnipsNLUEngine(Path.Combine("Engines", "bots"));
             Initialized = GeneralNLU.Initialized;
         }
 
@@ -40,6 +41,8 @@ namespace Victor.CLI
         public CXOptions Options { get; }
 
         protected SnipsNLUEngine GeneralNLU { get; }
+
+        protected SnipsNLUEngine BotsNLU { get; }
 
         protected EDDIClient Client { get;  }
         
@@ -92,58 +95,81 @@ namespace Victor.CLI
             }
             else
             {
-                var intents = GeneralNLU.GetIntents(input);
-                if (intents.IsNone)
-                {
-                    WriteInfoLine("Sorry I don't know what you mean.");
-                }
-                else if (intents.Top.Item2 < 0.5)
-                {
-                    WriteInfoLine("Sorry I'm not sure what you mean. Do you mean {0}?", intents.Top.Item1);
-                }
-                else
+                var intents = BotsNLU.GetIntents(input);
+                if (!intents.IsNone && intents.Top.Item2 >= 0.8)
                 {
                     if (NLUDebug)
                     {
-                        WriteInfoLine("Intent: {0} Score: {1}.", intents.Top.Item1, intents.Top.Item2);
+                        WriteInfoLine("Category: {0}, Intent: {1} Score: {2}.", "Bots", intents.Top.Item1, intents.Top.Item2);
                         foreach (var e in intents.Entities)
                         {
                             WriteInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value.ValueValue);
                         }
-                        if (intents.Top.Item1 == "enable")
-                        {
-                            Enable(intents);
 
-                        }
-                        else if (intents.Top.Item1 == "disable")
-                        {
-                            Disable(intents);
-                        }
+                    }
+                    else 
+                    {
+                        Bots(intents);
+                    }
+                }
+                else
+                {
+                    intents = GeneralNLU.GetIntents(input);
+                    if (intents.IsNone)
+                    {
+                        WriteInfoLine("Sorry I don't know what you mean. Type {0} to get a list of things you can do.", "help");
+                    }
+                    else if (intents.Top.Item2 < 0.6)
+                    {
+                        WriteInfoLine("Sorry I'm not sure what you mean. Do you mean {0}?", intents.Top.Item1);
                     }
                     else
                     {
-                        switch (intents.Top.Item1)
+                        if (NLUDebug)
                         {
-                            case "exit":
-                                Exit();
-                                break;
-                            case "help":
-                                Help(intents);
-                                break;
-                            case "hello":
-                                Hello(intents);
-                                break;
-                            case "enable":
+                            WriteInfoLine("Category: {0}, Intent: {1} Score: {2}.", "General", intents.Top.Item1, intents.Top.Item2);
+                            foreach (var e in intents.Entities)
+                            {
+                                WriteInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value.ValueValue);
+                            }
+                            if (intents.Top.Item1 == "enable")
+                            {
                                 Enable(intents);
-                                break;
-                            case "disable":
+                            }
+                            else if (intents.Top.Item1 == "disable")
+                            {
                                 Disable(intents);
-                                break;
-                            case "get bots":
-                                GetBots();
-                                break;
-                            default:
-                                break;
+                            }
+                            else if (intents.Top.Item1 == "exit")
+                            {
+                                Exit();
+                            }
+                        }
+                        else
+                        {
+                            switch (intents.Top.Item1)
+                            {
+                                case "exit":
+                                    Exit();
+                                    break;
+                                case "help":
+                                    Help(intents);
+                                    break;
+                                case "hello":
+                                    Hello(intents);
+                                    break;
+                                case "enable":
+                                    Enable(intents);
+                                    break;
+                                case "disable":
+                                    Disable(intents);
+                                    break;
+                                case "bots":
+                                    Bots(intents);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
@@ -181,6 +207,33 @@ namespace Victor.CLI
             string i = ReadLine.Read("|> ");
             HandleInput(DateTime.Now, i);
         }
+
+        public void EnableASR()
+        {
+            if (JuliusSession != null && JuliusSession.IsStarted)
+            {
+                throw new InvalidOperationException("Julius session already started.");
+            }
+            else if (JuliusSession != null && JuliusSession.Initialized && !JuliusSession.IsStarted)
+            {
+                JuliusSession.Start();
+            }
+            else
+            {
+                JuliusSession = new JuliusSession();
+                JuliusSession.Recognized += JuliusSession_Recognized;
+                if (JuliusSession.Initialized)
+                {
+                    WriteInfoLine("Automatic speech recognition enabled.");
+                }
+                else
+                {
+                    WriteErrorLine("Could not enable automatic speech recognition.");
+                }
+
+            }
+        }
+
         #endregion
 
         #region Features
@@ -206,12 +259,17 @@ namespace Victor.CLI
             switch (feature)
             {
                 case null:
+                case "":
                 case "?":
+                case "this":
                     WriteInfoLine("Victor CX is an auditory conversational user interface for interacting with an organisation\'s online services like product registration and on-boarding, product documentation, customer service and support.");
                     break;
                 case "nlu":
                     WriteInfoLine("Victor CX uses natural language understading to understand a user's intent and the entities that are part of that intent.");
                     WriteInfoLine("You can enable NLU debug mode by entering {0}.", "enable debug");
+                    break;
+                case "bots":
+                    WriteInfoLine("Bots provide different services. Say {0} to see the bots available.");
                     break;
             }
             
@@ -274,52 +332,30 @@ namespace Victor.CLI
             }
         }
 
-        public void EnableASR()
+        public void Bots(Intents intents)
         {
-            if (JuliusSession != null && JuliusSession.IsStarted)
+            if (intents.Entities.Length == 0)
             {
-                throw new InvalidOperationException("Julius session already started.");
-            }
-            else if (JuliusSession != null && JuliusSession.Initialized && !JuliusSession.IsStarted)
-            {
-                JuliusSession.Start();
-            }
-            else
-            {
-                JuliusSession = new JuliusSession();
-                JuliusSession.Recognized += JuliusSession_Recognized;
-                if (JuliusSession.Initialized)
+                WriteInfoLine("I'll check what bots are available on the Victor server.");
+                var descriptors = Client.BotstoreBotsDescriptorsGetAsync(null, null, null).Result;
+                if (descriptors == null)
                 {
-                    WriteInfoLine("Automatic speech recognition enabled.");
+                    WriteInfoLine("Sorry I couldn't get a proper response from the server.");
+                    return;
                 }
-                else
+                if (descriptors.Count == 0)
                 {
-                    WriteErrorLine("Could not enable automatic speech recognition.");
+                    WriteInfoLine("Sorry the server says there are zero bots.");
+                    return;
                 }
+                WriteInfoLine("There are {0} bots on the server.", descriptors.Where(d => d.Description != "").Count());
 
+                for (int i = 0; i < descriptors.Count; i++)
+                {
+                    WriteInfoLine("{0}. {1}", i, descriptors.ElementAt(i).Name);
+                }
+                SetContext("MENU_BOTS");
             }
-        }
-        public void GetBots()
-        {
-            WriteInfoLine("I'll check what bots are available on the Victor server.");
-            var descriptors = Client.BotstoreBotsDescriptorsGetAsync(null, null, null).Result;
-            if (descriptors == null)
-            {
-                WriteInfoLine("Sorry I couldn't get a proper response from the server.");
-                return;
-            }
-            if (descriptors.Count == 0)
-            {
-                WriteInfoLine("Sorry the server says there are zero bots.");
-                return;
-            }
-            WriteInfoLine("There are {0} bots on the server.", descriptors.Where(d => d.Description != "").Count());
-            
-            for(int i = 0; i < descriptors.Count; i++)
-            {
-                WriteInfoLine("{0}. {1}", i, descriptors.ElementAt(i).Name);
-            }
-            SetContext("MENU_BOTS");
         }
 
         public void GetBot(int i) 

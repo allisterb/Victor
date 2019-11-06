@@ -1,0 +1,29 @@
+﻿# bots intent
+---
+type: intent
+name: info
+slots:
+  - name: bot
+    entity: bot
+utterances:
+  - What bots are there
+  - Get bots
+  - Get the bots
+  - Show me bots
+  - Show me the [bot](apply) bot
+  - What's the [bot](loan application) bot
+  - How do I use the [bot](loan application) bot
+  - How does the [bot](news) bot work?
+  - What is the [bot](news) bot?
+
+  
+# bot entity
+---
+type: entity
+name: bot
+automatically_extensible: no
+values:
+- news
+- email
+- loan application
+- calendar

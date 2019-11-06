@@ -1,8 +1,0 @@
-{
-  "parsers_metadata": [
-    {
-      "entity_identifier": "Temperature",
-      "entity_parser": "parser_1"
-    }
-  ]
-}
