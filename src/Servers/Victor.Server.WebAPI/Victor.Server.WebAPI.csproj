@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
     <ProjectReference Include="..\..\CUI\Victor.CUI.EDDI\Victor.CUI.EDDI.csproj" />
+    <ProjectReference Include="..\..\CUI\Victor.CUI.RHDM\Victor.CUI.RHDM.csproj" />
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
   </ItemGroup>
 

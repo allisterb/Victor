@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: dotnet-21-rhel7
+  name: dotnet-21-rhel7-dev
   labels:
-    app: dotnet-21-rhel7
+    app: dotnet-21-rhel7-dev
   namespace: evals25-shared-7daa
 spec:
   containers:
-    - name: dotnet-21-rhel7   
+    - name: dotnet-21-rhel7-dev   
       image: dotnet/dotnet-21-rhel7
       args:
         - /bin/sh
         - '-c'
-        - sleep 5d
+        - sleep 50d
       readinessProbe:
         exec:
           command:

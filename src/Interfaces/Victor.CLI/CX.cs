@@ -53,8 +53,8 @@ namespace Victor.CLI
         public bool ASRReady { get; protected set; }
 
         public bool NLUDebug { get; protected set; }
-        
-        protected Tuple<DateTime, string> Context { get; set; }
+
+        protected Stack<Tuple<DateTime, string>> Context { get; } = new Stack<Tuple<DateTime, string>>();
 
         protected string[] Commands = { "help", "exit", "enable" };
 
@@ -83,15 +83,15 @@ namespace Victor.CLI
             Prompt();
         }
 
-        public void SetContext(string c) => Context = new Tuple<DateTime, string>(DateTime.Now, c);
+        public void SetContext(string c) => Context.Push(new Tuple<DateTime, string>(DateTime.Now, c));
 
         public void HandleInput(DateTime time, string input)
         {
             ThrowIfNotInitialized();
             InputEnabled = false;
-            if (Int32.TryParse(input, out int result) && Context.Item2.StartsWith("MENU"))
+            if (Int32.TryParse(input, out int result) && Context.Peek().Item2.StartsWith("MENU"))
             {
-                DispatchToMenuItem(Context.Item2, result);
+                DispatchToMenuItem(Context.Pop().Item2, result);
             }
             else
             {
@@ -237,6 +237,8 @@ namespace Victor.CLI
         #endregion
 
         #region Features
+
+        #region General
         public void Exit()
         {
             WriteInfoLine("Shutting down...");
@@ -331,37 +333,50 @@ namespace Victor.CLI
                 }
             }
         }
+        #endregion
 
+        #region Bots
         public void Bots(Intents intents)
         {
-            if (intents.Entities.Length == 0)
+            switch(intents.Top.Item1)
             {
-                WriteInfoLine("I'll check what bots are available on the Victor server.");
-                var descriptors = Client.BotstoreBotsDescriptorsGetAsync(null, null, null).Result;
-                if (descriptors == null)
-                {
-                    WriteInfoLine("Sorry I couldn't get a proper response from the server.");
-                    return;
-                }
-                if (descriptors.Count == 0)
-                {
-                    WriteInfoLine("Sorry the server says there are zero bots.");
-                    return;
-                }
-                WriteInfoLine("There are {0} bots on the server.", descriptors.Where(d => d.Description != "").Count());
+                case "info":
+                    if (intents.Entities.Length == 0)
+                    {
+                        WriteInfoLine("I'll check what bots are available on the Victor server.");
+                        var descriptors = Client.BotstoreBotsDescriptorsGetAsync(null, null, null).Result;
+                        if (descriptors == null)
+                        {
+                            WriteInfoLine("Sorry I couldn't get a proper response from the server.");
+                            return;
+                        }
+                        if (descriptors.Count == 0)
+                        {
+                            WriteInfoLine("Sorry the server says there are zero bots.");
+                            return;
+                        }
+                        WriteInfoLine("There are {0} bots on the server.", descriptors.Count());
 
-                for (int i = 0; i < descriptors.Count; i++)
-                {
-                    WriteInfoLine("{0}. {1}", i, descriptors.ElementAt(i).Name);
-                }
-                SetContext("MENU_BOTS");
+                        for (int i = 1; i <= descriptors.Count; i++)
+                        {
+                            WriteInfoLine("{0}. {1}", i, descriptors.ElementAt(i).Name);
+                        }
+                        SetContext("MENU_BOTS");
+                    }
+                    break;
+                default:
+                    break;
+
             }
+
         }
 
-        public void GetBot(int i) 
+        public void GetBot(int i)
         {
             WriteInfoLine("Get bot {0}.", i);
         }
+        #endregion
+
         #endregion
 
         #endregion
