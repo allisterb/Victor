@@ -13,10 +13,6 @@
         },
         {
           "synonyms": [],
-          "value": "bots"
-        },
-        {
-          "synonyms": [],
           "value": "menu"
         },
         {
@@ -763,14 +759,6 @@
               "entity": "person",
               "slot_name": "person",
               "text": "Henry"
-            },
-            {
-              "text": " "
-            },
-            {
-              "entity": "person",
-              "slot_name": "person",
-              "text": "Miller"
             }
           ]
         },
@@ -910,24 +898,12 @@
         {
           "data": [
             {
-              "text": "What are "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "bots"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
               "text": "Tell me about "
             },
             {
               "entity": "feature",
               "slot_name": "feature",
-              "text": "bots"
+              "text": "this"
             }
           ]
         },
@@ -939,7 +915,7 @@
             {
               "entity": "feature",
               "slot_name": "feature",
-              "text": "bots"
+              "text": "nlu"
             }
           ]
         },

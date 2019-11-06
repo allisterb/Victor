@@ -203,6 +203,9 @@
     },
     "language_code": "en",
     "slot_name_mappings": {
+      "help": {
+        "bot": "bot"
+      },
       "info": {
         "bot": "bot"
       }

@@ -1,4 +1,4 @@
-﻿# bots intent
+﻿# info intent
 ---
 type: intent
 name: info
@@ -6,16 +6,35 @@ slots:
   - name: bot
     entity: bot
 utterances:
+  - show bots
+  - all the bots
   - What bots are there
   - Get bots
+  - bots
   - Get the bots
-  - Show me bots
+  - Show me the bots
   - Show me the [bot](apply) bot
+  - Get the [bot](loan application)
+
+# help intent
+---
+type: intent
+name: help
+slots:
+  - name: bot
+    entity: bot
+utterances:
+  - help bots
+  - help with [bot](news) bot
+  - help with bot
+  - help with [bot](loan application)
+  - What are bots
+  - What is a bot?
+  - Tell me about bots
   - What's the [bot](loan application) bot
   - How do I use the [bot](loan application) bot
   - How does the [bot](news) bot work?
   - What is the [bot](news) bot?
-
   
 # bot entity
 ---

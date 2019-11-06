@@ -25,48 +25,67 @@
     }
   },
   "intents": {
-    "info": {
+    "help": {
       "utterances": [
         {
           "data": [
             {
-              "text": "What bots are there"
+              "text": "help bots"
             }
           ]
         },
         {
           "data": [
             {
-              "text": "Get bots"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Get the bots"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Show me bots"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Show me the "
+              "text": "help with "
             },
             {
               "entity": "bot",
               "slot_name": "bot",
-              "text": "apply"
+              "text": "news"
             },
             {
               "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What are bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is a bot?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about bots"
             }
           ]
         },
@@ -127,6 +146,86 @@
             },
             {
               "text": " bot?"
+            }
+          ]
+        }
+      ]
+    },
+    "info": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "show bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "all the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What bots are there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "apply"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
             }
           ]
         }

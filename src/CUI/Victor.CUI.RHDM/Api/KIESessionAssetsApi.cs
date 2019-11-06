@@ -227,7 +227,12 @@ namespace Victor.CUI.RHDM.KIE.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (containerId != null) localVarPathParams.Add("containerId", this.Configuration.ApiClient.ParameterToString(containerId)); // path parameter
-            if (body != null && body.GetType() != typeof(byte[]))
+            
+            if( body != null && body.GetType() == typeof(string))
+            {
+                localVarPostBody = body;
+            }
+            else if (body != null && body.GetType() != typeof(byte[]))
             {
                 localVarPostBody = this.Configuration.ApiClient.Serialize(body); // http body (model) parameter
             }

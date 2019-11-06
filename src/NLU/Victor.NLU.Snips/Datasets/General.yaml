@@ -19,7 +19,7 @@ utterances:
   - Hi Victor my name is [person](Mary)
   - Hi I'm [person](Ellen)
   - My name is [person](John)
-  - My name is [person](Henry) [person](Miller)
+  - My name is [person](Henry)
   - I am [person](David)
   - I'm [person](Mary)
   - name's [person](Ellen)
@@ -61,9 +61,8 @@ utterances:
   - What does this do
   - What is [feature](this)
   - What is [feature](nlu)
-  - What are [feature](bots)
-  - Tell me about [feature](bots)
-  - Talk about [feature](bots)
+  - Tell me about [feature](this)
+  - Talk about [feature](nlu)
   - How do I [feature](apply for a loan)
   - Can I [feature](send email)
   - How do I [feature](end this)
@@ -140,7 +139,6 @@ automatically_extensible: yes
 values:
 - this
 - services
-- bots
 - menu
 - debug
 - send email

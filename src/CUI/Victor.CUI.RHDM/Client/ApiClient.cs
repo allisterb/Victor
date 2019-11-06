@@ -67,6 +67,7 @@ namespace Victor.CUI.RHDM.KIE.Client
             Configuration = config ?? Victor.CUI.RHDM.KIE.Client.Configuration.Default;
 
             RestClient = new RestClient(Configuration.BasePath);
+            //RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(config.Username, config.Password);
         }
 
         /// <summary>
@@ -81,6 +82,7 @@ namespace Victor.CUI.RHDM.KIE.Client
 
             RestClient = new RestClient(basePath);
             Configuration = Client.Configuration.Default;
+            //RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator("adminUser", "awoLXq1!");
         }
 
         /// <summary>
@@ -175,7 +177,7 @@ namespace Victor.CUI.RHDM.KIE.Client
             // set user agent
             RestClient.UserAgent = Configuration.UserAgent;
 
-            RestClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true; ;
+            RestClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
             InterceptRequest(request);
             
             var response = RestClient.Execute(request);
