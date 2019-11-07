@@ -66,7 +66,7 @@ namespace Victor
             ThrowIfNotInitialized();
             GetIntents(input, out string[] scores, out string json, out string error);
             var entities = !string.IsNullOrEmpty(json) ? IntentEntity.FromJson(json) : Array.Empty<IntentEntity>();
-            return new Intents(scores, entities);
+            return new Intents(scores, entities, input);
         }
 
         public static void DownloadSnipsNativeLibIfMissing(string assemblyDirectory)

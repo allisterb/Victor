@@ -186,7 +186,7 @@
   },
   "slot_fillers": [
     {
-      "intent": "bots",
+      "intent": "action",
       "slot_filler_name": "slot_filler_0"
     },
     {
@@ -206,20 +206,12 @@
       "slot_filler_name": "slot_filler_4"
     },
     {
-      "intent": "helloUserName",
+      "intent": "help",
       "slot_filler_name": "slot_filler_5"
     },
     {
-      "intent": "help",
-      "slot_filler_name": "slot_filler_6"
-    },
-    {
       "intent": "info",
-      "slot_filler_name": "slot_filler_7"
-    },
-    {
-      "intent": "userName",
-      "slot_filler_name": "slot_filler_8"
+      "slot_filler_name": "slot_filler_6"
     }
   ]
 }

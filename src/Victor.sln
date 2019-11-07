@@ -34,9 +34,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Audio.Windows.WaveInRecorder", "Audio\Victor.Audio.Windows.WaveInRecorder\Victor.Audio.Windows.WaveInRecorder.csproj", "{761627B7-52DB-4953-A24E-2D2D6519240D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLU", "NLU", "{4D5197B4-E735-441A-8980-023FD450CDF8}"
-	ProjectSection(SolutionItems) = preProject
-		..\tests\Victor.Tests.EDDI\EDDITests.cs = ..\tests\Victor.Tests.EDDI\EDDITests.cs
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.NLU.Snips", "NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj", "{BCE43139-AA67-4A9A-B0DE-7BD20386754B}"
 EndProject

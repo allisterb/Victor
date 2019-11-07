@@ -7,11 +7,14 @@ namespace Victor
 {
     public class Intents
     {
-        public Intents(string[] scores, IntentEntity[] entities)
+        public Intents(string[] scores, IntentEntity[] entities, string input)
         {
             Scores = scores.Select(s => s.Split(':')).Select(s => new Tuple<string, double>(s[0], Double.Parse(s[1]))).ToArray();
             Entities = entities;
+            Input = input;
         }
+
+        public string Input { get; }
 
         public Tuple<string, double> Top => Scores.First();
 

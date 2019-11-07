@@ -193,7 +193,7 @@ namespace Victor
         static async Task CUI(CUIOptions o)
         {
             PrintLogo();
-            EDDIClient c = new EDDIClient(Config("CUI:EDDIServerUrl"), HttpClient);
+            EDDIClient c = new EDDIClient(Config("CUI_EDDI_SERVER_URL"), HttpClient);
             if (o.GetBots)
             {
                 Info("Querying for bots...");
@@ -224,7 +224,51 @@ namespace Victor
                     Exit(ExitResult.UNKNOWN_ERROR);
                 }
             }
-
+            else if(!string.IsNullOrEmpty(o.GetBot))
+            {
+                Info("Querying for bot {0}...", o.GetBot);
+                try
+                {
+                    var bot = await c.BotstoreBotsGetAsync(o.GetBot, o.Version);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(bot));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(bot));
+                    }
+                    else 
+                    {
+                        foreach(var p in bot.Packages)
+                        {
+                            System.Console.WriteLine("Package: {0}", p.Segments.Last());
+                        }
+                        
+                        if (bot.Channels != null)
+                        {
+                            foreach (var channel in bot.Channels)
+                            {
+                                System.Console.WriteLine("Channel: {0}", channel.Type);
+                            }
+                        }
+                        
+                        if (bot.GitBackupSettings != null && bot.GitBackupSettings.RepositoryUrl != null)
+                        {
+                            System.Console.WriteLine("Git repo: {0}", bot.GitBackupSettings.RepositoryUrl.ToString());
+                        }
+                        
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get bot {0}: {1}.", o.GetBot, eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving bot {0}.", o.GetBot);
+                    Exit(ExitResult.UNKNOWN_ERROR);
+                }
+            }
+        
             else if (!string.IsNullOrEmpty(o.ExportBot))
             {
                 try
@@ -724,7 +768,7 @@ namespace Victor
                 {
                     _signalBeep.WaitOne();
                     System.Console.Beep();
-                    Thread.Sleep(500);
+                    Thread.Sleep(800);
                 }
             }, 1);
             _beeperThread.Name = "Beeper";
@@ -765,7 +809,7 @@ namespace Victor
         #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Error((Exception)e.ExceptionObject, "Error occurred during operation. Victor CLI will shutdown.");
+            Error((Exception)e.ExceptionObject, "Unhandled error occurred during operation. Victor CLI will now shutdown.");
             Exit(ExitResult.UNHANDLED_EXCEPTION);
         }
         

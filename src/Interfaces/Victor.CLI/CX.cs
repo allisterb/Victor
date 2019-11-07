@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Diagnostics;
 
@@ -29,7 +29,7 @@ namespace Victor.CLI
                 {"MENU_BOTS", 0 }
             };
             Options = options;
-            Client = new EDDIClient("http://eddi-evals25-shared-7daa.apps.hackathon.rhmi.io", HttpClient);
+            Client = new EDDIClient(Config("CUI_EDDI_SERVER_URL"), HttpClient);
             GeneralNLU = new SnipsNLUEngine(Path.Combine("Engines", "general"));
             BotsNLU = new SnipsNLUEngine(Path.Combine("Engines", "bots"));
             Initialized = GeneralNLU.Initialized;
@@ -58,13 +58,15 @@ namespace Victor.CLI
 
         protected Stack<Tuple<DateTime, string>> Context { get; } = new Stack<Tuple<DateTime, string>>();
 
-        protected string[] Commands = { "help", "exit", "enable" };
-
         protected Dictionary<string, Action<object>> CommandHandlers { get; } = new Dictionary<string, Action<object>>();
 
         protected Dictionary<string, Action<int>> MenuHandlers { get; } = new Dictionary<string, Action<int>>();
 
         protected Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
+
+        protected Dictionary<string, List<object>> MenuItems { get; } = new Dictionary<string, List<object>>();
+
+        protected Dictionary<string, int> SelectedMenuItem = new Dictionary<string, int>();
         #endregion
 
         #region Methods
@@ -79,7 +81,7 @@ namespace Victor.CLI
             }
             
             WriteInfoLine("Welcome to Victor CX");
-            SetContext("Welcome");
+            SetContext("WELCOME");
             ReadLine.HistoryEnabled = true;
             if (Program.beeperOn) Program.StopBeeper();
             Prompt();
@@ -102,7 +104,7 @@ namespace Victor.CLI
                 {
                     if (NLUDebug)
                     {
-                        WriteInfoLine("Category: {0}, Intent: {1} Score: {2}.", "Bots", intents.Top.Item1, intents.Top.Item2);
+                        WriteInfoLine("Context: {0}, Category: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty(), "Bots", intents.Top.Item1, intents.Top.Item2);
                         foreach (var e in intents.Entities)
                         {
                             WriteInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value.ValueValue);
@@ -129,7 +131,7 @@ namespace Victor.CLI
                     {
                         if (NLUDebug)
                         {
-                            WriteInfoLine("Category: {0}, Intent: {1} Score: {2}.", "General", intents.Top.Item1, intents.Top.Item2);
+                            WriteInfoLine("Context: {0}, Category: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty(), "Bots", intents.Top.Item1, intents.Top.Item2);
                             foreach (var e in intents.Entities)
                             {
                                 WriteInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value.ValueValue);
@@ -177,20 +179,17 @@ namespace Victor.CLI
         }
 
         public void DispatchToMenuItem(string c, int i)
-        {
-            if (MenuHandlers.ContainsKey(c))
+        {            
+            if (i < 0 || i > MenuIndexes[c])
             {
-                if (i < 0 || i > MenuIndexes[c])
-                {
-                    WriteInfoLine("Enter a number between {1} and {0}.", 0, MenuIndexes[c]);
-                    return;
-                }
-                else
-                {
-                    Context.Pop();
-                    MenuHandlers[c].Invoke(i);
-                }
+                WriteInfoLine("Enter a number between {0} and {1}.", 1, MenuIndexes[c]);
+                return;
             }
+            else
+            {
+                Context.Pop();
+                MenuHandlers[c].Invoke(i);
+            }   
         }
 
         public void WriteInfoLine(string s) => Co.WriteLine(s, Color.PaleGoldenrod);
@@ -257,12 +256,15 @@ namespace Victor.CLI
         public void Help(Intents intents)
         {
             var feature = intents.Entities.Length > 0 ? intents.Entities.First().RawValue : null;
+            if (!string.IsNullOrEmpty(feature))
+            {
+                feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
+            }
             var context = Context.Count > 0 ? Context.Peek().Item2 : string.Empty;
             switch (feature)
             {
                 case null:
                 case "":
-                case "?":
                 case "this":
                     switch (context)
                     {
@@ -270,7 +272,10 @@ namespace Victor.CLI
                             WriteInfoLine("Victor CX is an auditory conversational user interface for interacting with an organisation\'s online services like product registration and on-boarding, product documentation, customer service and support.");
                             break;
                         case "MENU_BOTS":
-                            WriteInfoLine("Enter a number between {0} and {1} to select the bot you want to talk to.", 0, MenuIndexes["MENU_BOTS"]);
+                            WriteInfoLine("Enter a number between {0} and {1} to select the bot you want to talk to.", 1, MenuIndexes["MENU_BOTS"]);
+                            break;
+                        case "ITEM_BOTS":
+                            WriteInfoLine("Say {0} to talk to this bot, {1} to describe this bot, {2} back to go back to the previous menU.", "chat", "about", "back");
                             break;
                         default:
                             break;
@@ -354,10 +359,12 @@ namespace Victor.CLI
                     if (intents.Entities.Length == 0)
                     {
                         WriteInfoLine("I'll check what bots are available on the Victor server.");
+                        Program.StartBeeper();
                         var descriptors = Client.BotstoreBotsDescriptorsGetAsync(null, null, null).Result;
+                        Program.StopBeeper();
                         if (descriptors == null)
                         {
-                            WriteInfoLine("Sorry I couldn't get a proper response from the server.");
+                            WriteErrorLine("Sorry I couldn't get a proper response from the server.");
                         }
                         else if (descriptors.Count == 0)
                         {
@@ -373,9 +380,16 @@ namespace Victor.CLI
                             }
                             WriteInfoLine("You can now enter the number of the bot you want talk to.");
                             Context.PopIfNotEmpty();
-                            MenuIndexes["MENU_BOTS"] = descriptors.Count - 1;
+                            MenuIndexes["MENU_BOTS"] = descriptors.Count;
+                            MenuItems["MENU_BOTS"] = descriptors.Cast<object>().ToList();
                             SetContext("MENU_BOTS");
                         }
+                    }
+                    break;
+                case "action":
+                    if (intents.Input.ToLower().Contains("describe"))
+                    {
+                        DescribeCurrentBot();
                     }
                     break;
                 default:
@@ -385,7 +399,23 @@ namespace Victor.CLI
 
         public void GetBot(int i)
         {
-            WriteInfoLine("Get bot {0}.", i);
+            var bots = MenuItems["MENU_BOTS"].Cast<DocumentDescriptor>().ToList();
+            var bot = bots[i - 1];
+            SelectedMenuItem["MENU_BOTS"] = i;
+            SetContext("ITEM_BOTS");
+            WriteInfoLine("Bot {0}: {1}.", i, bot.Description);
+        }
+
+        public void DescribeCurrentBot()
+        {
+            if (Context.Peek().Item2 != "ITEM_BOTS")
+            {
+                WriteErrorLine("Sorry I don't know what you are doing.");
+                return;
+            }
+            var bots = MenuItems["MENU_BOTS"].Cast<DocumentDescriptor>().ToList();
+            var bot = bots.ElementAt(SelectedMenuItem["MENU_BOTS"]);
+            WriteInfoLine("Name: {0}: Description: {1} Id: {2}.", bot.Name, bot.Description, bot.ResourceId);
         }
         #endregion
 
@@ -404,6 +434,5 @@ namespace Victor.CLI
             }
         }
         #endregion
-
     }
 }

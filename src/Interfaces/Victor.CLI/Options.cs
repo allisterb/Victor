@@ -60,6 +60,9 @@ namespace Victor
         [Option("get-bots", Required = false, HelpText = "List the current chatbots on the EDDI server.")]
         public bool GetBots { get; set; }
 
+        [Option("get-bot", Required = false, HelpText = "Get the details of the bot with the speicified id.")]
+        public string GetBot { get; set; }
+
         [Option("export-bot", Required = false, HelpText = "Export a chatbot on the EDDI server.")]
         public string ExportBot { get; set; }
 

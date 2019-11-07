@@ -35,7 +35,20 @@ utterances:
   - How do I use the [bot](loan application) bot
   - How does the [bot](news) bot work?
   - What is the [bot](news) bot?
-  
+
+# action intent
+---
+type: intent
+name: action
+utterances:
+  - talk
+  - talk to this
+  - talk with this
+  - talk with bot
+  - describe
+  - describe bot
+  - describe this
+
 # bot entity
 ---
 type: entity

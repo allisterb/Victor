@@ -25,6 +25,59 @@
     }
   },
   "intents": {
+    "action": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "talk"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "talk to this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "talk with this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "talk with bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "describe"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "describe bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "describe this"
+            }
+          ]
+        }
+      ]
+    },
     "help": {
       "utterances": [
         {

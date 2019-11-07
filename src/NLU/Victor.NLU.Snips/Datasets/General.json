@@ -152,6 +152,18 @@
         {
           "data": [
             {
+              "text": "off "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "debug"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "disable "
             },
             {

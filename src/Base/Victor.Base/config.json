@@ -5,5 +5,5 @@
   "SnipsNLU:EngineDir": "Engines",
   "Mimic:Exe": "mimic.exe",
   "Mimic:Args": "",
-  "CUI:EDDIServerUrl": "http://eddi-evals25-shared-7daa.apps.hackathon.rhmi.io"
+  "CUI_EDDI_SERVER_URL": "http://eddi-evals25-shared-7daa.apps.hackathon.rhmi.io"
 }

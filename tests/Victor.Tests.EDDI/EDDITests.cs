@@ -9,7 +9,7 @@ namespace Victor.Tests
     {
         static HttpClient HttpClient = new HttpClient();
         static CancellationTokenSource CTS = new CancellationTokenSource();
-        protected EDDIClient EDDIClient = new EDDIClient(Api.Config("CUI:EDDIServerUrl"), HttpClient);
+        protected EDDIClient EDDIClient = new EDDIClient(Api.Config("CUI_EDDI_SERVER_URL"), HttpClient);
         public EDDITests() : base() { }
 
         [Fact]
