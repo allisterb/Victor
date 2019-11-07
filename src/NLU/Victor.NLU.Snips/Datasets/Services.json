@@ -1,0 +1,615 @@
+{
+  "entities": {
+    "bot": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "news"
+        },
+        {
+          "synonyms": [],
+          "value": "email"
+        },
+        {
+          "synonyms": [
+            "apply for a loan",
+            "apply for loan"
+          ],
+          "value": "loan application"
+        },
+        {
+          "synonyms": [],
+          "value": "calendar"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "openshift_objects": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "pods"
+        },
+        {
+          "synonyms": [],
+          "value": "build configs"
+        },
+        {
+          "synonyms": [],
+          "value": "deployment configs"
+        },
+        {
+          "synonyms": [],
+          "value": "routes"
+        },
+        {
+          "synonyms": [],
+          "value": "services"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "vish_module": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "openshift"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "bot_help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "help bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "news"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What are bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is a bot?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How does the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "news"
+            },
+            {
+              "text": " bot work?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "news"
+            },
+            {
+              "text": " bot?"
+            }
+          ]
+        }
+      ]
+    },
+    "bot_info": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "show bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "all the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What bots are there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "apply"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to talk to the "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "loan application"
+            },
+            {
+              "text": " bot"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to "
+            },
+            {
+              "entity": "bot",
+              "slot_name": "bot",
+              "text": "apply for a loan"
+            }
+          ]
+        }
+      ]
+    },
+    "vish_help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "What is vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help administer"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help administer computers"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help manage computers"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            },
+            {
+              "text": " module"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshit"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            },
+            {
+              "text": " module"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What are vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is a vish module?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's the "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            },
+            {
+              "text": " vish module"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use the vish "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            },
+            {
+              "text": " module"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I administer "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            },
+            {
+              "text": " openshift"
+            }
+          ]
+        }
+      ]
+    },
+    "vish_info": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "all the vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What vish modules are there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the vish modules"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            },
+            {
+              "text": " module"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "start vish "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "vish "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to manage "
+            },
+            {
+              "entity": "vish_module",
+              "slot_name": "vish_module",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "openshift "
+            },
+            {
+              "entity": "openshift_objects",
+              "slot_name": "openshift_objects",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "openshift "
+            },
+            {
+              "entity": "openshift_objects",
+              "slot_name": "openshift_objects",
+              "text": "build configs"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "openshift "
+            },
+            {
+              "entity": "openshift_objects",
+              "slot_name": "openshift_objects",
+              "text": "routes"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}

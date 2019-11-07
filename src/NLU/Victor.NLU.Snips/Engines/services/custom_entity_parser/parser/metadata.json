@@ -1,0 +1,16 @@
+{
+  "parsers_metadata": [
+    {
+      "entity_identifier": "bot",
+      "entity_parser": "parser_1"
+    },
+    {
+      "entity_identifier": "openshift_objects",
+      "entity_parser": "parser_2"
+    },
+    {
+      "entity_identifier": "vish_module",
+      "entity_parser": "parser_3"
+    }
+  ]
+}

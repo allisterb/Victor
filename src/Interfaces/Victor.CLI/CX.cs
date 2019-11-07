@@ -31,8 +31,8 @@ namespace Victor.CLI
             Options = options;
             Client = new EDDIClient(Config("CUI_EDDI_SERVER_URL"), HttpClient);
             GeneralNLU = new SnipsNLUEngine(Path.Combine("Engines", "general"));
-            BotsNLU = new SnipsNLUEngine(Path.Combine("Engines", "bots"));
-            Initialized = GeneralNLU.Initialized;
+            ServicesNLU = new SnipsNLUEngine(Path.Combine("Engines", "services"));
+            Initialized = GeneralNLU.Initialized && ServicesNLU.Initialized;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Victor.CLI
 
         protected SnipsNLUEngine GeneralNLU { get; }
 
-        protected SnipsNLUEngine BotsNLU { get; }
+        protected SnipsNLUEngine ServicesNLU { get; }
 
         protected EDDIClient Client { get;  }
         
@@ -99,7 +99,7 @@ namespace Victor.CLI
             }
             else
             {
-                var intents = BotsNLU.GetIntents(input);
+                var intents = ServicesNLU.GetIntents(input);
                 if (!intents.IsNone && intents.Top.Item2 >= 0.8)
                 {
                     if (NLUDebug)
@@ -113,9 +113,9 @@ namespace Victor.CLI
                     }
                     else 
                     {
-                        Bots(intents);
+                        Services(intents);
                     }
-                }
+                }  
                 else
                 {
                     intents = GeneralNLU.GetIntents(input);
@@ -351,11 +351,11 @@ namespace Victor.CLI
         #endregion
 
         #region Bots
-        public void Bots(Intents intents)
+        public void Services(Intents intents)
         {
             switch(intents.Top.Item1)
             {
-                case "info":
+                case "bot_info":
                     if (intents.Entities.Length == 0)
                     {
                         WriteInfoLine("I'll check what bots are available on the Victor server.");
@@ -385,16 +385,49 @@ namespace Victor.CLI
                             SetContext("MENU_BOTS");
                         }
                     }
-                    break;
-                case "action":
-                    if (intents.Input.ToLower().Contains("describe"))
+                    else
                     {
-                        DescribeCurrentBot();
+                        WriteInfoLine("bot info {0}.", intents.Entities.First().Value.ValueValue);
+                    }
+                    break;
+                case "bot_help":
+                    if (intents.Entities.Length == 0)
+                    {
+                        WriteInfoLine("bot help.");
+                    }
+                    else
+                    {
+                        WriteInfoLine("bot help {0}.", intents.Entities.First().Value.ValueValue);
+                    }
+                    break;
+                case "vish_info":
+                    if (intents.Entities.Length == 0)
+                    {
+                        WriteInfoLine("vish info.");
+                    }
+                    else
+                    {
+                        WriteInfoLine("info {0}.", intents.Entities.First().Value.ValueValue);
+                    }
+                    break;
+                case "vish_help":
+                    if (intents.Entities.Length == 0)
+                    {
+                        WriteInfoLine("vish help.");
+                    }
+                    else
+                    {
+                        WriteInfoLine(" help {0}.", intents.Entities.First().Value.ValueValue);
                     }
                     break;
                 default:
                     break;
             }
+        }
+
+        public void Vish(Intents intents)
+        {
+            WriteInfoLine("Vish");
         }
 
         public void GetBot(int i)
