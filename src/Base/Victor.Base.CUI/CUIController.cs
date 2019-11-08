@@ -38,6 +38,10 @@ namespace Victor
 
         public bool InputEnabled { get; set; }
 
+        public Intent LastIntent { get; set; }
+
+        public Action<Intent> LastAction { get; set; }
+
         #endregion
 
         #region Abstract methods
@@ -59,7 +63,8 @@ namespace Victor
         #endregion
 
         #region Methods
-        public void SetContext(string c) => Context.Push(new CUIContext(DateTime.Now, c));
+        public void SetContext(string c, Intent intent, Action<Intent> action) => Context.Push(new CUIContext(DateTime.Now, c, intent, action));
+        
         #endregion
     }
 }

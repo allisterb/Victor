@@ -73,7 +73,7 @@ namespace Victor
         public virtual bool HandleInput(DateTime time, string input)
         {
             ThrowIfNotInitialized();
-            if (Int32.TryParse(input, out int result) && Controller.Context.Peek().Label.StartsWith("MENU"))
+            if (Int32.TryParse(input, out int result) && Controller.Context.Peek().Label.StartsWith("MENU") && CanDispatchMenuSelection(Controller.Context.Peek()))
             {
                 return DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
       
@@ -82,10 +82,24 @@ namespace Victor
             {
                 return ParseIntent(Controller.Context.Peek(), time, input);
             }
-
         }
 
-        public virtual bool DispatchToMenuItem(CUIContext context, DateTime time, int i)
+        protected void DebugIntent(Intent intent)
+        {
+            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, this.Name, intent.Top.Label, intent.Top.Score);
+            foreach (var e in intent.Entities)
+            {
+                SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
+            }
+        }
+
+        protected bool CanDispatchMenuSelection(CUIContext context)
+        {
+            string label = context.Label.Replace("MENU_", "");
+            return MenuHandlers.ContainsKey(label);
+
+        }
+        protected virtual bool DispatchToMenuItem(CUIContext context, DateTime time, int i)
         {
             if (i < 0 || i > MenuIndexes[context.Label])
             {
@@ -100,7 +114,13 @@ namespace Victor
             }
         }
 
-        public abstract bool ParseIntent(CUIContext context, DateTime time, string input);
+        protected void DispatchIntent(Intent intent, Action<Intent> action)
+        {
+            action(intent);
+            Context.Peek().SetIntentAction(intent, action);
+        }
+
+        protected abstract bool ParseIntent(CUIContext context, DateTime time, string input);
         #endregion
     }
 }

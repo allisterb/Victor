@@ -13,16 +13,12 @@ namespace Victor.CLI
             Initialized = NLUEngine.Initialized;
         }
 
-        public override bool ParseIntent(CUIContext context, DateTime time, string input)
+        protected override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {
-                SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, this.Name, intent.Top.Label, intent.Top.Score);
-                foreach (var e in intent.Entities)
-                {
-                    SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
-                }
+                DebugIntent(intent);
                 if (intent.Top.Label == "enable")
                 {
                     Enable(intent);
@@ -33,7 +29,7 @@ namespace Victor.CLI
                 }
                 else if (intent.Top.Label == "exit")
                 {
-                    Exit();
+                    DispatchIntent(intent, Exit);
                 }
                 return true;
             }
@@ -46,13 +42,13 @@ namespace Victor.CLI
                 switch (intent.Top.Label)
                 {
                     case "exit":
-                        Exit();
+                        DispatchIntent(intent, Exit);
                         break;
                     case "help":
-                        Help(intent);
+                        DispatchIntent(intent, Help);
                         break;
                     case "hello":
-                        Hello(intent);
+                        DispatchIntent(intent, Hello);
                         break;
                     case "enable":
                         Enable(intent);
@@ -67,10 +63,10 @@ namespace Victor.CLI
             }
         }
 
-        #region Features
+        #region Functions
 
         #region General
-        public void Exit()
+        public void Exit(Intent intent)
         {
             SayInfoLine("Shutting down...");
             Program.Exit(ExitResult.SUCCESS);

@@ -61,7 +61,10 @@ namespace Victor.CLI
             InputEnabled = false;
             if (!ActivePackage.HandleInput(time, input))
             {
-                HomePackage.HandleInput(time, input);
+                if (!HomePackage.HandleInput(time, input))
+                {
+                    SayCouldNotUnderstand(input);
+                }
             }
             Prompt();
         }
@@ -110,6 +113,15 @@ namespace Victor.CLI
         {
             _signalBeep.Reset();
             beeperOn = false;
+        }
+
+        protected void SayCouldNotUnderstand(string input)
+        {
+            if (DebugEnabled)
+            {
+                SayErrorLine("Did not understand {0}.", input);
+            }
+            SayErrorLine("Sorry, I don't understand what you mean. Enter {0} to see the things you can do right now or {1} to get more help.", "info", "help");
         }
         #endregion
 
