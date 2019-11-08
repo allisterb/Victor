@@ -29,7 +29,7 @@ namespace Victor
 
         public CUIController Controller { get; }
 
-        public List<CUIPackage> SubPackages { get; }
+        public List<CUIPackage> SubPackages { get; } = new List<CUIPackage>();
 
         protected Dictionary<string, Action<object>> CommandHandlers { get; } = new Dictionary<string, Action<object>>();
 
@@ -46,11 +46,54 @@ namespace Victor
         #region Methods
         public Stack<CUIContext> Context => Controller.Context;
 
-        public void SayInfo(string template, params object[] args) => Controller.SayInfo(template, args);
+        public virtual bool HandleInput(DateTime time, string input)
+        {
+            ThrowIfNotInitialized();
+            if (Int32.TryParse(input, out int result) && Controller.Context.Peek().Label.StartsWith("MENU") && CanDispatchMenuSelection(Controller.Context.Peek()))
+            {
+                return DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
 
-        public void SayInfoLine(string template, params object[] args) => Controller.SayInfoLine(template, args);
+            }
+            else
+            {
+                return ParseIntent(Controller.Context.Peek(), time, input);
+            }
+        }
 
-        public void SayErrorLine(string template, params object[] args) => Controller.SayErrorLine(template, args);
+        public void DebugIntent(Intent intent)
+        {
+            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, this.Name, intent.Top.Label, intent.Top.Score);
+            foreach (var e in intent.Entities)
+            {
+                SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
+            }
+        }
+
+        public bool CanDispatchMenuSelection(CUIContext context)
+        {
+            string label = context.Label.Replace("MENU_", "");
+            return MenuHandlers.ContainsKey(label);
+
+        }
+        public virtual bool DispatchToMenuItem(CUIContext context, DateTime time, int i)
+        {
+            if (i < 0 || i > MenuIndexes[context.Label])
+            {
+                SayInfoLine("Enter a number between {0} and {1}.", 1, MenuIndexes[Context.Peek().Label]);
+                return true;
+            }
+            else
+            {
+                MenuHandlers[context.Label].Invoke(i);
+                return true;
+            }
+        }
+
+        public void DispatchIntent(Intent intent, Action<Intent> action)
+        {
+            action(intent);
+            Context.Peek().SetIntentAction(intent, action);
+        }
 
         public void DispatchToMenuItem(string c, int i)
         {
@@ -60,67 +103,24 @@ namespace Victor
                 return;
             }
             else
-            {
-                Context.Pop();
+            { 
                 MenuHandlers[c].Invoke(i);
             }
         }
 
+        protected void SayInfo(string template, params object[] args) => Controller.SayInfo(template, args);
+
+        protected void SayInfoLine(string template, params object[] args) => Controller.SayInfoLine(template, args);
+
+        protected void SayErrorLine(string template, params object[] args) => Controller.SayErrorLine("Error: " + template, args);
+
+
         #endregion
 
-        #region Abstract and Methods
+        #region Abstract methods
+        public abstract bool ParseIntent(CUIContext context, DateTime time, string input);
 
-        public virtual bool HandleInput(DateTime time, string input)
-        {
-            ThrowIfNotInitialized();
-            if (Int32.TryParse(input, out int result) && Controller.Context.Peek().Label.StartsWith("MENU") && CanDispatchMenuSelection(Controller.Context.Peek()))
-            {
-                return DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
-      
-            }
-            else
-            {
-                return ParseIntent(Controller.Context.Peek(), time, input);
-            }
-        }
-
-        protected void DebugIntent(Intent intent)
-        {
-            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, this.Name, intent.Top.Label, intent.Top.Score);
-            foreach (var e in intent.Entities)
-            {
-                SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
-            }
-        }
-
-        protected bool CanDispatchMenuSelection(CUIContext context)
-        {
-            string label = context.Label.Replace("MENU_", "");
-            return MenuHandlers.ContainsKey(label);
-
-        }
-        protected virtual bool DispatchToMenuItem(CUIContext context, DateTime time, int i)
-        {
-            if (i < 0 || i > MenuIndexes[context.Label])
-            {
-                SayInfoLine("Enter a number between {0} and {1}.", 1, MenuIndexes[Context.Peek().Label]);
-                return true;
-            }
-            else
-            {
-                Context.Pop();
-                MenuHandlers[context.Label].Invoke(i);
-                return true;
-            }
-        }
-
-        protected void DispatchIntent(Intent intent, Action<Intent> action)
-        {
-            action(intent);
-            Context.Peek().SetIntentAction(intent, action);
-        }
-
-        protected abstract bool ParseIntent(CUIContext context, DateTime time, string input);
+        public abstract void Menu(Intent intent);
         #endregion
     }
 }

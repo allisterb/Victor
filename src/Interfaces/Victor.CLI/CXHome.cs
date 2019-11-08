@@ -8,13 +8,27 @@ namespace Victor.CLI
 {
     public class CXHome : CUIPackage
     {
+        #region Constructors
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
-            MenuHandlers.Add("MENU_PACKAGE", GetMenuPackageItem);
+            MenuHandlers.Add("PACKAGES", GetMenuPackageItem);
+            MenuIndexes.Add("PACKAGES", 1);
             Initialized = NLUEngine.Initialized;
+            if (!Initialized)
+            {
+                SayErrorLine("Package not initialized. Exiting.");
+                Program.Exit(ExitResult.UNKNOWN_ERROR);
+            }
+        }
+        #endregion
+
+        #region Overriden methods
+        public override void Menu(Intent intent)
+        {
+            SayInfoLine("1. Vish");
         }
 
-        protected override bool ParseIntent(CUIContext context, DateTime time, string input)
+        public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
@@ -27,6 +41,10 @@ namespace Victor.CLI
                 else if (intent.Top.Label == "disable")
                 {
                     Disable(intent);
+                }
+                else if (intent.Top.Label == "menu")
+                {
+                    DispatchIntent(intent, Menu);
                 }
                 else if (intent.Top.Label == "exit")
                 {
@@ -63,6 +81,7 @@ namespace Victor.CLI
                 return true;
             }
         }
+        #endregion
 
         #region Functions
 
@@ -171,8 +190,24 @@ namespace Victor.CLI
             }
         }
 
-        protected void GetMenuPackageItem(int i) => throw new NotImplementedException();
         #endregion
         #endregion
+
+        protected void GetMenuPackageItem(int i)
+        {
+            switch(i - 1)
+            {
+                case 0:
+                    if (!SubPackages.Any(p => p.Name == "Vish"))
+                    {
+                        SubPackages.Add(new Vish(this.Controller, new SnipsNLUEngine(Path.Combine("Engines", "vish"))));
+                    }
+                    SubPackages.Single(p => p.Name == "Vish").Menu(null);
+                    break;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+            SubPackages[i - 1].DispatchIntent(null, SubPackages[i - 1].Menu);
+        }
     }
 }

@@ -63,7 +63,7 @@ namespace Victor
         #endregion
 
         #region Methods
-        public void SetContext(string c, Intent intent, Action<Intent> action) => Context.Push(new CUIContext(DateTime.Now, c, intent, action));
+        public void SetContext(string c, Intent intent = null, Action<Intent> action = null) => Context.Push(new CUIContext(DateTime.Now, c, intent, action));
         
         #endregion
     }

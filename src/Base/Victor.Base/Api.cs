@@ -27,7 +27,7 @@ namespace Victor
                     .AddEnvironmentVariables()
                     .Build();
             }
-            else if (Assembly.GetEntryAssembly().GetName().Name == "Victor.CLI")
+            else if (Assembly.GetEntryAssembly().GetName().Name == "Victor.CLI" && Environment.GetEnvironmentVariable("USERNAME") != "Allister")
             {
                 Configuration = new ConfigurationBuilder()
                 .AddJsonFile("config.json", optional: true)

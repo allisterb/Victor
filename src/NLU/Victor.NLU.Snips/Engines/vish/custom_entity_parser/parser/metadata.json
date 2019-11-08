@@ -1,0 +1,12 @@
+{
+  "parsers_metadata": [
+    {
+      "entity_identifier": "openshift_object",
+      "entity_parser": "parser_1"
+    },
+    {
+      "entity_identifier": "package",
+      "entity_parser": "parser_2"
+    }
+  ]
+}

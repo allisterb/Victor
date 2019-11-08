@@ -1,0 +1,363 @@
+{
+  "entities": {
+    "openshift_object": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "pods"
+          ],
+          "value": "pod"
+        },
+        {
+          "synonyms": [
+            "build configs"
+          ],
+          "value": "build config"
+        },
+        {
+          "synonyms": [
+            "deployment configs"
+          ],
+          "value": "deployment config"
+        },
+        {
+          "synonyms": [
+            "routes"
+          ],
+          "value": "route"
+        },
+        {
+          "synonyms": [
+            "services"
+          ],
+          "value": "service"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "package": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "openshift"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "What is vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help administer"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help administer computers"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help manage computers"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshit"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What are vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is a vish package?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's the "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            },
+            {
+              "text": " vish package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use the vish "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I administer "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            },
+            {
+              "text": " openshift"
+            }
+          ]
+        }
+      ]
+    },
+    "info": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "all the vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What vish packages are there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Get the vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the vish packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Show me the "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "start vish "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "vish "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to manage "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "openshift "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "openshift "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "build configs"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "openshift "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "routes"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}

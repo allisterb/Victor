@@ -66,8 +66,8 @@ utterances:
   - Talk about [feature](nlu)
   - How do I [package](apply for a loan)
   - Can I [package](send email)
-  - How do I [feature](end this)
-  - How can I [feature](exit the program)
+  - How do I [function](end this)
+  - How can I [function](exit the program)
   - How do I use [package](vish)
   - How does the [package](calendar) work
   - I want to [function](exit) the program
@@ -155,8 +155,10 @@ values:
 - Joe
 - Harry
 - Shelly
-- EllenCarrie]
-- [Sean, Tim, Hubert]
+- Carrie
+- Sean 
+- Tim 
+- Hubert
 
 # feature entity
 ---
@@ -171,6 +173,17 @@ values:
 - debug
 - [nlu, nlp]
 - asr
+
+# function entity
+---
+type: entity
+name: function
+automatically_extensible: no
+values:
+- this
+- [exit, end, end the program, end this]
+- debug
+
 
 # package entity
 ---

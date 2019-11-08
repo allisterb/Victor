@@ -54,15 +54,15 @@ namespace Victor.CUI.Vish.OpenShift.Models
 
     public partial class Builds
     {
-        public static Builds FromJson(string json) => JsonConvert.DeserializeObject<Builds>(json, Victor.CUI.Vish.OpenShift.Models.Converter.Settings);
+        public static Builds FromJson(string json) => JsonConvert.DeserializeObject<Builds>(json, Victor.CUI.Vish.OpenShift.Models.BuildsConverter.Settings);
     }
 
-    public static class Serialize
+    public static class BuildsSerialize
     {
-        public static string ToJson(this Builds self) => JsonConvert.SerializeObject(self, Victor.CUI.Vish.OpenShift.Models.Converter.Settings);
+        public static string ToJson(this Builds self) => JsonConvert.SerializeObject(self, Victor.CUI.Vish.OpenShift.Models.BuildsConverter.Settings);
     }
 
-    internal static class Converter
+    internal static class BuildsConverter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {

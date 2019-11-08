@@ -58,15 +58,15 @@ namespace Victor.CUI.Vish.OpenShift.Models
 
     public partial class Resources
     {
-        public static Resources FromJson(string json) => JsonConvert.DeserializeObject<Resources>(json, Victor.CUI.Vish.OpenShift.Models.Converter.Settings);
+        public static Resources FromJson(string json) => JsonConvert.DeserializeObject<Resources>(json, Victor.CUI.Vish.OpenShift.Models.BuildsConverter.Settings);
     }
 
-    public static class Serialize
+    public static class ResourcesSerialize
     {
-        public static string ToJson(this Resources self) => JsonConvert.SerializeObject(self, Victor.CUI.Vish.OpenShift.Models.Converter.Settings);
+        public static string ToJson(this Resources self) => JsonConvert.SerializeObject(self, Victor.CUI.Vish.OpenShift.Models.BuildsConverter.Settings);
     }
 
-    internal static class Converter
+    internal static class ResourcesConverter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
