@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ASR\Victor.ASR.Julius\Victor.ASR.Julius.csproj" />
+    <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
     <ProjectReference Include="..\..\CUI\Victor.CUI.EDDI\Victor.CUI.EDDI.csproj" />
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />

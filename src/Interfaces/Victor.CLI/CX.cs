@@ -99,7 +99,7 @@ namespace Victor.CLI
             }
             else
             {
-                var intents = ServicesNLU.GetIntents(input);
+                var intents = ServicesNLU.GetSnipsIntents(input);
                 if (!intents.IsNone && intents.Top.Item2 >= 0.8)
                 {
                     if (NLUDebug)
@@ -118,7 +118,7 @@ namespace Victor.CLI
                 }  
                 else
                 {
-                    intents = GeneralNLU.GetIntents(input);
+                    intents = GeneralNLU.GetSnipsIntents(input);
                     if (intents.IsNone)
                     {
                         WriteInfoLine("Sorry I don't know what you mean. Type {0} to get a list of things you can do.", "help");
@@ -247,13 +247,13 @@ namespace Victor.CLI
             Program.Exit(ExitResult.SUCCESS);
         }
 
-        public void Hello(Intents intents)
+        public void Hello(SnipsIntents intents)
         {
             var name = intents.Entities.Length > 0 ? intents.Entities.First().Value.ValueValue : "";
             WriteInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
         }
 
-        public void Help(Intents intents)
+        public void Help(SnipsIntents intents)
         {
             var feature = intents.Entities.Length > 0 ? intents.Entities.First().RawValue : null;
             if (!string.IsNullOrEmpty(feature))
@@ -292,7 +292,7 @@ namespace Victor.CLI
             
         }
 
-        public void Enable(Intents intents)
+        public void Enable(SnipsIntents intents)
         {
             if (intents.Entities.Length == 0)
             {
@@ -321,7 +321,7 @@ namespace Victor.CLI
             }
         }
 
-        public void Disable(Intents intents)
+        public void Disable(SnipsIntents intents)
         {
             if (intents.Entities.Length == 0)
             {
@@ -351,7 +351,7 @@ namespace Victor.CLI
         #endregion
 
         #region Bots
-        public void Services(Intents intents)
+        public void Services(SnipsIntents intents)
         {
             switch(intents.Top.Item1)
             {
@@ -425,7 +425,7 @@ namespace Victor.CLI
             }
         }
 
-        public void Vish(Intents intents)
+        public void Vish(SnipsIntents intents)
         {
             WriteInfoLine("Vish");
         }

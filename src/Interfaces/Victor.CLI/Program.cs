@@ -49,7 +49,7 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
-            EnableBeeper();
+            //EnableBeeper();
             if (args.Contains("--debug"))
             {
                 PrintLogo();
@@ -141,8 +141,9 @@ namespace Victor
             })
             .WithParsed<CXOptions>(o =>
             {
-                StartBeeper();
-                new CX(o).Start();
+                //StartBeeper();
+                //new CX(o).Start();
+                new CX2(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
 
@@ -167,7 +168,7 @@ namespace Victor
         
             s.Recognized += (text) =>
             {
-                engine.GetIntents(text, out string[] intents, out string json, out string error);
+                engine.GetSnipsIntents(text, out string[] intents, out string json, out string error);
                 if (intents.Length > 0)
                 {
                     Info("Intents: {0}", intents);

@@ -12,7 +12,7 @@ using Victor.SnipsNLU;
 
 namespace Victor
 {
-    public class SnipsNLUEngine: Api
+    public class SnipsNLUEngine : NLUEngine
     {
         #region Constructors
         public SnipsNLUEngine(string engineDir, CancellationToken ct) : base(ct)
@@ -34,17 +34,17 @@ namespace Victor
             }
         }
 
-        public SnipsNLUEngine(string engineDir) : this(engineDir, Cts.Token) { }
+        public SnipsNLUEngine(string engineDir) : this(engineDir, Ct) { }
         #endregion
 
         #region Properties
-        public IntPtr EnginePtr { get; } 
+        public IntPtr EnginePtr { get; }
 
         public string EngineDir { get; }
         #endregion
 
         #region Methods
-        public void GetIntents(string input, out string[] intents, out string slots_json, out string error)
+        public void GetSnipsIntents(string input, out string[] intents, out string slots_json, out string error)
         {
             ThrowIfNotInitialized();
             error = "";
@@ -61,12 +61,19 @@ namespace Victor
             }
         }
 
-        public Intents GetIntents(string input)
+        public SnipsIntents GetSnipsIntents(string input)
         {
             ThrowIfNotInitialized();
-            GetIntents(input, out string[] scores, out string json, out string error);
-            var entities = !string.IsNullOrEmpty(json) ? IntentEntity.FromJson(json) : Array.Empty<IntentEntity>();
-            return new Intents(scores, entities, input);
+            GetSnipsIntents(input, out string[] scores, out string json, out string error);
+            var entities = !string.IsNullOrEmpty(json) ? SnipsIntentEntity.FromJson(json) : Array.Empty<SnipsIntentEntity>();
+            return new SnipsIntents(scores, entities, input);
+        }
+
+        public override Intent GetIntent(string input)
+        {
+            var snipsIntents = GetSnipsIntents(input);
+            return new Intent(input, snipsIntents.Scores.Select(s => new IntentScore(s.Item1, s.Item2)),
+                snipsIntents.Entities.Select(e => new IntentEntity(e.RawValue, e.Value.ValueValue, e.Alternatives, e.Entity, e.Value.Kind, e.SlotName)));
         }
 
         public static void DownloadSnipsNativeLibIfMissing(string assemblyDirectory)

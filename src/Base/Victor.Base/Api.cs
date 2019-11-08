@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -118,6 +119,17 @@ namespace Victor
         public static void Error(Exception ex, string messageTemplate, params object[] args) => Logger.Error(ex, messageTemplate, args);
 
         public static Logger.Op Begin(string messageTemplate, params object[] args) => Logger.Begin(messageTemplate, args);
+
+        public static void SetPropsFromDict<T>(T instance, Dictionary<string, object> p)
+        {
+            foreach (PropertyInfo prop in typeof(T).GetProperties())
+            {
+                if (p.ContainsKey(prop.Name) && prop.PropertyType == p[prop.Name].GetType())
+                {
+                    prop.SetValue(instance, p[prop.Name]);
+                }
+            }
+        }
 
         public string CalculateMD5Hash(string input)
         {

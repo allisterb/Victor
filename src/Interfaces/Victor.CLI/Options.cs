@@ -37,7 +37,7 @@ namespace Victor
     }
 
     [Verb("cui", HelpText = "Administer the CUI features of Victor (admin only.)")]
-    class CUIOptions : Options
+    public class CUIOptions : Options
     {
         [Option('v', "version", Required = false, Default = 1, HelpText = "Set the version of the object to be retrieved.")]
         public int Version { get; set; }

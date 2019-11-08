@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
   </ItemGroup>
 

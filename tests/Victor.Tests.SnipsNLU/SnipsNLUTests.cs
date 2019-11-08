@@ -17,7 +17,7 @@ namespace Victor.Tests
         public void CanRecognizeTestIntent()
         {
             var engine = new SnipsNLUEngine(Path.Combine("Engines", "beverage"));
-            engine.GetIntents("Make me two cups of coffee.", out string[] intents, out string json, out string error);
+            engine.GetSnipsIntents("Make me two cups of coffee.", out string[] intents, out string json, out string error);
             Assert.NotEmpty(intents);
 
         }
