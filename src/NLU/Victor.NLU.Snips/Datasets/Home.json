@@ -5,7 +5,39 @@
       "data": [
         {
           "synonyms": [],
-          "value": "vish"
+          "value": "this"
+        },
+        {
+          "synonyms": [
+            "end this"
+          ],
+          "value": "end"
+        },
+        {
+          "synonyms": [
+            "services"
+          ],
+          "value": "packages"
+        },
+        {
+          "synonyms": [
+            "menus"
+          ],
+          "value": "menu"
+        },
+        {
+          "synonyms": [],
+          "value": "debug"
+        },
+        {
+          "synonyms": [
+            "nlp"
+          ],
+          "value": "nlu"
+        },
+        {
+          "synonyms": [],
+          "value": "asr"
         }
       ],
       "matching_strictness": 1.0,
@@ -17,9 +49,35 @@
       "matching_strictness": 1.0,
       "use_synonyms": true
     },
-    "module": {
-      "automatically_extensible": true,
-      "data": [],
+    "package": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "vish"
+        },
+        {
+          "synonyms": [
+            "send email",
+            "send an email",
+            "send emails"
+          ],
+          "value": "email"
+        },
+        {
+          "synonyms": [
+            "apply for a loan",
+            "apply for loan",
+            "apply for loan",
+            "get a loan"
+          ],
+          "value": "loan"
+        },
+        {
+          "synonyms": [],
+          "value": "github"
+        }
+      ],
       "matching_strictness": 1.0,
       "use_synonyms": true
     },
@@ -39,11 +97,16 @@
           "value": "Marge"
         },
         {
-          "synonyms": [
-            "Marvin",
-            "David"
-          ],
+          "synonyms": [],
           "value": "Michael"
+        },
+        {
+          "synonyms": [],
+          "value": "Marvin"
+        },
+        {
+          "synonyms": [],
+          "value": "David"
         },
         {
           "synonyms": [
@@ -197,7 +260,7 @@
         {
           "data": [
             {
-              "text": "disabke "
+              "text": "disable "
             },
             {
               "entity": "feature",
@@ -586,6 +649,13 @@
         {
           "data": [
             {
+              "text": "I want to go"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "I'm leaving"
             }
           ]
@@ -829,7 +899,7 @@
             {
               "entity": "feature",
               "slot_name": "feature",
-              "text": "bots"
+              "text": "packages"
             }
           ]
         },
@@ -913,8 +983,8 @@
               "text": "How do I "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "apply for a loan"
             }
           ]
@@ -925,8 +995,8 @@
               "text": "Can I "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "send email"
             }
           ]
@@ -961,8 +1031,8 @@
               "text": "How do I use "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "vish"
             }
           ]
@@ -973,8 +1043,8 @@
               "text": "How does the "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "calendar"
             },
             {
@@ -1000,11 +1070,23 @@
         {
           "data": [
             {
+              "text": "What is "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "help "
             },
             {
-              "entity": "module",
-              "slot_name": "module",
+              "entity": "package",
+              "slot_name": "package",
               "text": "vish"
             }
           ]
@@ -1015,8 +1097,8 @@
               "text": "help on "
             },
             {
-              "entity": "module",
-              "slot_name": "module",
+              "entity": "package",
+              "slot_name": "package",
               "text": "github"
             }
           ]
@@ -1029,7 +1111,19 @@
             {
               "entity": "feature",
               "slot_name": "feature",
-              "text": "bots"
+              "text": "packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help me with "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "packages"
             }
           ]
         },
@@ -1048,14 +1142,27 @@
         {
           "data": [
             {
-              "text": "How do I use this"
+              "text": "How do I use "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
             }
           ]
         },
         {
           "data": [
             {
-              "text": "What does this do"
+              "text": "What does "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            },
+            {
+              "text": " do"
             }
           ]
         },
@@ -1125,8 +1232,8 @@
               "text": "Can I "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "send email"
             }
           ]
@@ -1164,8 +1271,8 @@
               "text": "How do I use "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "email"
             }
           ]
@@ -1176,8 +1283,8 @@
               "text": "How does the "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "calendar"
             },
             {

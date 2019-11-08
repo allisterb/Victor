@@ -41,6 +41,7 @@ utterances:
   - end
   - I want to quit
   - I want to leave
+  - I want to go
   - I'm leaving
   - bye bye
 
@@ -55,7 +56,7 @@ utterances:
   - help
   - help [feature](nlp)
   - help on [feature](menu)
-  - help me on [feature](bots)
+  - help me on [feature](packages)
   - What's [feature](this)
   - How do I use this
   - What does this do
@@ -63,31 +64,32 @@ utterances:
   - What is [feature](nlu)
   - Tell me about [feature](this)
   - Talk about [feature](nlu)
-  - How do I [feature](apply for a loan)
-  - Can I [feature](send email)
+  - How do I [package](apply for a loan)
+  - Can I [package](send email)
   - How do I [feature](end this)
   - How can I [feature](exit the program)
-  - How do I use [feature](vish)
-  - How does the [feature](calendar) work
+  - How do I use [package](vish)
+  - How does the [package](calendar) work
   - I want to [function](exit) the program
-  
-  
-  - help [module](vish)
-  - help on [module](github)
-  - help me on [feature](bots)
+   
+  - What is [package](vish)
+  - help [package](vish)
+  - help on [package](github)
+  - help me on [feature](packages)
+  - help me with [feature](packages)
   - What's [feature](this)
-  - How do I use this
-  - What does this do
+  - How do I use [feature](this)
+  - What does [feature](this) do
   - What is [feature](this)
   - What is [feature](nlu)
   - Tell me about [feature](this)
   - Talk about [feature](nlu)
-  - How do I [feature](apply for a loan)
-  - Can I [feature](send email)
+  - How do I [package](apply for a loan)
+  - Can I [package](send email)
   - How do I [feature](end this)
   - How can I [feature](exit) the program
-  - How do I use [feature](email)
-  - How does the [feature](calendar) work
+  - How do I use [package](email)
+  - How does the [package](calendar) work
   
 # enable intent
 ---
@@ -129,7 +131,7 @@ utterances:
   - turn [feature](asr) off
   - turn [feature](debug) off
   - turn [feature](asr) off please
-  - disabke [feature](debug) now
+  - disable [feature](debug) now
   - I want [feature](asr) off now
   - I don't want [feature](asr) now
   - I want to turn off [feature](debug) now
@@ -146,32 +148,38 @@ values:
 - John
 - Allister
 - Marge
-- [Michael, Marvin, David]
-- [Luis, Joe, Harry]
-- [Shelly, Ellen, Carrie]
+- Michael
+- Marvin 
+- David
+- Luis
+- Joe
+- Harry
+- Shelly
+- EllenCarrie]
 - [Sean, Tim, Hubert]
 
 # feature entity
 ---
 type: entity
 name: feature
-automatically_extensible: yes
+automatically_extensible: no
 values:
 - this
-- services
-- menu
+- [end, end this]
+- [packages, services]
+- [menu, menus]
 - debug
-- send email
-- nlp
-- nlu
-- debug
+- [nlu, nlp]
 - asr
-- apply for a loan
 
-# module entity
+# package entity
 ---
 type: entity
-name: feature
+name: package
 automatically_extensible: no
 values:
 - vish
+- [email, send email, send an email, send emails]
+- [calendar, calendars
+- [loan, apply for a loan, apply for loan, apply for loan, get a loan]
+- github

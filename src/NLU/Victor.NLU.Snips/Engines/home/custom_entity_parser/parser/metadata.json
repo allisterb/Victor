@@ -9,7 +9,7 @@
       "entity_parser": "parser_2"
     },
     {
-      "entity_identifier": "module",
+      "entity_identifier": "package",
       "entity_parser": "parser_3"
     },
     {

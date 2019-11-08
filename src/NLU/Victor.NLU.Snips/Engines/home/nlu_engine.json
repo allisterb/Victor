@@ -203,8 +203,8 @@
       "function": {
         "automatically_extensible": true
       },
-      "module": {
-        "automatically_extensible": true
+      "package": {
+        "automatically_extensible": false
       },
       "person": {
         "automatically_extensible": true
@@ -225,7 +225,7 @@
       "help": {
         "feature": "feature",
         "function": "function",
-        "module": "module"
+        "package": "package"
       }
     }
   },

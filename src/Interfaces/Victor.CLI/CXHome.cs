@@ -10,6 +10,7 @@ namespace Victor.CLI
     {
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
+            MenuHandlers.Add("MENU_PACKAGE", GetMenuPackageItem);
             Initialized = NLUEngine.Initialized;
         }
 
@@ -76,13 +77,14 @@ namespace Victor.CLI
             Program.Exit(ExitResult.SUCCESS);
         }
 
-        public void Hello(Intent intent)
+        protected void Hello(Intent intent)
         {
             var name = intent.Entities.Length > 0 ? intent.Entities.First().Value : "";
             SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
+            SayInfoLine("Enter help to see the help pagaes, packages to see available packages.");
         }
 
-        public void Help(Intent intent)
+        protected void Help(Intent intent)
         {
             var feature = intent.Entities.Length > 0 ? intent.Entities.First().Value : null;
             if (!string.IsNullOrEmpty(feature))
@@ -116,7 +118,7 @@ namespace Victor.CLI
 
         }
 
-        public void Enable(Intent intent)
+        protected void Enable(Intent intent)
         {
             if (intent.Entities.Length == 0)
             {
@@ -130,12 +132,12 @@ namespace Victor.CLI
                         if (!Controller.DebugEnabled)
                         {
                             Controller.DebugEnabled = true;
-                            SayInfoLine("NLU debug enabled. NLU information will be output and commands won't be executed.");
+                            SayInfoLine("Debug enabled. NLU information will be output and commands won't be executed.");
                             break;
                         }
                         else
                         {
-                            SayErrorLine("NLU debug is already enabled.");
+                            SayErrorLine("Debug is already enabled.");
                         }
                         break;
                     default:
@@ -145,7 +147,7 @@ namespace Victor.CLI
             }
         }
 
-        public void Disable(Intent intent)
+        protected void Disable(Intent intent)
         {
             if (intent.Entities.Length == 0)
             {
@@ -159,11 +161,11 @@ namespace Victor.CLI
                         if (Controller.DebugEnabled)
                         {
                             Controller.DebugEnabled = false;
-                            SayInfoLine("NLU debug disabled. Commands will be executed.");
+                            SayInfoLine("Debug disabled. Commands will be executed.");
                         }
                         else
                         {
-                            SayErrorLine("NLU debug is not enabled.");
+                            SayErrorLine("Debug is not enabled.");
                         }
                         break;
                     default:
@@ -172,6 +174,8 @@ namespace Victor.CLI
                 }
             }
         }
+
+        protected void GetMenuPackageItem(int i) => throw new NotImplementedException();
         #endregion
         #endregion
     }
