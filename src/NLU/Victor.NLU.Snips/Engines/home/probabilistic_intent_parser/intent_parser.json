@@ -204,6 +204,10 @@
     {
       "intent": "help",
       "slot_filler_name": "slot_filler_4"
+    },
+    {
+      "intent": "menu",
+      "slot_filler_name": "slot_filler_5"
     }
   ]
 }

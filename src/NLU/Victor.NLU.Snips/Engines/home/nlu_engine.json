@@ -201,7 +201,7 @@
         "automatically_extensible": false
       },
       "function": {
-        "automatically_extensible": true
+        "automatically_extensible": false
       },
       "package": {
         "automatically_extensible": false
@@ -213,10 +213,12 @@
     "language_code": "en",
     "slot_name_mappings": {
       "disable": {
-        "feature": "feature"
+        "feature": "feature",
+        "function": "function"
       },
       "enable": {
-        "feature": "feature"
+        "feature": "feature",
+        "function": "function"
       },
       "exit": {},
       "hello": {
@@ -226,7 +228,8 @@
         "feature": "feature",
         "function": "function",
         "package": "package"
-      }
+      },
+      "menu": {}
     }
   },
   "intent_parsers": [

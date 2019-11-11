@@ -54,6 +54,7 @@ namespace Victor
         #region Methods
         public override void Menu(Intent intent)
         {
+            SayInfoLine("Welcome to the Voice Interactive Shell. Select a package to use.");
             SayInfoLine("1. ", "RedHat OpenShift");
             
             Controller.SetContext("MENU_VISH_OPENSHIFT");

@@ -11,12 +11,12 @@ namespace Victor.CLI
         #region Constructors
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
-            MenuHandlers.Add("PACKAGES", GetMenuPackageItem);
+            MenuHandlers.Add("PACKAGES", GetPackageMenuItem);
             MenuIndexes.Add("PACKAGES", 1);
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
-                SayErrorLine("Package not initialized. Exiting.");
+                SayErrorLine("NLU engine for package {0} did not initialize. Exiting.", this.Name);
                 Program.Exit(ExitResult.UNKNOWN_ERROR);
             }
         }
@@ -25,6 +25,8 @@ namespace Victor.CLI
         #region Overriden methods
         public override void Menu(Intent intent)
         {
+            Controller.SetContext("MENU_PACKAGES");
+            SayInfoLine("Select a package to use.");
             SayInfoLine("1. Vish");
         }
 
@@ -34,25 +36,9 @@ namespace Victor.CLI
             if (Controller.DebugEnabled)
             {
                 DebugIntent(intent);
-                if (intent.Top.Label == "enable")
-                {
-                    Enable(intent);
-                }
-                else if (intent.Top.Label == "disable")
-                {
-                    Disable(intent);
-                }
-                else if (intent.Top.Label == "menu")
-                {
-                    DispatchIntent(intent, Menu);
-                }
-                else if (intent.Top.Label == "exit")
-                {
-                    DispatchIntent(intent, Exit);
-                }
-                return true;
             }
-            else if (intent.Top.Score < 0.8)
+            
+            if (intent.Top.Score < 0.8)
             {
                 return false;
             }
@@ -74,6 +60,9 @@ namespace Victor.CLI
                         break;
                     case "disable":
                         Disable(intent);
+                        break;
+                    case "menu":
+                        DispatchIntent(intent, Menu);
                         break;
                     default:
                         break;
@@ -101,7 +90,9 @@ namespace Victor.CLI
 
         protected void Help(Intent intent)
         {
-            var feature = intent.Entities.Length > 0 ? intent.Entities.First().Value : null;
+            var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.Kind == "feature")?.Value : null;
+            var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.Kind == "package")?.Value : null;
+            var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.Kind == "function")?.Value : null;
             if (!string.IsNullOrEmpty(feature))
             {
                 feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
@@ -147,7 +138,7 @@ namespace Victor.CLI
                         if (!Controller.DebugEnabled)
                         {
                             Controller.DebugEnabled = true;
-                            SayInfoLine("Debug enabled. NLU information will be output and commands won't be executed.");
+                            SayInfoLine("Debug enabled.");
                             break;
                         }
                         else
@@ -193,21 +184,24 @@ namespace Victor.CLI
         #endregion
         #endregion
 
-        protected void GetMenuPackageItem(int i)
+        protected void GetPackageMenuItem(int i)
         {
             switch(i - 1)
             {
                 case 0:
                     if (!SubPackages.Any(p => p.Name == "Vish"))
                     {
+                        SayInfoLine("Loading Vish package...");
+                        Controller.StartBeeper();
                         SubPackages.Add(new Vish(this.Controller, new SnipsNLUEngine(Path.Combine("Engines", "vish"))));
+                        Controller.StopBeeper();
                     }
-                    SubPackages.Single(p => p.Name == "Vish").Menu(null);
+                    
+                    DispatchIntent(null, SubPackages.Single(p => p.Name == "Vish").Menu);
                     break;
                 default:
                     throw new IndexOutOfRangeException();
             }
-            SubPackages[i - 1].DispatchIntent(null, SubPackages[i - 1].Menu);
         }
     }
 }

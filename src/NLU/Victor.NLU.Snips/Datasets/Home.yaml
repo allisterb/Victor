@@ -55,6 +55,7 @@ slots:
 utterances:
   - help
   - help [feature](nlp)
+  - help [function](debug)
   - help on [feature](menu)
   - help me on [feature](packages)
   - What's [feature](this)
@@ -99,20 +100,20 @@ slots:
   - name: feature
     entity: feature
 utterances:
-  - enable [feature](debug)
-  - enable [feature](debug) now
-  - turn on [feature](debug)
+  - enable [function](debug)
+  - enable [function](debug) now
+  - turn on [function](debug)
   - turn on [feature](asr)
   - enable [feature](asr)
   - turn [feature](asr) on
-  - turn [feature](debug) on
+  - turn [function](debug) on
   - turn [feature](asr) on please
-  - enable [feature](debug) now
+  - enable [function](debug) now
   - I want [feature](asr) on now
-  - I want to turn on [feature](debug) now
-  - I want to enable [feature](debug)
-  - Please turn on [feature](debug) now
-  - Please [feature](debug) now
+  - I want to turn on [function](debug) now
+  - I want to enable [function](debug)
+  - Please turn on [function](debug) now
+  - Please [function](debug) now
 
 # disable intent
 ---
@@ -122,22 +123,35 @@ slots:
   - name: feature
     entity: feature
 utterances:
-  - disable [feature](debug)
-  - disable [feature](debug) now
-  - turn off [feature](debug)
+  - disable [function](debug)
+  - disable [function](debug) now
+  - turn off [function](debug)
   - turn off [feature](asr)
-  - off [feature](debug)
+  - off [function](debug)
   - disable [feature](asr)
   - turn [feature](asr) off
-  - turn [feature](debug) off
+  - turn [function](debug) off
   - turn [feature](asr) off please
-  - disable [feature](debug) now
+  - disable [function](debug) now
   - I want [feature](asr) off now
   - I don't want [feature](asr) now
-  - I want to turn off [feature](debug) now
+  - I want to turn off [function](debug) now
   - I want to disable [feature](asr)
-  - Please disable [feature](debug) now 
-  - Please turn off [feature](debug) now
+  - Please disable [function](debug) now 
+  - Please turn off [function](debug) now
+
+# menu intent
+---
+type: intent
+name: menu
+utterances:
+    - menu
+    - show menu
+    - go to menu
+    - packages
+    - show packages
+    - go to packages
+    - get packages
 
 # person entity
 ---
@@ -166,11 +180,8 @@ type: entity
 name: feature
 automatically_extensible: no
 values:
-- this
-- [end, end this]
 - [packages, services]
 - [menu, menus]
-- debug
 - [nlu, nlp]
 - asr
 
@@ -193,6 +204,6 @@ automatically_extensible: no
 values:
 - vish
 - [email, send email, send an email, send emails]
-- [calendar, calendars
-- [loan, apply for a loan, apply for loan, apply for loan, get a loan]
+- [calendar, calendars]
+- [loan, apply for loan, get a loan]
 - github

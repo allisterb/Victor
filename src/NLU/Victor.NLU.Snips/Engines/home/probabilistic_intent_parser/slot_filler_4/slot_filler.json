@@ -102,7 +102,8 @@
         "args": {
           "entities": [
             "package",
-            "feature"
+            "feature",
+            "function"
           ],
           "entity_filter": {
             "automatically_extensible": false
@@ -119,9 +120,7 @@
       },
       {
         "args": {
-          "entities": [
-            "function"
-          ],
+          "entities": [],
           "entity_filter": {
             "automatically_extensible": true
           },

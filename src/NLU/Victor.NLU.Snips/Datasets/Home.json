@@ -4,16 +4,6 @@
       "automatically_extensible": false,
       "data": [
         {
-          "synonyms": [],
-          "value": "this"
-        },
-        {
-          "synonyms": [
-            "end this"
-          ],
-          "value": "end"
-        },
-        {
           "synonyms": [
             "services"
           ],
@@ -24,10 +14,6 @@
             "menus"
           ],
           "value": "menu"
-        },
-        {
-          "synonyms": [],
-          "value": "debug"
         },
         {
           "synonyms": [
@@ -44,8 +30,25 @@
       "use_synonyms": true
     },
     "function": {
-      "automatically_extensible": true,
-      "data": [],
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "this"
+        },
+        {
+          "synonyms": [
+            "end",
+            "end the program",
+            "end this"
+          ],
+          "value": "exit"
+        },
+        {
+          "synonyms": [],
+          "value": "debug"
+        }
+      ],
       "matching_strictness": 1.0,
       "use_synonyms": true
     },
@@ -66,8 +69,12 @@
         },
         {
           "synonyms": [
-            "apply for a loan",
-            "apply for loan",
+            "calendars"
+          ],
+          "value": "calendar"
+        },
+        {
+          "synonyms": [
             "apply for loan",
             "get a loan"
           ],
@@ -109,25 +116,36 @@
           "value": "David"
         },
         {
-          "synonyms": [
-            "Joe",
-            "Harry"
-          ],
+          "synonyms": [],
           "value": "Luis"
         },
         {
-          "synonyms": [
-            "Ellen",
-            "Carrie"
-          ],
+          "synonyms": [],
+          "value": "Joe"
+        },
+        {
+          "synonyms": [],
+          "value": "Harry"
+        },
+        {
+          "synonyms": [],
           "value": "Shelly"
         },
         {
-          "synonyms": [
-            "Tim",
-            "Hubert"
-          ],
+          "synonyms": [],
+          "value": "Carrie"
+        },
+        {
+          "synonyms": [],
           "value": "Sean"
+        },
+        {
+          "synonyms": [],
+          "value": "Tim"
+        },
+        {
+          "synonyms": [],
+          "value": "Hubert"
         }
       ],
       "matching_strictness": 1.0,
@@ -143,8 +161,8 @@
               "text": "disable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             }
           ]
@@ -155,8 +173,8 @@
               "text": "disable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -170,8 +188,8 @@
               "text": "turn off "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             }
           ]
@@ -194,8 +212,8 @@
               "text": "off "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             }
           ]
@@ -233,8 +251,8 @@
               "text": "turn "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -263,8 +281,8 @@
               "text": "disable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -308,8 +326,8 @@
               "text": "I want to turn off "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -335,8 +353,8 @@
               "text": "Please disable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -350,8 +368,8 @@
               "text": "Please turn off "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -369,8 +387,8 @@
               "text": "enable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             }
           ]
@@ -381,8 +399,8 @@
               "text": "enable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -396,8 +414,8 @@
               "text": "turn on "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             }
           ]
@@ -447,8 +465,8 @@
               "text": "turn "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -477,8 +495,8 @@
               "text": "enable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -507,8 +525,8 @@
               "text": "I want to turn on "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -522,8 +540,8 @@
               "text": "I want to enable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             }
           ]
@@ -534,8 +552,8 @@
               "text": "Please turn on "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -549,8 +567,8 @@
               "text": "Please "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "debug"
             },
             {
@@ -882,6 +900,18 @@
         {
           "data": [
             {
+              "text": "help "
+            },
+            {
+              "entity": "function",
+              "slot_name": "function",
+              "text": "debug"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "help on "
             },
             {
@@ -1007,8 +1037,8 @@
               "text": "How do I "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "end this"
             }
           ]
@@ -1019,8 +1049,8 @@
               "text": "How can I "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "exit the program"
             }
           ]
@@ -1220,8 +1250,8 @@
               "text": "How do I "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "package",
+              "slot_name": "package",
               "text": "apply for a loan"
             }
           ]
@@ -1289,6 +1319,59 @@
             },
             {
               "text": " work"
+            }
+          ]
+        }
+      ]
+    },
+    "menu": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "menu"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show menu"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go to menu"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go to packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "get packages"
             }
           ]
         }

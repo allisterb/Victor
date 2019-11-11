@@ -14,7 +14,6 @@
       {
         "args": {
           "common_words_gazetteer_name": "top_10000_words_stemmed",
-          "language_code": "en",
           "n": 1,
           "use_stemming": true
         },
@@ -30,7 +29,6 @@
       {
         "args": {
           "common_words_gazetteer_name": "top_10000_words_stemmed",
-          "language_code": "en",
           "n": 2,
           "use_stemming": true
         },
@@ -69,7 +67,6 @@
       },
       {
         "args": {
-          "language_code": "en",
           "n": 1
         },
         "factory_name": "shape_ngram",
@@ -79,7 +76,6 @@
       },
       {
         "args": {
-          "language_code": "en",
           "n": 2
         },
         "factory_name": "shape_ngram",
@@ -90,7 +86,6 @@
       },
       {
         "args": {
-          "language_code": "en",
           "n": 3
         },
         "factory_name": "shape_ngram",
@@ -100,10 +95,6 @@
       },
       {
         "args": {
-          "entities": [
-            "feature",
-            "function"
-          ],
           "entity_filter": {
             "automatically_extensible": false
           },
@@ -119,7 +110,6 @@
       },
       {
         "args": {
-          "entities": [],
           "entity_filter": {
             "automatically_extensible": true
           },
@@ -136,20 +126,6 @@
       },
       {
         "args": {
-          "entity_labels": [
-            "snips/amountOfMoney",
-            "snips/date",
-            "snips/datePeriod",
-            "snips/datetime",
-            "snips/duration",
-            "snips/number",
-            "snips/ordinal",
-            "snips/percentage",
-            "snips/temperature",
-            "snips/time",
-            "snips/timePeriod"
-          ],
-          "language_code": "en",
           "tagging_scheme_code": 1
         },
         "factory_name": "builtin_entity_match",
@@ -176,11 +152,8 @@
     "tagging_scheme": 1,
     "unit_name": "crf_slot_filler"
   },
-  "crf_model_file": "model.crfsuite",
-  "intent": "disable",
+  "crf_model_file": null,
+  "intent": "menu",
   "language_code": "en",
-  "slot_name_mapping": {
-    "feature": "feature",
-    "function": "function"
-  }
+  "slot_name_mapping": {}
 }

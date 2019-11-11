@@ -101,7 +101,8 @@
       {
         "args": {
           "entities": [
-            "feature"
+            "feature",
+            "function"
           ],
           "entity_filter": {
             "automatically_extensible": false
@@ -179,6 +180,7 @@
   "intent": "enable",
   "language_code": "en",
   "slot_name_mapping": {
-    "feature": "feature"
+    "feature": "feature",
+    "function": "function"
   }
 }
