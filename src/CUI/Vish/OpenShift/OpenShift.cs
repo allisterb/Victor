@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
+using Microsoft.Rest;
+using Newtonsoft.Json;
 
-using RestSharp; 
-
+using Victor.CUI.Vish.OpenShift.Client;
+using Victor.CUI.Vish.OpenShift.Client.Models;
 namespace Victor
 {
     public class OpenShift : CUIPackage
@@ -16,8 +22,8 @@ namespace Victor
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
             {
-                RestClient = new RestClient(new Uri(ApiUrl));
-                RestClient.AddDefaultHeader("Authorization", "Bearer " + ApiToken);
+                var handler = new HttpClientHandler {};
+                Client = new OpenShiftAPIwithKubernetes(new Uri(ApiUrl), new TokenCredentials(ApiToken), handler); 
                 Initialized = true;
             }
             else if (string.IsNullOrEmpty(ApiUrl))
@@ -36,7 +42,7 @@ namespace Victor
 
         protected string ApiUrl { get; }
         
-        protected RestClient RestClient { get; }
+        protected OpenShiftAPIwithKubernetes Client { get; }
         #endregion
 
 
@@ -70,12 +76,25 @@ namespace Victor
             SayInfoLine("1. Get pods");
         }
 
-        protected void GetResources()
+        public async Task<Iok8sapicorev1PodList> GetPods()
         {
             ThrowIfNotInitialized();
-            var r = RestClient.Execute(new RestRequest("/builds"));
-            File.WriteAllText("builds.json", r.Content);
+            return await Client.ListCoreV1NamespacedPodAsync("evals25-shared-7daa");
+            
+            //var r = RestClient.Execute(new RestRequest("/"));
+            //if (r.StatusCode == HttpStatusCode.OK)
+            //{
+            //    return RESTResources.FromJson(r.Content);//JsonConvert.DeserializeObject<Resource[]>(r.Content);
+
+            //}
+            //else
+            //{
+            //    throw new Exception();
+            //}
+
         }
+
+        
         #endregion
     }
 }

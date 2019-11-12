@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Victor.Tests
@@ -9,13 +10,21 @@ namespace Victor.Tests
         
         public OpenShiftTests() : base() 
         {
-            //oc = new OpenShift();
+            oc = new OpenShift(null, null, Api.Ct);
         }
 
         [Fact]
         public void CanGetPods()
         {
-            //oc.GetResources();
+            var r = oc.GetPods().Result;
+            Assert.NotEmpty(r.Items);
+;        }
+
+        [Fact]
+        public void CanGetBuilds()
+        {
+            //var builds = oc.GetBuilds();
+            //Assert.True(builds != null);
         }
     }
 }

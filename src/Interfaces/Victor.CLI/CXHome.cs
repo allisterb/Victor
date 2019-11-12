@@ -11,7 +11,7 @@ namespace Victor.CLI
         #region Constructors
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
-            MenuHandlers.Add("PACKAGES", GetPackageMenuItem);
+            MenuHandlers.Add("PACKAGES", GetPackagesMenuItem);
             MenuIndexes.Add("PACKAGES", 1);
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
@@ -38,7 +38,7 @@ namespace Victor.CLI
                 DebugIntent(intent);
             }
             
-            if (intent.Top.Score < 0.8)
+            if (intent.Top.Score < 0.6)
             {
                 return false;
             }
@@ -72,9 +72,10 @@ namespace Victor.CLI
         }
         #endregion
 
-        #region Functions
+        #region Methods
 
-        #region General
+        #region CUI Functions
+
         public void Exit(Intent intent)
         {
             SayInfoLine("Shutting down...");
@@ -180,11 +181,9 @@ namespace Victor.CLI
                 }
             }
         }
-
-        #endregion
         #endregion
 
-        protected void GetPackageMenuItem(int i)
+        protected void GetPackagesMenuItem(int i)
         {
             switch(i - 1)
             {
@@ -203,5 +202,6 @@ namespace Victor.CLI
                     throw new IndexOutOfRangeException();
             }
         }
+        #endregion
     }
 }

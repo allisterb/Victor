@@ -85,9 +85,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Server.NLU", "Server
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortAudio.Net", "..\ext\PortAudio.Net\PortAudio.Net\PortAudio.Net.csproj", "{B827EA82-3D9F-4D66-9293-FFCD3151618D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.Tests.Vish", "..\tests\Victor.Tests.Vish\Victor.Tests.Vish.csproj", "{1338222B-1022-4DFA-99F0-398DAF14CAD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Tests.Vish", "..\tests\Victor.Tests.Vish\Victor.Tests.Vish.csproj", "{1338222B-1022-4DFA-99F0-398DAF14CAD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.Base.CUI", "Base\Victor.Base.CUI\Victor.Base.CUI.csproj", "{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Base.CUI", "Base\Victor.Base.CUI\Victor.Base.CUI.csproj", "{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.CUI.Vish.OpenShift.RestClient", "CUI\Victor.CUI.Vish.OpenShift.RestClient\Victor.CUI.Vish.OpenShift.RestClient.csproj", "{E82BE707-ACF7-4443-822B-D76BE1B74ABA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -325,6 +327,14 @@ Global
 		{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC}.Release|x86.Build.0 = Release|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Debug|x86.Build.0 = Debug|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Release|x86.ActiveCfg = Release|Any CPU
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -360,6 +370,7 @@ Global
 		{B827EA82-3D9F-4D66-9293-FFCD3151618D} = {F2F87D32-B89C-4194-A03C-37C033BD306F}
 		{1338222B-1022-4DFA-99F0-398DAF14CAD4} = {9BCBB3CA-0ADC-4A7B-81C4-396CE1BDA685}
 		{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC} = {B14CB18F-3BDE-4675-B707-4CA6A90E5DAD}
+		{E82BE707-ACF7-4443-822B-D76BE1B74ABA} = {0D85527C-44EE-499A-8024-402349632FA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC5685EE-DB95-4277-8DB7-6FA4A8FD811D}

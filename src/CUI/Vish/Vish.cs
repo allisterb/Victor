@@ -3,9 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-
-using RestSharp;
-
 namespace Victor
 {
     public class Vish : CUIPackage
@@ -23,14 +20,11 @@ namespace Victor
 
         #endregion
 
-            #region Properties
+        #region Properties
         protected string ApiToken { get; }
 
         protected string ApiUrl { get; }
-
-        protected RestClient RestClient { get; }
         #endregion
-
 
         #region Overriden methods
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
@@ -61,13 +55,6 @@ namespace Victor
         }
 
         protected void GetMenuPackageItem(int i) => SubPackages[i - 1].DispatchIntent(null, SubPackages[i - 1].Menu);
-
-        protected void GetResources()
-        {
-            ThrowIfNotInitialized();
-            var r = RestClient.Execute(new RestRequest("/builds"));
-            File.WriteAllText("builds.json", r.Content);
-        }
         #endregion
     }
 }
