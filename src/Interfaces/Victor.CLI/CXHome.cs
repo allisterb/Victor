@@ -110,9 +110,9 @@ namespace Victor.CLI
 
         protected void Help(Intent intent)
         {
-            var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.Kind == "feature")?.Value : null;
-            var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.Kind == "package")?.Value : null;
-            var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.Kind == "function")?.Value : null;
+            var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value : null;
+            var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
+            var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value : null;
             if (!string.IsNullOrEmpty(feature))
             {
                 feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
@@ -134,8 +134,9 @@ namespace Victor.CLI
                     }
                     break;
                 case "nlu":
-                    SayInfoLine("Victor CX uses natural language understading to understand a user's intent and the entities that are part of that intent.");
-                    SayInfoLine("You can enable NLU debug mode by entering {0}.", "enable debug");
+                    SayInfoLine("Victor CX uses natural language understanding to understand a user's intent and the entities that are part of that intent.");
+                    SayInfoLine("A user does not have to enter an exact phrase or command but can express their intent using natural language and different phrases and synonymns.");
+                    SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
                     break;
                 default:
                     SayInfoLine("No help so far for {0}.", feature);
