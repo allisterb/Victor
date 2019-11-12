@@ -21,6 +21,7 @@ namespace Victor
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             MenuHandlers["OPENSHIFT"] = GetOpenShiftMenuItem;
+            MenuIndexes["OPENSHIFT"] = 1;
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
             {
                 var handler = new HttpClientHandler {};
@@ -49,10 +50,11 @@ namespace Victor
         #endregion
 
         #region Overriden members
-        public override string[] VariableNames { get; } = { "Project" };
+        public override string[] VariableNames { get; } = { "PROJECT" };
 
         public override string[] MenuItemNames { get; } = { "OPENSHIFT" };
 
+        public override string[] OutputNames { get; } = {"PODS" };
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
@@ -82,7 +84,7 @@ namespace Victor
         {
             Controller.SetContext("MENU_OPENSHIFT");
             SayInfoLine("RedHat OpenShift");
-            SayInfoLine("1. Get pods");
+            SayInfoLine("1 {0}", "Get pods");
         }
 
         #endregion
@@ -102,17 +104,20 @@ namespace Victor
         #region Functions
         public void GetPods(Intent intent)
         {
-            if (!Variables.ContainsKey("PROJECT"))
+            Controller.SetContext("GETPODS");
+            if (string.IsNullOrEmpty(Variables["PROJECT"]))
             {
-                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.");
+                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "PROJECT");
                 GetInput("PROJECT");
 
             }
             else
             {
+                SayInfoLine("Get pods for project {0}.", Variables["PROJECT"]);
                 Controller.StartBeeper();
-                GetPods(Variables["PROJECT"], null).Wait();
+                var pods = GetPods(Variables["PROJECT"], null).Result;
                 Controller.StopBeeper();
+                SayInfoLine("Got {0} pods for project {1}.", pods.Items.Count, Variables["PROJECT"]);
             }
            
         }

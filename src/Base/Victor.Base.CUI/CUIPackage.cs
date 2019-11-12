@@ -50,6 +50,8 @@ namespace Victor
 
         protected Dictionary<string, int> SelectedMenuItem = new Dictionary<string, int>();
 
+        protected Dictionary<string, List<string>> Pages { get; } = new Dictionary<string, List<string>>();
+
         #endregion
 
         #region Methods
@@ -64,9 +66,10 @@ namespace Victor
             if(Controller.DebugEnabled)
             {
                 SayInfoLine("Get input for variable {0}.", variableName);
-                Controller.SetContext("INPUT_" + variableName);
-                Controller.Context.Peek().SetIntentAction(intent, action);
             }
+            Controller.SetContext("INPUT_" + variableName);
+            Controller.Context.Peek().SetIntentAction(intent, action);
+
         }
 
         public bool CanDispatchInput(CUIContext context)
@@ -110,7 +113,7 @@ namespace Victor
         #region UI
         public void DebugIntent(Intent intent)
         {
-            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, this.Name, intent.Top.Label, intent.Top.Score);
+            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, Controller.ActivePackage.Name, intent.Top.Label, intent.Top.Score);
             foreach (var e in intent.Entities)
             {
                 SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
@@ -176,7 +179,7 @@ namespace Victor
             Variables[variableName] = input;
             if (context.IntentAction != null)
             {
-                SayInfoLine("Dispatch to {0} with intent {1}.", context.IntentAction.Method.Name, context.Intent?.Top?.Label);
+                SayInfoLine("Dispatch input {0} to {1}.", input, context.IntentAction.Method.Name);
                 context.IntentAction.Invoke(context.Intent);
             }
         }
@@ -184,6 +187,8 @@ namespace Victor
         public abstract string[] VariableNames { get; }
 
         public abstract string[] MenuItemNames { get; }
+
+        public abstract string[] OutputNames { get; }
 
         public abstract bool ParseIntent(CUIContext context, DateTime time, string input);
 

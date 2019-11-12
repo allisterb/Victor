@@ -25,10 +25,12 @@ namespace Victor
         protected string ApiUrl { get; }
         #endregion
 
-        #region Overriden methods
+        #region Overriden me,bers
         public override string[] VariableNames { get; } = { };
 
         public override string[] MenuItemNames { get; } = { "VISH_PACKAGES" };
+
+        public override string[] OutputNames { get; } = { "PODS" };
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
@@ -57,8 +59,7 @@ namespace Victor
         public override void Menu(Intent intent)
         {
             Controller.SetContext("MENU_VISH_PACKAGES");
-            SayInfoLine("1. {0}", "Red Hat OpenShift");
-            
+            SayInfoLine("1 {0}", "Red Hat OpenShift");   
         }
 
         protected void GetPackagesMenuItem(int i)

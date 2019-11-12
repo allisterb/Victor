@@ -27,6 +27,7 @@ namespace Victor.CLI
 
         public override string[] MenuItemNames { get; } = { "PACKAGES" };
 
+        public override string[] OutputNames { get; } = {};
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
