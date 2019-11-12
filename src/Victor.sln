@@ -89,7 +89,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Tests.Vish", "..\tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Base.CUI", "Base\Victor.Base.CUI\Victor.Base.CUI.csproj", "{7ABDBCCF-E8A5-4601-9E57-24C3974EF4CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.CUI.Vish.OpenShift.RestClient", "CUI\Victor.CUI.Vish.OpenShift.RestClient\Victor.CUI.Vish.OpenShift.RestClient.csproj", "{E82BE707-ACF7-4443-822B-D76BE1B74ABA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.CUI.Vish.OpenShift.RestClient", "CUI\Victor.CUI.Vish.OpenShift.RestClient\Victor.CUI.Vish.OpenShift.RestClient.csproj", "{E82BE707-ACF7-4443-822B-D76BE1B74ABA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

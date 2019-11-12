@@ -69,14 +69,15 @@ namespace Victor.CLI
             Prompt();
         }
 
-
-
-        public override void SayInfo(string template, params object[] args) => Co.WriteFormatted(template, Color.Pink, Color.PaleGoldenrod, args);
-
         public override void SayInfoLine(string template, params object[] args) => Co.WriteLineFormatted(template, Color.Pink, Color.PaleGoldenrod, args);
 
         public override void SayErrorLine(string template, params object[] args) => Co.WriteLineFormatted(template, Color.Pink, Color.Red, args);
 
+        public override void SayWarningLine(string template, params object[] args)
+        {
+            Sc.Beep(10000, 1000);
+            Co.WriteLineFormatted(template, Color.Pink, Color.Blue, args);
+        }
         public override void StartBeeper() => _StartBeeper();
 
         public override void StopBeeper() => _StopBeeper();

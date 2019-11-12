@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
+    <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />
     <ProjectReference Include="..\Victor.CUI.Vish.OpenShift.RestClient\Victor.CUI.Vish.OpenShift.RestClient.csproj" />
   </ItemGroup>
 

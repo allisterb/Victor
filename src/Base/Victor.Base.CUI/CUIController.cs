@@ -30,9 +30,9 @@ namespace Victor
         
         public Stack<CUIContext> Context { get; } = new Stack<CUIContext>();
         
-        public CUIPackage HomePackage { get; protected set; }
+        public CUIPackage HomePackage { get; set; }
         
-        public CUIPackage ActivePackage { get; protected set; }
+        public CUIPackage ActivePackage { get;  set; }
 
         public bool DebugEnabled { get; set; }
 
@@ -51,15 +51,16 @@ namespace Victor
 
         public abstract void HandleInput(DateTime time, string input);
 
-        public abstract void SayInfo(string template, params object[] args);
-
         public abstract void SayInfoLine(string template, params object[] args);
 
         public abstract void SayErrorLine(string template, params object[] args);
 
+        public abstract void SayWarningLine(string template, params object[] args);
+        
         public abstract void StartBeeper();
 
         public abstract void StopBeeper();
+
         #endregion
 
         #region Methods

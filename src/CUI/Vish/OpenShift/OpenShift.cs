@@ -16,10 +16,11 @@ namespace Victor
     public class OpenShift : CUIPackage
     {
         #region Constructors
-        public OpenShift(CUIController controller, NLUEngine engine, CancellationToken ct) : base("OpenShift", engine, controller, ct)
+        public OpenShift(CUIController controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
         {
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
+            MenuHandlers["OPENSHIFT"] = GetOpenShiftMenuItem;
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
             {
                 var handler = new HttpClientHandler {};
@@ -35,6 +36,8 @@ namespace Victor
                 SayErrorLine("I could not determine your OpenShift service API token.");
             }
         }
+
+        public OpenShift(CUIController controller) : this(controller, Ct) {}
         #endregion
 
         #region Properties
@@ -45,8 +48,11 @@ namespace Victor
         protected OpenShiftAPIwithKubernetes Client { get; }
         #endregion
 
+        #region Overriden members
+        public override string[] VariableNames { get; } = { "Project" };
 
-        #region Overriden methods
+        public override string[] MenuItemNames { get; } = { "OPENSHIFT" };
+
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
@@ -66,9 +72,12 @@ namespace Victor
                 }
             }
         }
-        #endregion
 
-        #region Methods
+        public override void Welcome(Intent intent = null)
+        {
+            SayInfoLine("Welcome to the OpenShift administration package.");
+            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
+        }
         public override void Menu(Intent intent)
         {
             Controller.SetContext("MENU_OPENSHIFT");
@@ -76,25 +85,47 @@ namespace Victor
             SayInfoLine("1. Get pods");
         }
 
-        public async Task<Iok8sapicorev1PodList> GetPods()
+        #endregion
+
+        #region Methods
+        protected void GetOpenShiftMenuItem(int i)
+        {
+            switch (i - 1)
+            {
+                case 0:
+                    DispatchIntent(null, GetPods);
+                    break;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
+        #region Functions
+        public void GetPods(Intent intent)
+        {
+            if (!Variables.ContainsKey("PROJECT"))
+            {
+                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.");
+                GetInput("PROJECT");
+
+            }
+            else
+            {
+                Controller.StartBeeper();
+                GetPods(Variables["PROJECT"], null).Wait();
+                Controller.StopBeeper();
+            }
+           
+        }
+        #endregion
+
+        #region OpenShift API
+        public async Task<Iok8sapicorev1PodList> GetPods(string ns, string label)
         {
             ThrowIfNotInitialized();
-            return await Client.ListCoreV1NamespacedPodAsync("evals25-shared-7daa");
-            
-            //var r = RestClient.Execute(new RestRequest("/"));
-            //if (r.StatusCode == HttpStatusCode.OK)
-            //{
-            //    return RESTResources.FromJson(r.Content);//JsonConvert.DeserializeObject<Resource[]>(r.Content);
-
-            //}
-            //else
-            //{
-            //    throw new Exception();
-            //}
-
+            return await Client.ListCoreV1NamespacedPodAsync(namespaceParameter: "evals25-shared-7daa", labelSelector: label);
         }
+        #endregion
 
-        
         #endregion
     }
 }

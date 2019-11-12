@@ -1,0 +1,34 @@
+﻿# help intent
+---
+type: intent
+name: help
+slots:
+  - name: object
+    entity: openshift_object
+utterances:
+  - help
+  - What are [openshift_object](pods)
+  - help with [openshift_object](builds)
+  - help [openshift_object](pods)
+  - help administer [openshift_object](build_configs)
+  - help administer openshift
+  - help manage [openshift_object](build configs)
+  - help with [openshift_object](pods)
+  - help with vish openshift
+  - help with vish openshift [openshift_object](pods)
+  - What is a [openshift_object](pods)
+  - Tell me about [openshift_object](pods)
+  - How do I use this
+  - How do I administer [openshift_object](users)
+
+# openshift_object entity
+---
+type: entity
+name: openshift_object
+automatically_extensible: no
+values:
+- [pod, pods]
+- [build config, build configs]
+- [deployment config, deployment configs]
+- [route, routes]
+- [service, services]

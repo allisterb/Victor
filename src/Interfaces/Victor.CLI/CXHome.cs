@@ -11,8 +11,8 @@ namespace Victor.CLI
         #region Constructors
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
-            MenuHandlers.Add("PACKAGES", GetPackagesMenuItem);
-            MenuIndexes.Add("PACKAGES", 1);
+            MenuHandlers["PACKAGES"] = GetPackagesMenuItem;
+            MenuIndexes["PACKAGES"] = 1;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -22,13 +22,10 @@ namespace Victor.CLI
         }
         #endregion
 
-        #region Overriden methods
-        public override void Menu(Intent intent)
-        {
-            Controller.SetContext("MENU_PACKAGES");
-            SayInfoLine("Select a package to use.");
-            SayInfoLine("1. Vish");
-        }
+        #region Overriden members
+        public override string[] VariableNames { get; } = { "NAME" };
+
+        public override string[] MenuItemNames { get; } = { "PACKAGES" };
 
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
@@ -37,7 +34,7 @@ namespace Victor.CLI
             {
                 DebugIntent(intent);
             }
-            
+
             if (intent.Top.Score < 0.6)
             {
                 return false;
@@ -47,13 +44,13 @@ namespace Victor.CLI
                 switch (intent.Top.Label)
                 {
                     case "exit":
-                        DispatchIntent(intent, Exit);
+                        Exit(intent);
                         break;
                     case "help":
-                        DispatchIntent(intent, Help);
+                        Help(intent);
                         break;
                     case "hello":
-                        DispatchIntent(intent, Hello);
+                        Hello(intent);
                         break;
                     case "enable":
                         Enable(intent);
@@ -70,6 +67,20 @@ namespace Victor.CLI
                 return true;
             }
         }
+
+        public override void Welcome(Intent intent = null)
+        {
+            Controller.SetContext("Welcome");
+            SayInfoLine("Welcome to Victor CX."); 
+            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
+        }
+        public override void Menu(Intent intent)
+        {
+            Controller.SetContext("MENU_PACKAGES");
+            SayInfoLine("Select a package to use.");
+            SayInfoLine("1 {0}", "Vish");
+        }
+
         #endregion
 
         #region Methods
@@ -85,8 +96,16 @@ namespace Victor.CLI
         protected void Hello(Intent intent)
         {
             var name = intent.Entities.Length > 0 ? intent.Entities.First().Value : "";
-            SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
-            SayInfoLine("Enter help to see the help pagaes, packages to see available packages.");
+            if (!string.IsNullOrEmpty(name))
+            {
+                SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
+                Variables["Name"] = name;
+            }
+            else 
+            {
+                SayInfoLine("Hello, welcome to the Victor CX auditory user interface.");
+            }
+            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
         }
 
         protected void Help(Intent intent)
@@ -192,11 +211,11 @@ namespace Victor.CLI
                     {
                         SayInfoLine("Loading Vish package...");
                         Controller.StartBeeper();
-                        SubPackages.Add(new Vish(this.Controller, new SnipsNLUEngine(Path.Combine("Engines", "vish"))));
+                        SubPackages.Add(new Vish(this.Controller));
                         Controller.StopBeeper();
                     }
-                    
-                    DispatchIntent(null, SubPackages.Single(p => p.Name == "Vish").Menu);
+                    Controller.ActivePackage = SubPackages.Single(p => p.Name == "Vish");
+                    DispatchIntent(null, Controller.ActivePackage.Menu);
                     break;
                 default:
                     throw new IndexOutOfRangeException();

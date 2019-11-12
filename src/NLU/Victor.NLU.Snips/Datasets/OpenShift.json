@@ -1,0 +1,196 @@
+{
+  "entities": {
+    "openshift_object": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "pods"
+          ],
+          "value": "pod"
+        },
+        {
+          "synonyms": [
+            "build configs"
+          ],
+          "value": "build config"
+        },
+        {
+          "synonyms": [
+            "deployment configs"
+          ],
+          "value": "deployment config"
+        },
+        {
+          "synonyms": [
+            "routes"
+          ],
+          "value": "route"
+        },
+        {
+          "synonyms": [
+            "services"
+          ],
+          "value": "service"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "help"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What are "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "builds"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help administer "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "build_configs"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help administer openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help manage "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "build configs"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with vish openshift "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is a "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I administer "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "users"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}
