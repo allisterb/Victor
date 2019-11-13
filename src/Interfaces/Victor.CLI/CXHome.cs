@@ -59,7 +59,7 @@ namespace Victor.CLI
                         Disable(intent);
                         break;
                     case "menu":
-                        DispatchIntent(intent, Menu);
+                        DispatchIntent(intent, Controller.ActivePackage.Menu);
                         break;
                     default:
                         break;
