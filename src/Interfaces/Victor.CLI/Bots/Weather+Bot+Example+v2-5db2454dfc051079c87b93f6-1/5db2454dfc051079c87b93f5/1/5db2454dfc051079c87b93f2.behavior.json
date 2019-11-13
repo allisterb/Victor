@@ -1,0 +1,57 @@
+{
+  "behaviorGroups" : [ {
+    "name" : "Default",
+    "behaviorRules" : [ {
+      "name" : "Show Global Menu",
+      "actions" : [ "global_menu" ],
+      "conditions" : [ {
+        "type" : "negation",
+        "configs" : { },
+        "conditions" : [ {
+          "type" : "inputmatcher",
+          "configs" : {
+            "expressions" : "*",
+            "occurrence" : "currentStep"
+          },
+          "conditions" : [ ]
+        } ]
+      }, {
+        "type" : "negation",
+        "configs" : { },
+        "conditions" : [ {
+          "type" : "contextmatcher",
+          "configs" : {
+            "contextKey" : "onboardingOfUser",
+            "contextType" : "string",
+            "string" : "true"
+          },
+          "conditions" : [ ]
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "",
+    "behaviorRules" : [ {
+      "name" : "Ask for City",
+      "actions" : [ "ask_for_city" ],
+      "conditions" : [ {
+        "type" : "inputmatcher",
+        "configs" : {
+          "expressions" : "trigger(current_weather)"
+        },
+        "conditions" : [ ]
+      } ]
+    }, {
+      "name" : "Current Weather in City",
+      "actions" : [ "current_weather_in_city" ],
+      "conditions" : [ {
+        "type" : "inputmatcher",
+        "configs" : {
+          "expressions" : "trigger(current_weather)",
+          "occurrence" : "lastStep"
+        },
+        "conditions" : [ ]
+      } ]
+    } ]
+  } ]
+}

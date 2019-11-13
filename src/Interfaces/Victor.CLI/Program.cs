@@ -369,12 +369,45 @@ namespace Victor
                     Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
+            else if(o.GetDictionaries)
+            {
+                Info("Querying for dictionaries...");
+                try
+                {
+                    var descriptors = await c.RegulardictionarystoreRegulardictionariesDescriptorsAsync(null, null, null);
+                    if (o.Json)
+                    {
+                        System.Console.WriteLine(EDDIClient.Serialize(descriptors));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(descriptors));
+                    }
+                    else
+                    {
+                        foreach (var d in descriptors)
+                        {
+                            System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not list dictionaries: {0}", eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving .");
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+
+            }
             else if (!string.IsNullOrEmpty(o.GetDictionary))
             {
                 Info("Querying for dictionary {0}...", o.GetDictionary);
                 try
                 {
                     var dictionary = await c.RegulardictionarystoreRegulardictionariesGetAsync(o.GetDictionary, o.Version, o.Filter, null, null, null);
+                    var version = await c.RegulardictionarystoreRegulardictionariesCurrentversionGetAsync(o.GetDictionary);
+                    System.Console.WriteLine("Version: {0}.", version);
                     if (o.Json)
                     {
                         System.Console.WriteLine(EDDIClient.Serialize(dictionary));
@@ -561,6 +594,27 @@ namespace Victor
                 }
 
             }
+            else if (!string.IsNullOrEmpty(o.GetHttpCall))
+            {
+                Info("Querying for HTTP call {0}...", o.GetHttpCall);
+                try
+                {
+                    var call = await c.HttpcallsstoreHttpcallsGetAsync(o.GetHttpCall, o.Version);                    
+                    System.Console.WriteLine(EDDIClient.Serialize(call));
+                    WriteToFileIfRequired(o, EDDIClient.Serialize(call));
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get HTTP call {0}: {1}", o.GetProperty, eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving HTTP call {0}.", o.GetProperty);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+
+            }
             else if (o.CreateDictionary)
             {
                 Info("Creating dictionary...");
@@ -574,6 +628,30 @@ namespace Victor
                 else
                 {
                     Error("Did not create dictionary. HTTP status code {0}.", s);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdateDictionary))
+            {
+                Info("Updating dictionary {0}...", o.UpdateDictionary);
+                await c.RegulardictionarystoreRegulardictionariesPatchAsync(o.UpdateDictionary, o.Version,
+                    new PatchInstructionRegularDictionaryConfiguration[] 
+                    {
+                        new PatchInstructionRegularDictionaryConfiguration()
+                        {
+                            Operation = PatchInstructionRegularDictionaryConfigurationOperation.SET,
+                            Document = ReadFromFileIfRequired<RegularDictionaryConfiguration>(o)
+                        } 
+                    });
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    
+                    Info("Updated dictionary at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not update dictionary. HTTP status code {0}.", s);
                 }
             }
             else if (o.CreateBehavior)

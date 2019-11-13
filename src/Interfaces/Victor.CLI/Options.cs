@@ -72,6 +72,9 @@ namespace Victor
         [Option("get-package", Required = false, HelpText = "Get the package with the specified id.")]
         public string GetPackage { get; set; }
 
+        [Option("get-dictionaries", Required = false, HelpText = "Get all dictionaries on the EDDI server.")]
+        public bool GetDictionaries { get; set; }
+
         [Option("get-dictionary", Required = false, HelpText = "Get the dictionary with the specified id.")]
         public string GetDictionary { get; set; }
 
@@ -84,6 +87,9 @@ namespace Victor
         [Option("get-property", Required = false, HelpText = "Get the property with the specified id.")]
         public string GetProperty { get; set; }
 
+        [Option("get-http-call", Required = false, HelpText = "Get the HTTP call with the specified id.")]
+        public string GetHttpCall { get; set; }
+
         [Option("create-dictionary", Required = false, HelpText = "Create a dictionary from the specified input.")]
         public bool CreateDictionary { get; set; }
 
@@ -95,6 +101,9 @@ namespace Victor
 
         [Option("create-package", Required = false, HelpText = "Create a package from the specified input.")]
         public bool CreatePackage { get; set; }
+
+        [Option("update-dictionary", Required = false, HelpText = "Update a dictionary with the specified id from the specified input.")]
+        public string UpdateDictionary { get; set; }
 
         [Option("start-convo", Required = false, HelpText = "Start a conversation with a bot.")]
         public string StartConversation { get; set; }
