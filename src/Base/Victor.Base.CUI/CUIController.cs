@@ -66,6 +66,13 @@ namespace Victor
         #region Methods
         public void SetContext(string c, Intent intent = null, Action<Intent> action = null) => Context.Push(new CUIContext(DateTime.Now, c, intent, action));
         
+        public void SayInfoLineIfDebugEnabled(string template, params object[] args)
+        {
+            if (DebugEnabled)
+            {
+                SayInfoLine(template, args);
+            }
+        }
         #endregion
     }
 }

@@ -63,24 +63,29 @@ namespace Victor
         #region Input
         public void GetInput(string variableName, Action<Intent> action = null, Intent intent = null)
         {
-            if(Controller.DebugEnabled)
+            Controller.SetContext("INPUT_" + variableName, intent, action);
+            if (Controller.DebugEnabled)
             {
                 SayInfoLine("Get input for variable {0}.", variableName);
             }
-            Controller.SetContext("INPUT_" + variableName);
-            Controller.Context.Peek().SetIntentAction(intent, action);
-
         }
 
         public bool CanDispatchInput(CUIContext context)
         {
-            string label = context.Label.Replace("INPUT_", "");
-            return Variables.ContainsKey(label);
+            if (context.Label.StartsWith("INPUT_"))
+            {
+                string label = context.Label.Replace("INPUT_", "");
+                return Variables.ContainsKey(label);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion
 
-        #region Menu
+        #region Menu and Intents
         public bool CanDispatchMenuItemSelection(CUIContext context)
         {
             if (Controller.Context.Peek().Label.StartsWith("MENU"))
@@ -102,7 +107,6 @@ namespace Victor
                 SayInfoLine("Dispatching to command {0}.", action.Method.Name);
             }
             action(intent);
-            Context.Peek().SetIntentAction(intent, action);
             if (Controller.DebugEnabled)
             {
                 SayInfoLine("New context: {0}", Context.Peek().Label);
@@ -172,23 +176,19 @@ namespace Victor
         public virtual void DispatchInput(CUIContext context, string input)
         {
             string variableName = context.Label.Replace("INPUT_", "");
+            Variables[variableName] = input;
             if (Controller.DebugEnabled)
             {
-                SayInfoLine("Set variable {0} to {1}.", variableName, input);
-            }
-            Variables[variableName] = input;
-            if (context.IntentAction != null)
-            {
+                SayInfoLine("Variable {0} set to to {1}.", variableName, input);
                 SayInfoLine("Dispatch input {0} to {1}.", input, context.IntentAction.Method.Name);
-                context.IntentAction.Invoke(context.Intent);
             }
+            context.IntentAction.Invoke(context.Intent);
+            
         }
 
         public abstract string[] VariableNames { get; }
 
         public abstract string[] MenuItemNames { get; }
-
-        public abstract string[] OutputNames { get; }
 
         public abstract bool ParseIntent(CUIContext context, DateTime time, string input);
 

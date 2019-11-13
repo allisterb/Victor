@@ -61,6 +61,7 @@ namespace Victor.CLI
             InputEnabled = false;
             if (!ActivePackage.HandleInput(time, input))
             {
+                SayInfoLineIfDebugEnabled("Input handled by HOME package.");
                 if (!HomePackage.HandleInput(time, input))
                 {
                     SayCouldNotUnderstand(input);
@@ -75,7 +76,7 @@ namespace Victor.CLI
 
         public override void SayWarningLine(string template, params object[] args)
         {
-            Sc.Beep(10000, 1000);
+            Sc.Beep(5000, 500);
             Co.WriteLineFormatted(template, Color.Pink, Color.Blue, args);
         }
         public override void StartBeeper() => _StartBeeper();

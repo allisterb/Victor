@@ -10,7 +10,7 @@ namespace Victor.Tests
         
         public OpenShiftTests() : base() 
         {
-            oc = new OpenShift(null, null, Api.Ct);
+            oc = new OpenShift(null, Api.Ct);
         }
 
         [Fact]
@@ -18,7 +18,7 @@ namespace Victor.Tests
         {
             //var r = oc.GetPods().Result;
             //Assert.NotEmpty(r.Items);
-;        }
+        }
 
         [Fact]
         public void CanGetBuilds()

@@ -11,8 +11,8 @@ namespace Victor.CLI
         #region Constructors
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
-            MenuHandlers["PACKAGES"] = GetPackagesMenuItem;
-            MenuIndexes["PACKAGES"] = 1;
+            MenuHandlers["HOME_PACKAGES"] = GetPackagesMenuItem;
+            MenuIndexes["HOME_PACKAGES"] = 1;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -23,11 +23,10 @@ namespace Victor.CLI
         #endregion
 
         #region Overriden members
-        public override string[] VariableNames { get; } = { "NAME" };
+        public override string[] VariableNames { get; } = { "HOME_NAME" };
 
-        public override string[] MenuItemNames { get; } = { "PACKAGES" };
+        public override string[] MenuItemNames { get; } = { "HOME_PACKAGES" };
 
-        public override string[] OutputNames { get; } = {};
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
@@ -71,7 +70,7 @@ namespace Victor.CLI
 
         public override void Welcome(Intent intent = null)
         {
-            Controller.SetContext("Welcome");
+            Controller.SetContext("WELCOME");
             SayInfoLine("Welcome to Victor CX."); 
             SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
         }

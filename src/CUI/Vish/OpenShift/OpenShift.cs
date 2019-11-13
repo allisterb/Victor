@@ -50,11 +50,10 @@ namespace Victor
         #endregion
 
         #region Overriden members
-        public override string[] VariableNames { get; } = { "PROJECT" };
+        public override string[] VariableNames { get; } = { "OPENSHIFT_PROJECT" };
 
         public override string[] MenuItemNames { get; } = { "OPENSHIFT" };
 
-        public override string[] OutputNames { get; } = {"PODS" };
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
@@ -108,7 +107,7 @@ namespace Victor
             if (string.IsNullOrEmpty(Variables["PROJECT"]))
             {
                 SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "PROJECT");
-                GetInput("PROJECT");
+                GetInput("PROJECT", GetPods, intent);
 
             }
             else
