@@ -203,14 +203,14 @@ namespace Victor
                     var descriptors = await c.BotstoreBotsDescriptorsGetAsync(null, null, null);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(descriptors));
+                        WriteInfo(EDDIClient.Serialize(descriptors));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(descriptors));
                     }
                     else
                     {
                         foreach (var d in descriptors)
                         {
-                            System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                            WriteInfo("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
                         }
                     }
                 }
@@ -233,27 +233,27 @@ namespace Victor
                     var bot = await c.BotstoreBotsGetAsync(o.GetBot, o.Version);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(bot));
+                        WriteInfo(EDDIClient.Serialize(bot));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(bot));
                     }
                     else
                     {
                         foreach (var p in bot.Packages)
                         {
-                            System.Console.WriteLine("Package: {0}", p.Segments.Last());
+                            WriteInfo("Package: {0}", p.Segments.Last());
                         }
 
                         if (bot.Channels != null)
                         {
                             foreach (var channel in bot.Channels)
                             {
-                                System.Console.WriteLine("Channel: {0}", channel.Type);
+                                WriteInfo("Channel: {0}", channel.Type);
                             }
                         }
 
                         if (bot.GitBackupSettings != null && bot.GitBackupSettings.RepositoryUrl != null)
                         {
-                            System.Console.WriteLine("Git repo: {0}", bot.GitBackupSettings.RepositoryUrl.ToString());
+                            WriteInfo("Git repo: {0}", bot.GitBackupSettings.RepositoryUrl.ToString());
                         }
 
                     }
@@ -275,7 +275,7 @@ namespace Victor
                 try
                 {
                     var r = await c.BackupExportPostAsync(o.ExportBot, 1);
-                    System.Console.WriteLine("Bot {0} exported to location: {1}.", o.ExportBot, r);
+                    WriteInfo("Bot {0} exported to location: {1}.", o.ExportBot, r);
                     Exit(ExitResult.SUCCESS);
                 }
                 catch (EDDIApiException eae)
@@ -298,14 +298,14 @@ namespace Victor
                     var descriptors = await c.PackagestorePackagesDescriptorsGetAsync(null, null, null);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(descriptors));
+                        WriteInfo(EDDIClient.Serialize(descriptors));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(descriptors));
                     }
                     else
                     {
                         foreach (var d in descriptors)
                         {
-                            System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                            WriteInfo("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
                         }
                     }
                 }
@@ -329,14 +329,14 @@ namespace Victor
                     var package = await c.PackagestorePackagesGetAsync(o.GetPackage, o.Version);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(package));
+                        WriteInfo(EDDIClient.Serialize(package));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(package));
                     }
                     else
                     {
                         foreach (var pe in package.PackageExtensions)
                         {
-                            System.Console.WriteLine("Extension: {0}", pe.Type.ToString());
+                            WriteInfo("Extension: {0}", pe.Type.ToString());
                             if (pe.Config.Count > 0)
                             {
                                 System.Console.Write("  Config: ");
@@ -344,7 +344,7 @@ namespace Victor
                                 {
                                     System.Console.Write("{0}: {1}", config.Key, config.Value);
                                 }
-                                System.Console.WriteLine("\n");
+                                WriteInfo("\n");
                             }
                             if (pe.Extensions.Count > 0)
                             {
@@ -353,7 +353,7 @@ namespace Victor
                                 {
                                     System.Console.Write("{0}: {1}", ex.Key, ex.Value);
                                 }
-                                System.Console.WriteLine("\n");
+                                WriteInfo("\n");
                             }
                         }
                     }
@@ -377,14 +377,14 @@ namespace Victor
                     var descriptors = await c.RegulardictionarystoreRegulardictionariesDescriptorsAsync(null, null, null);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(descriptors));
+                        WriteInfo(EDDIClient.Serialize(descriptors));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(descriptors));
                     }
                     else
                     {
                         foreach (var d in descriptors)
                         {
-                            System.Console.WriteLine("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                            WriteInfo("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
                         }
                     }
                 }
@@ -407,41 +407,41 @@ namespace Victor
                 {
                     var dictionary = await c.RegulardictionarystoreRegulardictionariesGetAsync(o.GetDictionary, o.Version, o.Filter, null, null, null);
                     var version = await c.RegulardictionarystoreRegulardictionariesCurrentversionGetAsync(o.GetDictionary);
-                    System.Console.WriteLine("Version: {0}.", version);
+                    WriteInfo("Version: {0}.", version);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(dictionary));
+                        WriteInfo(EDDIClient.Serialize(dictionary));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(dictionary));
                     }
                     else
                     {
                         if (dictionary.Words.Count > 0)
                         {
-                            System.Console.WriteLine("Words:");
+                            WriteInfo("Words:");
                             foreach (var w in dictionary.Words)
                             {
-                                System.Console.WriteLine("  Word: {0}", w.Word);
-                                System.Console.WriteLine("  Frequency: {0}", w.Frequency);
-                                System.Console.WriteLine("  Expressions: {0}", w.Expressions);
+                                WriteInfo("  Word: {0}", w.Word);
+                                WriteInfo("  Frequency: {0}", w.Frequency);
+                                WriteInfo("  Expressions: {0}", w.Expressions);
                             }
                         }
                         if (dictionary.Phrases.Count > 0)
                         {
-                            System.Console.WriteLine("Phrases:");
+                            WriteInfo("Phrases:");
                             foreach (var p in dictionary.Phrases)
                             {
-                                System.Console.WriteLine("  Phrase: {0}", p.Phrase);
-                                System.Console.WriteLine("  Expressions: {0}", p.Expressions);
+                                WriteInfo("  Phrase: {0}", p.Phrase);
+                                WriteInfo("  Expressions: {0}", p.Expressions);
                             }
-                            System.Console.WriteLine("");
+                            WriteInfo("");
                         }
                         if (dictionary.RegExs.Count > 0)
                         {
-                            System.Console.WriteLine("RegExs:");
+                            WriteInfo("RegExs:");
                             foreach (var r in dictionary.RegExs)
                             {
-                                System.Console.WriteLine("  RegEx: {0}", r.RegEx);
-                                System.Console.WriteLine("  Expressions: {0}", r.Expressions);
+                                WriteInfo("  RegEx: {0}", r.RegEx);
+                                WriteInfo("  Expressions: {0}", r.Expressions);
 
                             }
                         }
@@ -467,33 +467,33 @@ namespace Victor
                     var behavior = await c.BehaviorstoreBehaviorsetsGetAsync(o.GetBehavior, o.Version);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(behavior));
+                        WriteInfo(EDDIClient.Serialize(behavior));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(behavior));
                     }
                     else
                     {
                         if (behavior.BehaviorGroups.Count > 0)
                         {
-                            System.Console.WriteLine("Groups:");
+                            WriteInfo("Groups:");
                             foreach (var bg in behavior.BehaviorGroups)
                             {
-                                System.Console.WriteLine("  Name: {0}", bg.Name);
-                                System.Console.WriteLine("  Execution Strategy: {0}", bg.ExecutionStrategy);
+                                WriteInfo("  Name: {0}", bg.Name);
+                                WriteInfo("  Execution Strategy: {0}", bg.ExecutionStrategy);
                                 if (bg.BehaviorRules.Count > 0)
                                 {
-                                    System.Console.WriteLine("  Rules:");
+                                    WriteInfo("  Rules:");
                                     foreach (var r in bg.BehaviorRules)
                                     {
-                                        System.Console.WriteLine("      Phrase: {0}", r.Name);
+                                        WriteInfo("      Phrase: {0}", r.Name);
                                         if (r.Actions.Count > 0)
                                         {
-                                            System.Console.WriteLine("      Actions: {0}", r.Actions.Aggregate((s1, s2) => s1 + " " + s2));
+                                            WriteInfo("      Actions: {0}", r.Actions.Aggregate((s1, s2) => s1 + " " + s2));
                                         }
                                         if (r.Conditions.Count > 0)
                                         {
                                             foreach (var condition in r.Conditions)
                                             {
-                                                System.Console.WriteLine("      Conditions:");
+                                                WriteInfo("      Conditions:");
                                                 PrintBehaviorRuleCondition(condition, "         ");
                                             }
                                         }
@@ -518,7 +518,7 @@ namespace Victor
                     var outputSet = await c.OutputstoreOutputsetsGetAsync(o.GetOutput, o.Version, o.Filter, null, null, null);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(outputSet));
+                        WriteInfo(EDDIClient.Serialize(outputSet));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(outputSet));
                     }
                     else
@@ -527,14 +527,14 @@ namespace Victor
                         {
                             foreach (var oc in outputSet.OutputSet)
                             {
-                                System.Console.WriteLine("Action: {0}", oc.Action);
-                                System.Console.WriteLine("Times Occurred: {0}", oc.TimesOccurred);
+                                WriteInfo("Action: {0}", oc.Action);
+                                WriteInfo("Times Occurred: {0}", oc.TimesOccurred);
                                 if (oc.Outputs.Count > 0)
                                 {
-                                    System.Console.WriteLine("Outputs: ");
+                                    WriteInfo("Outputs: ");
                                     foreach (var output in oc.Outputs)
                                     {
-                                        System.Console.WriteLine("  Type: {0}. Alternatives: {1}", output.Type, output.ValueAlternatives.Select(va => va.ToString()).Aggregate((s1, s2) => s1 + "=" + s2));
+                                        WriteInfo("  Type: {0}. Alternatives: {1}", output.Type, output.ValueAlternatives.Select(va => va.ToString()).Aggregate((s1, s2) => s1 + "=" + s2));
                                     }
                                 }
                             }
@@ -560,7 +560,7 @@ namespace Victor
                     var prop = await c.PropertysetterstorePropertysettersGetAsync(o.GetProperty, o.Version);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(prop));
+                        WriteInfo(EDDIClient.Serialize(prop));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(prop));
                     }
                     else
@@ -569,13 +569,13 @@ namespace Victor
                         {
                             foreach (var soa in prop.SetOnActions)
                             {
-                                System.Console.WriteLine("Actions: {0}", soa.Actions.Aggregate((a1, a2) => a1 + " " + a2));
+                                WriteInfo("Actions: {0}", soa.Actions.Aggregate((a1, a2) => a1 + " " + a2));
                                 if (soa.SetProperties.Count > 0)
                                 {
-                                    System.Console.WriteLine("Set Properties: ");
+                                    WriteInfo("Set Properties: ");
                                     foreach (var ap in soa.SetProperties)
                                     {
-                                        System.Console.WriteLine("  " + EDDIClient.Serialize(ap));
+                                        WriteInfo("  " + EDDIClient.Serialize(ap));
                                     }
                                 }
                             }
@@ -600,7 +600,7 @@ namespace Victor
                 try
                 {
                     var call = await c.HttpcallsstoreHttpcallsGetAsync(o.GetHttpCall, o.Version);
-                    System.Console.WriteLine(EDDIClient.Serialize(call));
+                    WriteInfo(EDDIClient.Serialize(call));
                     WriteToFileIfRequired(o, EDDIClient.Serialize(call));
                 }
                 catch (EDDIApiException eae)
@@ -786,12 +786,49 @@ namespace Victor
                     var convo = await c.ConversationstoreConversationsSimpleAsync(o.GetConversation, false, true, null);
                     if (o.Json)
                     {
-                        System.Console.WriteLine(EDDIClient.Serialize(convo));
+                        WriteInfo(EDDIClient.Serialize(convo));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(convo));
                     }
                     else
                     {
-                        convo.
+                        WriteInfo("Bot Id: {0}", convo.BotId);
+                        WriteInfo("Bot Version: {0}", convo.BotVersion);
+                        WriteInfo("Bot Deployment Environment: {0}", convo.Environment.ToString());
+                        WriteInfo("User Id: {0}", convo.UserId);
+                        WriteInfo("Converstation State: {0}", convo.ConversationState.ToString());
+                        for (int i = 0; i < convo.ConversationOutputs.Count; i++)
+                        {
+                            WriteInfo("\nStep: {0}", i);
+                            var output = convo.ConversationOutputs.ElementAt(i);
+                            if (output.ContainsKey("input"))
+                            {
+                                WriteInfo("Input: {0}", output["input"]);
+                            }
+                            if (output.ContainsKey("expressions"))
+                            {
+                                WriteInfo("Expressions: {0}", output["expressions"]);
+                            }
+                            if (output.ContainsKey("expressions"))
+                            {
+                                WriteInfo("Intents: {0}", EDDIClient.Serialize(output["expressions"]));
+                            }
+                            if (output.ContainsKey("actions"))
+                            {
+                                WriteInfo("Actions: {0}", EDDIClient.Serialize(output["actions"]));
+                            }
+                            if (output.ContainsKey("httpCalls"))
+                            {
+                                WriteInfo("HTTP Calls: {0}", EDDIClient.Serialize(output["httpCalls"]));
+                            }
+                            if (output.ContainsKey("properties"))
+                            {
+                                WriteInfo("Properties: {0}", EDDIClient.Serialize(output["properties"]));
+                            }
+                            if (output.ContainsKey("output"))
+                            {
+                                WriteInfo("Output: {0}", output["output"]);
+                            }
+                        }
                     }
                 }
                 catch (EDDIApiException eae)
@@ -865,10 +902,10 @@ namespace Victor
 
         static void PrintBehaviorRuleCondition(BehaviorRuleConditionConfiguration condition, string indent)
         {
-            System.Console.WriteLine(indent + "Type: {0}", condition.Type);
+            WriteInfo(indent + "Type: {0}", condition.Type);
             if (condition.Configs.Count > 0)
             {
-                System.Console.WriteLine(indent + "Config: " + condition.Configs.Select(cfg => cfg.Key + ":" + cfg.Value).Aggregate((cfg1, cfg2) => cfg1 + " " + cfg2));
+                WriteInfo(indent + "Config: " + condition.Configs.Select(cfg => cfg.Key + ":" + cfg.Value).Aggregate((cfg1, cfg2) => cfg1 + " " + cfg2));
             }
             if (condition.Conditions != null && condition.Conditions.Count > 0)
             {
@@ -972,6 +1009,8 @@ namespace Victor
                 return e;
             });
         }
+
+        static void WriteInfo(string template, params object[] args) => CO.WriteLineFormatted(template, Color.AliceBlue, Color.PaleGoldenrod, args);
         #endregion
 
         #region Properties

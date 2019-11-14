@@ -120,17 +120,12 @@ namespace Victor
         [Option("start-convo", Required = false, HelpText = "Start a conversation with a bot.")]
         public string StartConversation { get; set; }
 
-        [Option("get-convo", Required = false, HelpText = "Start a conversation with a bot.")]
+        [Option("get-convo", Required = false, HelpText = "Get the conversation with the specified id.")]
         public string GetConversation { get; set; }
 
         [Option('t', "talk", Required = false, HelpText = "Respond to the conversation with the specified bot id:convo id .")]
         public string Talk { get; set; }
 
-        [Option("bid", Required = false, HelpText = "Bot id")]
-        public string BotId { get; set; }
-
-        [Option("cid", Required = false, HelpText = "Conservation id")]
-        public string ConversationId { get; set; }
     }
 
     [Verb("cx", HelpText = "Use the CX features of Victor.")]
