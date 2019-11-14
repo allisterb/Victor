@@ -624,6 +624,16 @@ namespace Victor
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
                     Info("Created dictionary at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "dictionary." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -639,6 +649,16 @@ namespace Victor
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
                     Info("Created behavior set at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "behavior." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -654,6 +674,16 @@ namespace Victor
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
                     Info("Created output configuration set at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "output." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -670,6 +700,16 @@ namespace Victor
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
                     Info("Created package at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "package." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -685,6 +725,16 @@ namespace Victor
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
                     Info("Created bot at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "bot." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -707,8 +757,17 @@ namespace Victor
                 if (s == 200)
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
-
                     Info("Updated dictionary at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "dictionary." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -723,8 +782,17 @@ namespace Victor
                 if (s == 200)
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
-
                     Info("Updated package at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "package." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -739,8 +807,17 @@ namespace Victor
                 if (s == 200)
                 {
                     string l = EDDIClient.GetLastResponseHeader("Location").First();
-
                     Info("Updated bot at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "bot." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
                 }
                 else
                 {
@@ -754,8 +831,13 @@ namespace Victor
                 int s = EDDIClient.LastStatusCode;
                 if (s == 202)
                 {
-                    Info("Deployed bot. Deployment status at {0}", Config("CUI_EDDI_SERVER_URL") + 
-                        "/administration/unrestricted/deploymentstatus/" + o.DeployBot + "?version=" + o.Version.ToString());
+                    var url = Config("CUI_EDDI_SERVER_URL") +
+                        "/administration/unrestricted/deploymentstatus/" + o.DeployBot + "?version=" + o.Version.ToString();
+                    Info("Deployed bot. Deployment status at {0}", url);
+                    Info("Waiting for 5 seconds while bot deploys.");
+                    Thread.Sleep(5 * 1000);
+                    var response = HttpClient.GetAsync(url).Result;
+                    Info("Deployment status: {0}.", response.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {
