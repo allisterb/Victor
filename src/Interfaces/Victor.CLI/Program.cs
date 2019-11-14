@@ -765,7 +765,7 @@ namespace Victor
             else if (!string.IsNullOrEmpty(o.StartConversation))
             {
                 Info("Starting conversation with bot {0}...", o.StartConversation);
-                await c.BotsPostAsync(Environment8.Test, o.StartConversation, "", null);
+                await c.BotsPostAsync(Environment8.Unrestricted, o.StartConversation, "", null);
                 int s = EDDIClient.LastStatusCode;
                 if (s == 201)
                 {
@@ -783,16 +783,49 @@ namespace Victor
                 try
                 {
                     Info("Getting conversation {0}...", o.GetConversation);
-                    var convo = await c.ConversationstoreConversationsSimpleAsync(o.GetConversation, true, true, null);
+                    var convo = await c.ConversationstoreConversationsSimpleAsync(o.GetConversation, false, true, null);
                     if (o.Json)
                     {
                         System.Console.WriteLine(EDDIClient.Serialize(convo));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(convo));
-
                     }
                     else
                     {
-                        System.Console.WriteLine("BotId:{0}, BotVersion:{1}, BotEnvironment:{2}.", convo.BotId, convo.BotVersion, convo.Environment.ToString());
+                        convo.
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get conversation: {0}: {1}", o.GetConversation, eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error getting conversation {0}.", o.GetConversation);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.Talk))
+            {
+                if (string.IsNullOrEmpty(o.Input))
+                {
+                    Error("You must specify an input to the conversation.");
+                    Exit(ExitResult.INVALID_OPTIONS);
+                }
+                try
+                {
+                    string[] ids = o.Talk.Split(':');
+                    string botid = ids[0], cid = ids[1];
+                    Info("Sending input to conversation {0} with bot {1}...", cid, botid);
+                    await c.BotsPostAsync(Environment7.Unrestricted, botid, cid, false, true, null, body: new InputData() { Input = o.Input });
+                    var s = EDDIClient.LastStatusCode;
+                    if (s == 200)
+                    {
+                        Info("Input sent to {0}.", o.Talk);
+                    }
+                    else
+                    {
+                        Error("Did not talk to {0}. HTTP status code {0}.", s);
                     }
 
                 }
@@ -807,7 +840,6 @@ namespace Victor
                     Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
-
             else
             {
                 Error("Select the CUI operation and options you want to use.");

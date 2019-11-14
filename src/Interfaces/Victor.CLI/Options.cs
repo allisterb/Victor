@@ -123,7 +123,7 @@ namespace Victor
         [Option("get-convo", Required = false, HelpText = "Start a conversation with a bot.")]
         public string GetConversation { get; set; }
 
-        [Option('t', "talk", Required = false, HelpText = "Respond to a particular coversation.")]
+        [Option('t', "talk", Required = false, HelpText = "Respond to the conversation with the specified bot id:convo id .")]
         public string Talk { get; set; }
 
         [Option("bid", Required = false, HelpText = "Bot id")]

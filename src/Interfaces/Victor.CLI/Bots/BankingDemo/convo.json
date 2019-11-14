@@ -1,0 +1,212 @@
+﻿{
+  "botId": "5dcca13927c35179bce0c19e",
+  "botVersion": 3,
+  "userId": "anonymous-50zLUKqQqI",
+  "environment": "unrestricted",
+  "conversationState": "READY",
+  "redoCacheSize": 0,
+  "conversationOutputs": [
+    {
+      "actions": [ "CONVERSATION_START", "global_menu" ],
+      "output": [ "Welcome to First Red Hat National Bank. What do you want to do?" ],
+      "quickReplies": [
+        {
+          "value": "balance",
+          "expressions": "trigger(account_balance)",
+          "default": false
+        }
+      ]
+    },
+    {
+      "input": "hello",
+      "expressions": "unknown(hello)",
+      "intents": [ "unknown" ]
+    },
+    {
+      "input": "balance",
+      "expressions": "trigger(account_balance)",
+      "intents": [ "trigger" ],
+      "actions": [ "ask_for_account_no" ],
+      "output": [ "What is  your account number?" ]
+    },
+    {
+      "input": "bala",
+      "expressions": "unknown(bala)",
+      "intents": [ "unknown" ],
+      "actions": [ "current_weather_in_city" ],
+      "httpCalls": {
+        "currentWeather": {
+          "coord": {
+            "lon": -3.6,
+            "lat": 52.91
+          },
+          "weather": [
+            {
+              "id": 500,
+              "main": "Rain",
+              "description": "light rain",
+              "icon": "10n"
+            }
+          ],
+          "base": "stations",
+          "main": {
+            "temp": 5.29,
+            "pressure": 992,
+            "humidity": 75,
+            "temp_min": 5,
+            "temp_max": 6
+          },
+          "visibility": 10000,
+          "wind": {
+            "speed": 11.8,
+            "deg": 50
+          },
+          "rain": { "3h": 0.63 },
+          "clouds": { "all": 100 },
+          "dt": 1573698269,
+          "sys": {
+            "type": 1,
+            "id": 1380,
+            "country": "GB",
+            "sunrise": 1573716916,
+            "sunset": 1573748548
+          },
+          "timezone": 0,
+          "id": 2656615,
+          "name": "Bala",
+          "cod": 200
+        }
+      },
+      "properties": {
+        "currentWeather": {
+          "coord": {
+            "lon": -3.6,
+            "lat": 52.91
+          },
+          "weather": [
+            {
+              "id": 500,
+              "main": "Rain",
+              "description": "light rain",
+              "icon": "10n"
+            }
+          ],
+          "base": "stations",
+          "main": {
+            "temp": 5.29,
+            "pressure": 992,
+            "humidity": 75,
+            "temp_min": 5,
+            "temp_max": 6
+          },
+          "visibility": 10000,
+          "wind": {
+            "speed": 11.8,
+            "deg": 50
+          },
+          "rain": { "3h": 0.63 },
+          "clouds": { "all": 100 },
+          "dt": 1573698269,
+          "sys": {
+            "type": 1,
+            "id": 1380,
+            "country": "GB",
+            "sunrise": 1573716916,
+            "sunset": 1573748548
+          },
+          "timezone": 0,
+          "id": 2656615,
+          "name": "Bala",
+          "cod": 200
+        },
+        "account_no": "bala"
+      },
+      "output": [ "The current weather situation of  is light rain at 5.29 ??C" ]
+    }
+  ],
+  "conversationProperties": {
+    "account_no": {
+      "name": "account_no",
+      "value": "bala",
+      "scope": "conversation"
+    }
+  },
+  "conversationSteps": [
+    {
+      "conversationStep": [
+        {
+          "key": "actions",
+          "value": [ "CONVERSATION_START", "global_menu" ],
+          "timestamp": 1573696524345000
+        },
+        {
+          "key": "output:text:global_menu",
+          "value": "Welcome to First Red Hat National Bank. What do you want to do?",
+          "timestamp": 1573696524345000
+        },
+        {
+          "key": "quickReplies:global_menu",
+          "value": [
+            {
+              "value": "balance",
+              "expressions": "trigger(account_balance)",
+              "default": false
+            }
+          ],
+          "timestamp": 1573696524345000
+        }
+      ],
+      "timestamp": 1573696524345000
+    },
+    {
+      "conversationStep": [
+        {
+          "key": "input:initial",
+          "value": "hello",
+          "timestamp": 1573698354463000
+        }
+      ],
+      "timestamp": 1573698354463000
+    },
+    {
+      "conversationStep": [
+        {
+          "key": "input:initial",
+          "value": "balance",
+          "timestamp": 1573698374792000
+        },
+        {
+          "key": "actions",
+          "value": [ "ask_for_account_no" ],
+          "timestamp": 1573698374798000
+        },
+        {
+          "key": "output:text:ask_for_account_no",
+          "value": "What is  your account number?",
+          "timestamp": 1573698374799000
+        }
+      ],
+      "timestamp": 1573698374799000
+    },
+    {
+      "conversationStep": [
+        {
+          "key": "input:initial",
+          "value": "bala",
+          "timestamp": 1573698542052000
+        },
+        {
+          "key": "actions",
+          "value": [ "current_weather_in_city" ],
+          "timestamp": 1573698542052000
+        },
+        {
+          "key": "output:text:current_weather_in_city",
+          "value": "The current weather situation of  is light rain at 5.29 ??C",
+          "timestamp": 1573698542925000
+        }
+      ],
+      "timestamp": 1573698542925000
+    }
+  ]
+}
