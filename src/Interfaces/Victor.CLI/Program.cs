@@ -225,7 +225,7 @@ namespace Victor
                     Exit(ExitResult.UNKNOWN_ERROR);
                 }
             }
-            else if(!string.IsNullOrEmpty(o.GetBot))
+            else if (!string.IsNullOrEmpty(o.GetBot))
             {
                 Info("Querying for bot {0}...", o.GetBot);
                 try
@@ -236,13 +236,13 @@ namespace Victor
                         System.Console.WriteLine(EDDIClient.Serialize(bot));
                         WriteToFileIfRequired(o, EDDIClient.Serialize(bot));
                     }
-                    else 
+                    else
                     {
-                        foreach(var p in bot.Packages)
+                        foreach (var p in bot.Packages)
                         {
                             System.Console.WriteLine("Package: {0}", p.Segments.Last());
                         }
-                        
+
                         if (bot.Channels != null)
                         {
                             foreach (var channel in bot.Channels)
@@ -250,12 +250,12 @@ namespace Victor
                                 System.Console.WriteLine("Channel: {0}", channel.Type);
                             }
                         }
-                        
+
                         if (bot.GitBackupSettings != null && bot.GitBackupSettings.RepositoryUrl != null)
                         {
                             System.Console.WriteLine("Git repo: {0}", bot.GitBackupSettings.RepositoryUrl.ToString());
                         }
-                        
+
                     }
                 }
                 catch (EDDIApiException eae)
@@ -269,7 +269,7 @@ namespace Victor
                     Exit(ExitResult.UNKNOWN_ERROR);
                 }
             }
-        
+
             else if (!string.IsNullOrEmpty(o.ExportBot))
             {
                 try
@@ -369,7 +369,7 @@ namespace Victor
                     Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
-            else if(o.GetDictionaries)
+            else if (o.GetDictionaries)
             {
                 Info("Querying for dictionaries...");
                 try
@@ -599,7 +599,7 @@ namespace Victor
                 Info("Querying for HTTP call {0}...", o.GetHttpCall);
                 try
                 {
-                    var call = await c.HttpcallsstoreHttpcallsGetAsync(o.GetHttpCall, o.Version);                    
+                    var call = await c.HttpcallsstoreHttpcallsGetAsync(o.GetHttpCall, o.Version);
                     System.Console.WriteLine(EDDIClient.Serialize(call));
                     WriteToFileIfRequired(o, EDDIClient.Serialize(call));
                 }
@@ -628,30 +628,6 @@ namespace Victor
                 else
                 {
                     Error("Did not create dictionary. HTTP status code {0}.", s);
-                }
-            }
-            else if (!string.IsNullOrEmpty(o.UpdateDictionary))
-            {
-                Info("Updating dictionary {0}...", o.UpdateDictionary);
-                await c.RegulardictionarystoreRegulardictionariesPatchAsync(o.UpdateDictionary, o.Version,
-                    new PatchInstructionRegularDictionaryConfiguration[] 
-                    {
-                        new PatchInstructionRegularDictionaryConfiguration()
-                        {
-                            Operation = PatchInstructionRegularDictionaryConfigurationOperation.SET,
-                            Document = ReadFromFileIfRequired<RegularDictionaryConfiguration>(o)
-                        } 
-                    });
-                int s = EDDIClient.LastStatusCode;
-                if (s == 200)
-                {
-                    string l = EDDIClient.GetLastResponseHeader("Location").First();
-                    
-                    Info("Updated dictionary at {0}.", l);
-                }
-                else
-                {
-                    Error("Did not update dictionary. HTTP status code {0}.", s);
                 }
             }
             else if (o.CreateBehavior)
@@ -700,8 +676,93 @@ namespace Victor
                     Error("Did not create package. HTTP status code {0}.", s);
                 }
             }
-           
-            else if(!string.IsNullOrEmpty(o.StartConversation))
+            else if (o.CreateBot)
+            {
+                Info("Creating bot...");
+                await c.BotstoreBotsPostAsync(ReadFromFileIfRequired<BotConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Created bot at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not create package. HTTP status code {0}.", s);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdateDictionary))
+            {
+                Info("Updating dictionary {0}...", o.UpdateDictionary);
+                await c.RegulardictionarystoreRegulardictionariesPatchAsync(o.UpdateDictionary, o.Version,
+                    new PatchInstructionRegularDictionaryConfiguration[]
+                    {
+                        new PatchInstructionRegularDictionaryConfiguration()
+                        {
+                            Operation = PatchInstructionRegularDictionaryConfigurationOperation.SET,
+                            Document = ReadFromFileIfRequired<RegularDictionaryConfiguration>(o)
+                        }
+                    });
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+
+                    Info("Updated dictionary at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not update dictionary. HTTP status code {0}.", s);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdatePackage))
+            {
+                Info("Updating package {0}...", o.UpdatePackage);
+                await c.PackagestorePackagesPutAsync(o.UpdatePackage, o.Version, ReadFromFileIfRequired<PackageConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+
+                    Info("Updated package at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not update package. HTTP status code {0}.", s);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdateBot))
+            {
+                Info("Updating bot {0}...", o.UpdateBot);
+                await c.BotstoreBotsPutAsync(o.UpdateBot, o.Version, ReadFromFileIfRequired<BotConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+
+                    Info("Updated bot at {0}.", l);
+                }
+                else
+                {
+                    Error("Did not update bot. HTTP status code {0}.", s);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.DeployBot))
+            {
+                Info("Deploying bot {0}...", o.DeployBot);
+                await c.AdministrationDeployAsync(EDDIEnvironment.Unrestricted, o.DeployBot, o.Version, true);
+                int s = EDDIClient.LastStatusCode;
+                if (s == 202)
+                {
+                    Info("Deployed bot. Deployment status at {0}", Config("CUI_EDDI_SERVER_URL") + 
+                        "/administration/unrestricted/deploymentstatus/" + o.DeployBot + "?version=" + o.Version.ToString());
+                }
+                else
+                {
+                    Error("Did not update bot. HTTP status code {0}.", s);
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.StartConversation))
             {
                 Info("Starting conversation with bot {0}...", o.StartConversation);
                 await c.BotsPostAsync(Environment8.Test, o.StartConversation, "", null);
@@ -733,7 +794,7 @@ namespace Victor
                     {
                         System.Console.WriteLine("BotId:{0}, BotVersion:{1}, BotEnvironment:{2}.", convo.BotId, convo.BotVersion, convo.Environment.ToString());
                     }
-                    
+
                 }
                 catch (EDDIApiException eae)
                 {

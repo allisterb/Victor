@@ -102,6 +102,18 @@ namespace Victor
         [Option("create-package", Required = false, HelpText = "Create a package from the specified input.")]
         public bool CreatePackage { get; set; }
 
+        [Option("update-package", Required = false, HelpText = "Update a package with the specified id from the specified input.")]
+        public string UpdatePackage { get; set; }
+
+        [Option("create-bot", Required = false, HelpText = "Create a bot from the specified input.")]
+        public bool CreateBot { get; set; }
+
+        [Option("update-bot", Required = false, HelpText = "Update a bot with the specified id from the specified input.")]
+        public string UpdateBot { get; set; }
+
+        [Option("deploy-bot", Required = false, HelpText = "Deploy a bot with the specified id to the unrestricted environment.")]
+        public string DeployBot { get; set; }
+
         [Option("update-dictionary", Required = false, HelpText = "Update a dictionary with the specified id from the specified input.")]
         public string UpdateDictionary { get; set; }
 

@@ -1,0 +1,22 @@
+{
+  "words": 
+  [
+    {
+      "word": "balance",
+      "expressions": "trigger(account_balance)",
+      "frequency": 0
+    }
+  ],
+  "regExs": [],
+  "phrases": 
+  [
+    {
+      "phrase": "what is the account balance",
+      "expressions": "trigger(account_balance)"
+    },
+    {
+      "phrase": "what's my account balance",
+      "expressions": "trigger(account_balance)"
+    }
+  ]
+}
