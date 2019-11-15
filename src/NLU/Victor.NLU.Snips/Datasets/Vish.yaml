@@ -6,6 +6,8 @@ slots:
   - name: package
     entity: package
 utterances:
+  - help
+  - help with this
   - What is vish
   - help vish
   - help vish packages
@@ -21,31 +23,10 @@ utterances:
   - Tell me about vish packages
   - What's the [package](openshift) vish package
   - How do I use the vish [package](openshift) package
-  - How do I administer [package](openshift) openshift
-
-# info intent
----
-type: intent
-name: info
-slots:
-  - name: package
-    entity: package
-utterances:
-  - vish
-  - show vish packages
-  - all the vish packages
+  - How do I administer [package](openshift) openshift  
   - What vish packages are there
-  - Get vish packages
-  - vish packages
-  - Get the vish packages
-  - Show me the vish packages
-  - Show me the [package](openshift) package
-  - start vish [package](openshift)
-  - vish [package](openshift)
   - I want to manage [package](openshift)
-  - openshift [openshift_object](pods)
-  - openshift [openshift_object](build configs)
-  - openshift [openshift_object](routes)
+
 
 # vish_package entity
 ---
@@ -54,15 +35,3 @@ name: package
 automatically_extensible: no
 values:
 - openshift
-
-# openshift_object entity
----
-type: entity
-name: openshift_object
-automatically_extensible: no
-values:
-- [pod, pods]
-- [build config, build configs]
-- [deployment config, deployment configs]
-- [route, routes]
-- [service, services]

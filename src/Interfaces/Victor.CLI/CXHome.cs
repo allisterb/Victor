@@ -114,6 +114,7 @@ namespace Victor.CLI
         public override void Help(Intent intent)
         {
             var context = Context.Count > 0 ? Context.Peek().Label : "";
+            
             if (intent == null || intent.Entities.Length == 0)
             {
                 switch (context)
@@ -161,20 +162,20 @@ namespace Victor.CLI
                             SayInfoLine("ASR quality may vary depending on your mic and environment. To test how ASR works with your hardware and environment run {0} from a command line.", "victor asr");
                             break;
                         case "package":
-                            SayInfoLine("There are 3 package categories: {0}, {1} and {2}.", "Vish", "Services", "Bots.\n");
-                            SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.\n");
-                            SayInfoLine("Services let you access services like news and product information that do not require much interactivity.\n");
-                            SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.\n");
+                            SayInfoLine("There are 3 package categories: {0}, {1} and {2}.", "Vish", "Services", "Bots.");
+                            SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.");
+                            SayInfoLine("Services let you access services like news and product information that do not require much interactivity.");
+                            SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.");
                             SayInfoLine("Use the {0} command to bring up the packages menu. You can also jump to a package category by entering the category name like {1}.\n", "menu", "vish");
                             break;
                         case "vish":
-                            SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.\n");
+                            SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.");
                             break;
                         case "services":
-                            SayInfoLine("Services let you access services like news and product information that do not require much interactivity.\n");
+                            SayInfoLine("Services let you access services like news and product information that do not require much interactivity.");
                             break;
                         case "bots":
-                            SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.\n");
+                            SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.");
                             SayInfoLine("You can administer Victor CX bots by running {0} from the command-line.", "victor cui");
                             break;
                         case "menu":

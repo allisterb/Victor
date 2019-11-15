@@ -26,12 +26,10 @@ namespace Victor
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
-        #region Intent
+        #region Intents
         public override void Welcome(Intent intent = null)
         {
-            SayInfoLine("Welcome to the Voice Interactive Shell.");
-            SayInfoLine("Say {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.\nTo get background information on any part of Vish enter {3}.",
-                "menu", "help", "exit", "info");
+            Help(null);
         }
 
         public override void Menu(Intent intent)
@@ -42,7 +40,56 @@ namespace Victor
 
         public override void Help(Intent intent = null)
         {
-            throw new NotImplementedException();
+            var context = Context.Count > 0 ? Context.Peek().Label : "";
+
+            if (intent == null || intent.Entities.Length == 0)
+            {
+                switch (context)
+                {
+                    case "WELCOME":
+                        SayInfoLine("Welcome to the Voice Interactive Shell.");
+                        SayInfoLine("Say {0} to see a menu of Vish packages available or {1} or {2} to go back to HOME.",
+                            "menu", "back", "home");
+                        break;
+                    case "MENU_VISH_PACKAGES":
+                        SayInfoLine("Enter the number associated with the Vish package you want to select.");
+                        break;
+                    default:
+                        SayErrorLine("Unknown VISH context: {0}.", context);
+                        SayInfoLine("Say {0} to enable debug mode.", "enable debug");
+                        break;
+                }
+            }
+            else
+            {
+                var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
+             
+                if (string.IsNullOrEmpty(package))
+                {
+                    SayInfoLine("Sorry I didn't understand what you said.");
+                    SayInfoLine("Say {0} to see a menu of Vish packages available or {1} or {2} to go back to HOME.", "menu", "back", "home");
+
+                }
+                else
+                {
+                    package = new string(package.Where(c => Char.IsLetterOrDigit(c)).ToArray());
+                    switch (package)
+                    {
+                        case "this":
+                            Help(null);
+                            break;
+                        case "openshift":
+                            SayInfoLine("The {0} OpenShift package helps you administer a Red Hat OpenShift cluster.", "openshift");
+                            break;
+                        case "menu":
+                            SayInfoLine("Enter the number associated with the Vish package you want to select.");
+                            break;
+                        default:
+                            SayInfoLine("No help so far for package {0}.", package);
+                            break;
+                    }
+                }
+            }
         }
 
         public override void Info(Intent intent = null)

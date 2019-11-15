@@ -176,7 +176,7 @@
     "unit_name": "crf_slot_filler"
   },
   "crf_model_file": "model.crfsuite",
-  "intent": "help",
+  "intent": "launch",
   "language_code": "en",
   "slot_name_mapping": {
     "package": "package"

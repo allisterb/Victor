@@ -1,42 +1,5 @@
 {
   "entities": {
-    "openshift_object": {
-      "automatically_extensible": false,
-      "data": [
-        {
-          "synonyms": [
-            "pods"
-          ],
-          "value": "pod"
-        },
-        {
-          "synonyms": [
-            "build configs"
-          ],
-          "value": "build config"
-        },
-        {
-          "synonyms": [
-            "deployment configs"
-          ],
-          "value": "deployment config"
-        },
-        {
-          "synonyms": [
-            "routes"
-          ],
-          "value": "route"
-        },
-        {
-          "synonyms": [
-            "services"
-          ],
-          "value": "service"
-        }
-      ],
-      "matching_strictness": 1.0,
-      "use_synonyms": true
-    },
     "package": {
       "automatically_extensible": false,
       "data": [
@@ -52,6 +15,20 @@
   "intents": {
     "help": {
       "utterances": [
+        {
+          "data": [
+            {
+              "text": "help"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with this"
+            }
+          ]
+        },
         {
           "data": [
             {
@@ -208,103 +185,11 @@
               "text": " openshift"
             }
           ]
-        }
-      ]
-    },
-    "info": {
-      "utterances": [
-        {
-          "data": [
-            {
-              "text": "vish"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "show vish packages"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "all the vish packages"
-            }
-          ]
         },
         {
           "data": [
             {
               "text": "What vish packages are there"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Get vish packages"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "vish packages"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Get the vish packages"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Show me the vish packages"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Show me the "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "openshift"
-            },
-            {
-              "text": " package"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "start vish "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "openshift"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "vish "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "openshift"
             }
           ]
         },
@@ -317,42 +202,6 @@
               "entity": "package",
               "slot_name": "package",
               "text": "openshift"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "openshift "
-            },
-            {
-              "entity": "openshift_object",
-              "slot_name": "openshift_object",
-              "text": "pods"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "openshift "
-            },
-            {
-              "entity": "openshift_object",
-              "slot_name": "openshift_object",
-              "text": "build configs"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "openshift "
-            },
-            {
-              "entity": "openshift_object",
-              "slot_name": "openshift_object",
-              "text": "routes"
             }
           ]
         }

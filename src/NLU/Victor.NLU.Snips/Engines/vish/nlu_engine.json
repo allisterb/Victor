@@ -197,9 +197,6 @@
   "custom_entity_parser": "custom_entity_parser",
   "dataset_metadata": {
     "entities": {
-      "openshift_object": {
-        "automatically_extensible": false
-      },
       "package": {
         "automatically_extensible": false
       }
@@ -207,10 +204,6 @@
     "language_code": "en",
     "slot_name_mappings": {
       "help": {
-        "package": "package"
-      },
-      "info": {
-        "openshift_object": "openshift_object",
         "package": "package"
       }
     }

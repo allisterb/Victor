@@ -51,7 +51,8 @@ namespace Victor.CLI
         public override void Prompt()
         {
             InputEnabled = true;
-            string i = ReadLine.Read("|> ");
+            string prompt = Context.Peek().Label.StartsWith("INPUT_") ? "|*>" : "|>";
+            string i =  ReadLine.Read(prompt);
             HandleInput(DateTime.Now, i);
         }
 

@@ -101,7 +101,8 @@
       {
         "args": {
           "entities": [
-            "package"
+            "package",
+            "feature"
           ],
           "entity_filter": {
             "automatically_extensible": false
@@ -176,9 +177,10 @@
     "unit_name": "crf_slot_filler"
   },
   "crf_model_file": "model.crfsuite",
-  "intent": "help",
+  "intent": "info",
   "language_code": "en",
   "slot_name_mapping": {
+    "feature": "feature",
     "package": "package"
   }
 }
