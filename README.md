@@ -1,6 +1,6 @@
 # Victor - Voice Interactive Controller
 
-Victor is an free cross-platform programmable voice control framework for desktops that was started during my entry into the [Mozilla Voice Challenge](https://www.herox.com/voice) to test some ideas for an integrated open-source voice stack, and then as the base client platform for the [Victor CX](https://devpost.com/software/victorcx) auditory CUI that was my entry into RedHat's [ReBoot Customer Experience Hackathon](https://redhat.devpost.com/)
+Victor is an free cross-platform programmable voice control framework for desktops that was started during my entry into the [Mozilla Voice Challenge](https://www.herox.com/voice) to test some ideas for an integrated open-source voice stack, and then as the base client platform for the [Victor CX](https://github.com/allisterb/Victor/tree/master/src/CUI) auditory CUI that was [my entry](https://devpost.com/software/victorcx) into RedHat's ReBoot Customer Experience Hackathon.
 
 The following videos are available demoing and documenting some aspects of Victor (click the screenshot to go to the YouTube video):
 [![Victor Test 1](https://oqlqyg.dm.files.1drv.com/y4myL6ntcHAuxBvE4mz9RcFPsgmFXgu2Fo_BAv6eETqRVt1n7VmqAKPAQIaykLZy6NzzlRx5hJUL8TbPm78Dyp-RBCXE6nJvk3Bv304hXfDX4RXpTPMLB4KpcNX-odIYWTbkCGwXmkuQMAGw8rWexWteVwAHI7RlpWL1AX2MCsxLwTUY_mVydRdhZXTHMSyefXRBcaXqlctZIbO8yQS5cCK-A?width=476&height=315&cropmode=none)](https://youtu.be/Lvw4WmbTTBk "Victor Test 1")
