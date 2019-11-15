@@ -1,9 +1,8 @@
-# Victor - Voice Input Controller
+# Victor - Voice Interactive Controller
 
-Victor is an free cross-platform programmable voice control program for desktops that is currently in the early stages of development. Victor was started during my entry into the [Mozilla Voice Challenge](https://www.herox.com/voice) to test some ideas for an integrated open-source voice stack. The current release is v0.1.1 and can be downloaded from the [release page](https://github.com/allisterb/Victor/releases/tag/v0.1.1).
+Victor is an free cross-platform programmable voice control framework for desktops that was started during my entry into the [Mozilla Voice Challenge](https://www.herox.com/voice) to test some ideas for an integrated open-source voice stack, and then as the base client platform for the [Victor CX](https://devpost.com/software/victorcx) auditory CUI that was my entry into RedHat's [ReBoot Customer Experience Hackathon](https://redhat.devpost.com/)
 
-The following videos are available demoing and documenting some aspects of Victor (click the screenshot to go to the YouTube video): 
-
+The following videos are available demoing and documenting some aspects of Victor (click the screenshot to go to the YouTube video):
 [![Victor Test 1](https://oqlqyg.dm.files.1drv.com/y4myL6ntcHAuxBvE4mz9RcFPsgmFXgu2Fo_BAv6eETqRVt1n7VmqAKPAQIaykLZy6NzzlRx5hJUL8TbPm78Dyp-RBCXE6nJvk3Bv304hXfDX4RXpTPMLB4KpcNX-odIYWTbkCGwXmkuQMAGw8rWexWteVwAHI7RlpWL1AX2MCsxLwTUY_mVydRdhZXTHMSyefXRBcaXqlctZIbO8yQS5cCK-A?width=476&height=315&cropmode=none)](https://youtu.be/Lvw4WmbTTBk "Victor Test 1")
 
 [![Victor Test 2](https://tt6saw.dm.files.1drv.com/y4mm7AvW6iDJzANRlfK5PTWeBc1HzsQlkgQdVNq9h47stgzeAhCO5rkISenEz1QxJpDjFwcfXMpQYoGEBJnr3qNwl9hw2S9w17XHva98P4LwTxuni0eHcgyAVTGOe28OO-FtVQK3u2WsSYxDlqpy0e2M1EXRBPtGhiAHSpl18sk-EgjDKDbb8FVV1lwK5udB4C_CJmzCspiDdrnBtpszV6cvg?width=454&height=272&cropmode=none)](https://youtu.be/LQLpoyohYtE "Victor Test 2")
@@ -31,3 +30,4 @@ Victor [interfaces](https://github.com/allisterb/Victor/blob/master/src/NLU/Vict
 Abstractions over the lower-level Snips functions are built-up to avoid other code having to manage the details of calling the library code. This is the standard procedure used for Snips bindings to other languages like Python. This ability to interface with the Snips library directly removes the need for an intermediate Python interpreter or REST API makes SnipsNLU a good choice for the NLU component of an integrated voice stack.
 
 ### Mimic (TTS)
+Victor can use the Mimic TTS engine but generally it is better to rely on the operating system's narrator or TTS capabilities or the user's installed screen reader.
