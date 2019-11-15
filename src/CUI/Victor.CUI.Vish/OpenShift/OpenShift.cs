@@ -114,7 +114,7 @@ namespace Victor
             {
                 SayInfoLine("Get pods for project {0}.", Variables["PROJECT"]);
                 Controller.StartBeeper();
-                var pods = GetPods(Variables["PROJECT"], null).Result;
+                var pods = GetPods(Variables["PROJECT"], null);
                 Controller.StopBeeper();
                 SayInfoLine("Got {0} pods for project {1}.", pods.Items.Count, Variables["PROJECT"]);
             }
@@ -123,10 +123,36 @@ namespace Victor
         #endregion
 
         #region OpenShift API
-        public async Task<Iok8sapicorev1PodList> GetPods(string ns, string label)
+        public Iok8sapicorev1PodList GetPods(string ns, string label)
         {
             ThrowIfNotInitialized();
-            return await Client.ListCoreV1NamespacedPodAsync(namespaceParameter: "evals25-shared-7daa", labelSelector: label);
+            return Client.ListCoreV1NamespacedPod(namespaceParameter: ns, labelSelector: label);
+        }
+
+        public Comgithubopenshiftapiprojectv1ProjectList GetProjects()
+        {
+            ThrowIfNotInitialized();
+            return Client.ListProject();
+
+        }
+
+        public Comgithubopenshiftapiroutev1RouteList GetRoutes(string ns, string label = null)
+        {
+            ThrowIfNotInitialized();
+            return Client.ListRouteOpenshiftIoV1NamespacedRoute(namespaceParameter: ns, labelSelector: label);
+
+        }
+
+        public Comgithubopenshiftapibuildv1BuildList GetBuilds(string ns, string label = null)
+        {
+            ThrowIfNotInitialized();
+            return Client.ListBuildOpenshiftIoV1NamespacedBuild(namespaceParameter: ns, labelSelector: label);
+        }
+
+        public Comgithubopenshiftapibuildv1BuildConfigList GetBuildConfigs(string ns, string label = null)
+        {
+            ThrowIfNotInitialized();
+            return Client.ListBuildOpenshiftIoV1NamespacedBuildConfig(namespaceParameter: ns, labelSelector: label);
         }
         #endregion
 

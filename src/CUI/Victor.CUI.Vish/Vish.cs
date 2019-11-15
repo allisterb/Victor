@@ -62,6 +62,7 @@ namespace Victor
             Controller.SetContext("MENU_VISH_PACKAGES", intent, Menu);
             SayInfoLine("1 {0}", "Red Hat OpenShift");   
         }
+
         #endregion
         protected void GetPackagesMenuItem(int i)
         {

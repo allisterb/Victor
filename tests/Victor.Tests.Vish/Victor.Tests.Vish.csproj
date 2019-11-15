@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CUI\Vish\Victor.CUI.Vish.csproj" />
+    <ProjectReference Include="..\..\src\CUI\Victor.CUI.Vish\Victor.CUI.Vish.csproj" />
     <ProjectReference Include="..\Victor.Tests.Base\Victor.Tests.Base.csproj" />
   </ItemGroup>
 

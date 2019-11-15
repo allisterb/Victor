@@ -28,7 +28,7 @@
     <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
     <ProjectReference Include="..\..\CUI\Victor.CUI.EDDI\Victor.CUI.EDDI.csproj" />
-    <ProjectReference Include="..\..\CUI\Vish\Victor.CUI.Vish.csproj" />
+    <ProjectReference Include="..\..\CUI\Victor.CUI.Vish\Victor.CUI.Vish.csproj" />
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />
     <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
