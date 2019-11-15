@@ -88,6 +88,9 @@ namespace Victor.CLI
                     case "menu":
                         DispatchIntent(intent, Controller.ActivePackage.Menu);
                         break;
+                    case "back":
+                        Back(intent);
+                        break;
                     default:
                         break;
                 }
@@ -352,6 +355,19 @@ namespace Victor.CLI
                 }
             }
         }
+
+        public void Back(Intent intent)
+        {
+            if (Controller.ActivePackage != Controller.PreviousPackage)
+            {
+                Controller.ActivePackage = Controller.PreviousPackage;
+                Controller.ActivePackage.DispatchIntent(null, Controller.ActivePackage.Menu);
+            }
+            else
+            {
+                Controller.Buzz();
+            }
+        }
         #endregion
 
         protected void GetPackagesMenuItem(int i)
@@ -366,7 +382,7 @@ namespace Victor.CLI
                         SubPackages.Add(new Vish(this.Controller));
                         Controller.StopBeeper();
                     }
-                    Controller.ActivePackage = SubPackages.Single(p => p.Name == "Vish");
+                    Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
                     DispatchIntent(null, Controller.ActivePackage.Menu);
                     break;
                 default:

@@ -79,7 +79,7 @@ namespace Victor
                             Help(null);
                             break;
                         case "openshift":
-                            SayInfoLine("The {0} OpenShift package helps you administer a Red Hat OpenShift cluster.", "openshift");
+                            SayInfoLine("The {0} package helps you administer a Red Hat OpenShift cluster.", "RedHat OpenShift");
                             break;
                         case "menu":
                             SayInfoLine("Enter the number associated with the Vish package you want to select.");

@@ -49,19 +49,17 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
-            //EnableBeeper();
-            if (args.Contains("--debug"))
+            if (!args.Contains("cx"))
             {
                 PrintLogo();
+            }
+            if (args.Contains("--debug"))
+            {
                 Info("Debug mode set.");
             }
             ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions, CXOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
-                if (!args.Contains("--debug"))
-                {
-                    PrintLogo();
-                }
                 HelpText help = GetAutoBuiltHelpText(result);
                 help.Copyright = string.Empty;
                 help.AddPreOptionsLine(string.Empty);
@@ -180,13 +178,13 @@ namespace Victor
                         Info("Slots: {0}", json);
                     }
                 }
-                Info("Press any key to exit...");
+                Info("Listening. Press any key to exit...");
             };
             s.Start();
             Info("Waiting for the ASR process to become ready...");
             s.Listening += () =>
             {
-                Info("ASR process listening.");
+                Info("Listening. Press any key to exit...");
             };
             System.Console.ReadKey(false);
             Info("Exiting...");

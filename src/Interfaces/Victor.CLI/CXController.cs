@@ -27,6 +27,7 @@ namespace Victor.CLI
             Packages.Add(new CXHome(this));
             HomePackage = Packages[0];
             ActivePackage = Packages[0];
+            PreviousPackage = Packages[0];
             JuliusSession = new JuliusSession();
             Initialized = Packages[0].Initialized;
             StopBeeper();
@@ -84,6 +85,8 @@ namespace Victor.CLI
         public override void StartBeeper() => _StartBeeper();
 
         public override void StopBeeper() => _StopBeeper();
+
+        public override void Buzz() => Sc.Beep(400, 500);
 
         public override void EnableASR()
         {
@@ -148,14 +151,6 @@ namespace Victor.CLI
             beeperOn = false;
         }
 
-        private void JuliusSession_Listening()
-        {
-            if (beeperOn)
-            {
-                StopBeeper();
-            }
-            SayInfoLine("ASR enabled.");
-        }
 
         protected void SayCouldNotUnderstand(string input)
         {
@@ -176,6 +171,16 @@ namespace Victor.CLI
                 ReadLine.Send(ConsoleKey.Enter);
             };
         }
+
+        private void JuliusSession_Listening()
+        {
+            if (beeperOn)
+            {
+                StopBeeper();
+            }
+            SayInfoLine("ASR enabled.");
+        }
+
         #endregion
         #region Fields
         static Thread _beeperThread;

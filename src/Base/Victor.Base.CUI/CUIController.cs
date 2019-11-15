@@ -34,6 +34,8 @@ namespace Victor
         
         public CUIPackage ActivePackage { get;  set; }
 
+        public CUIPackage PreviousPackage { get; set; }
+
         public bool DebugEnabled { get; set; }
 
         public bool InputEnabled { get; set; }
@@ -61,15 +63,24 @@ namespace Victor
 
         public abstract void StopBeeper();
 
+        public abstract void Buzz();
+
         public abstract void EnableASR();
 
         public abstract void StopASR();
+        
         public abstract bool ASREnabled { get; }
         #endregion
 
         #region Methods
         public void SetContext(string c, Intent intent = null, Action<Intent> action = null) => Context.Push(new CUIContext(DateTime.Now, c, intent, action));
-        
+
+        public void SetActivePackage(CUIPackage package)
+        {
+            this.PreviousPackage = this.ActivePackage;
+            this.ActivePackage = package;
+        }
+
         public void SayInfoLineIfDebugEnabled(string template, params object[] args)
         {
             if (DebugEnabled)
