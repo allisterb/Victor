@@ -29,6 +29,10 @@ namespace Victor.CUI.RHDM.KIE.Client
     /// </summary>
     public partial class ApiClient
     {
+        public static IRestResponse LastResponse { get; set; }
+
+        public static int LastStatusCode { get; set; }
+
         private JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
@@ -182,7 +186,7 @@ namespace Victor.CUI.RHDM.KIE.Client
             
             var response = RestClient.Execute(request);
             InterceptResponse(request, response);
-
+            LastResponse = response;
             return (Object) response;
         }
 

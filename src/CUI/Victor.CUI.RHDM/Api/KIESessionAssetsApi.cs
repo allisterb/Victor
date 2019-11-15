@@ -81,6 +81,10 @@ namespace Victor.CUI.RHDM.KIE.Api
     /// </summary>
     public partial class KIESessionAssetsApi : IKIESessionAssetsApi
     {
+        public static IRestResponse LastResponse { get; set; }
+
+        public static int LastStatusCode { get; set; }
+        
         private Victor.CUI.RHDM.KIE.Client.ExceptionFactory _exceptionFactory = (name, response) => null;
 
         /// <summary>

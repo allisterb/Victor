@@ -12,11 +12,11 @@ namespace Victor.Server.WebAPI
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class RHDMController : ControllerBase
+    public class BusinessRulesController : ControllerBase
     {
 
  
-        public RHDMController(ILogger<BotController> logger, EDDIClient c)
+        public BusinessRulesController(ILogger<BotController> logger, EDDIClient c)
         {
            
         }

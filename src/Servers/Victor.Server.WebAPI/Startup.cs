@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using Victor.CUI.RHDM.KIE.Client;
+using Victor.CUI.RHDM.KIE.Api;
 
 namespace Victor.Server.WebAPI
 {
@@ -29,7 +31,17 @@ namespace Victor.Server.WebAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped((provider) => new EDDIClient("http://victor-webapi-evals25-shared-7daa.apps.hackathon.rhmi.io/", Api.HttpClient));
+            services.AddTransient((provider) => new EDDIClient("http://victor-webapi-evals25-shared-7daa.apps.hackathon.rhmi.io/", Api.HttpClient));
+
+            services.AddTransient((provider) =>
+            {
+                var config = new Configuration();
+                config.BasePath = "https://victor-kieserver-evals25-shared-7daa.apps.hackathon.rhmi.io/services/rest/";
+                config.Username = Api.Config("KIE_ADMIN_USER");
+                config.Password = Api.Config("KIE_ADMIN_PWD");
+                config.ApiClient.RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(config.Username, config.Password);
+                return new KIESessionAssetsApi(config);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
