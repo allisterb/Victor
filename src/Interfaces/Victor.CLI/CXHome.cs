@@ -334,6 +334,17 @@ namespace Victor.CLI
                             SayErrorLine("Debug is not enabled.");
                         }
                         break;
+                    case "asr":
+                        if (Controller.ASREnabled)
+                        {
+                            Controller.StopASR();
+                            SayInfoLine("ASR disabled.");
+                        }
+                        else
+                        {
+                            SayErrorLine("ASR is not enabled.");
+                        }
+                        break;
                     default:
                         SayErrorLine("Sorry I don't know how to enable that.");
                         break;

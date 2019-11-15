@@ -73,6 +73,7 @@ namespace Victor
                 throw new InvalidOperationException("The Julius session is not started.");
             }
             JuliusProcess.Stop();
+            IsListening = false;
             IsStarted = false;
         }
 
