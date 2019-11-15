@@ -13,10 +13,10 @@ using Co = Colorful.Console;
 
 namespace Victor.CLI
 {
-    public class CX2 : CUIController
+    public class CXController : CUIController
     {
         #region Constructors 
-        public CX2(CXOptions o) : base("Victor CLI", Ct)
+        public CXController(CXOptions o) : base("Victor CLI", Ct)
         {
             if (_beeperThread == null)
             {
@@ -41,8 +41,7 @@ namespace Victor.CLI
                 Sc.Clear();
             }
 
-            SayInfoLine("Welcome to Victor CX");
-            SetContext("WELCOME");
+            HomePackage.DispatchIntent(null, HomePackage.Welcome);
             ReadLine.HistoryEnabled = true;
             if (beeperOn) Program.StopBeeper();
             Prompt();

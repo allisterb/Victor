@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 using Victor.CUI.Vish.OpenShift.Client;
 using Victor.CUI.Vish.OpenShift.Client.Models;
+
 namespace Victor
 {
     public class OpenShift : CUIPackage
@@ -18,10 +19,11 @@ namespace Victor
         #region Constructors
         public OpenShift(CUIController controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
         {
+            MenuHandlers["OPENSHIFT"] = GetOpenShiftMenuItem;
+            MenuIndexes["OPENSHIFT"] = 5;
+
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
-            MenuHandlers["OPENSHIFT"] = GetOpenShiftMenuItem;
-            MenuIndexes["OPENSHIFT"] = 1;
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
             {
                 var handler = new HttpClientHandler {};
@@ -30,29 +32,21 @@ namespace Victor
             }
             else if (string.IsNullOrEmpty(ApiUrl))
             {
-                SayErrorLine("I could not determine your OpenShift API URL.");
+                SayErrorLine("I could not determine your OpenShift API URL. Please ensure the item exists in your config.json configuration file.");
             }
             else if (string.IsNullOrEmpty(ApiToken))
             {
-                SayErrorLine("I could not determine your OpenShift service API token.");
+                SayErrorLine("I could not determine your OpenShift service API token. Please ensure the item exists in your config.json configuration file");
             }
         }
 
         public OpenShift(CUIController controller) : this(controller, Ct) {}
         #endregion
 
-        #region Properties
-        protected string ApiToken { get; }
-
-        protected string ApiUrl { get; }
-        
-        protected OpenShiftAPIwithKubernetes Client { get; }
-        #endregion
-
         #region Overriden members
         public override string[] VariableNames { get; } = { "OPENSHIFT_PROJECT" };
 
-        public override string[] MenuItemNames { get; } = { "OPENSHIFT" };
+        public override string[] MenuNames { get; } = { "PROJECTS", "PODS", "BUILD_CONFIGS", "BUILDS",  "DEPLOYMENT_CONFIGS" };
 
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
@@ -87,6 +81,13 @@ namespace Victor
         }
 
         #endregion
+        #region Properties
+        protected string ApiToken { get; }
+
+        protected string ApiUrl { get; }
+        
+        protected OpenShiftAPIwithKubernetes Client { get; }
+        #endregion
 
         #region Methods
         protected void GetOpenShiftMenuItem(int i)
@@ -103,20 +104,20 @@ namespace Victor
         #region Functions
         public void GetPods(Intent intent)
         {
-            Controller.SetContext("GETPODS");
-            if (string.IsNullOrEmpty(Variables["PROJECT"]))
+            Controller.SetContext("PODS");
+            if (string.IsNullOrEmpty(Variables["OPENSHIFT_PROJECT"]))
             {
-                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "PROJECT");
-                GetInput("PROJECT", GetPods, intent);
+                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "OPENSHIFT_PROJECT");
+                GetInput("OPENSHIFT_PROJECT", GetPods, intent);
 
             }
             else
             {
-                SayInfoLine("Get pods for project {0}.", Variables["PROJECT"]);
+                SayInfoLine("Get pods for project {0}.", Variables["OPENSHIFT_PROJECT"]);
                 Controller.StartBeeper();
-                var pods = GetPods(Variables["PROJECT"], null);
+                var pods = GetPods(Variables["OPENSHIFT_PROJECT"], null);
                 Controller.StopBeeper();
-                SayInfoLine("Got {0} pods for project {1}.", pods.Items.Count, Variables["PROJECT"]);
+                SayInfoLine("Got {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
             }
            
         }

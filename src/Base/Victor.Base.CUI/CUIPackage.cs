@@ -22,7 +22,7 @@ namespace Victor
             {
                 Variables.Add(vn, null);
             }
-            foreach(var m in MenuItemNames)
+            foreach(var m in MenuNames)
             {
                 MenuHandlers.Add(m, null);
                 MenuIndexes.Add(m, 0);
@@ -86,7 +86,7 @@ namespace Victor
         #endregion
 
         #region Menu and Intents
-        public bool CanDispatchMenuItemSelection(CUIContext context)
+        public bool CanDispatchToMenuItemSelection(CUIContext context)
         {
             if (Controller.Context.Peek().Label.StartsWith("MENU"))
             {
@@ -142,7 +142,7 @@ namespace Victor
                 DispatchInput(Context.Peek(), input);
                 return true;
             }
-            else if (Int32.TryParse(input, out int result) && CanDispatchMenuItemSelection(Controller.Context.Peek()))
+            else if (Int32.TryParse(input, out int result) && CanDispatchToMenuItemSelection(Controller.Context.Peek()))
             {
                 DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
                 return true;
@@ -152,9 +152,28 @@ namespace Victor
                 return ParseIntent(Controller.Context.Peek(), time, input);
             }
         }
+
+        public virtual bool ParseIntent(CUIContext context, DateTime time, string input)
+        {
+            var intent = NLUEngine.GetIntent(input);
+            if (intent.Top.Score < 0.8)
+            {
+                return false;
+            }
+            else
+            {
+                switch (intent.Top.Label)
+                {
+                    default:
+                        return false;
+                }
+            }
+
+        }
+
         public virtual void HandleMenuItem(int i)
         {
-            if (CanDispatchMenuItemSelection(Context.Peek()))
+            if (CanDispatchToMenuItemSelection(Context.Peek()))
             {
                 DispatchToMenuItem(Context.Peek(), DateTime.Now, i);
             }
@@ -188,13 +207,13 @@ namespace Victor
 
         public abstract string[] VariableNames { get; }
 
-        public abstract string[] MenuItemNames { get; }
+        public abstract string[] MenuNames { get; }
 
-        public abstract bool ParseIntent(CUIContext context, DateTime time, string input);
-
+        #region Intents
         public abstract void Welcome(Intent intent = null);
 
         public abstract void Menu(Intent intent = null);
+        #endregion
         #endregion
     }
 }

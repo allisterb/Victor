@@ -10,12 +10,34 @@ namespace Victor
         #region Constructors
         public Vish(CUIController controller, CancellationToken ct) : base("Vish", new SnipsNLUEngine(Path.Combine("Engines", "vish")), controller, ct)
         {
-            MenuIndexes["VISH_PACKAGES"] = 1;
+            MenuIndexes["VISH_PACKAGES"] = 3;
             MenuHandlers["VISH_PACKAGES"] = GetPackagesMenuItem;
             Initialized = NLUEngine.Initialized;
         }
 
         public Vish(CUIController controller) : this(controller, Ct) {}
+
+        #endregion
+
+        #region Overriden members
+        public override string[] VariableNames { get; } = { };
+
+        public override string[] MenuNames { get; } = { "VISH_PACKAGES" };
+
+        #region Intent
+        public override void Welcome(Intent intent = null)
+        {
+            SayInfoLine("Welcome to the Voice Interactive Shell.");
+            SayInfoLine("Say {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.\nTo get background information on any part of Vish enter {3}.",
+                "menu", "help", "exit", "info");
+        }
+
+        public override void Menu(Intent intent)
+        {
+            Controller.SetContext("MENU_VISH_PACKAGES", intent, Menu);
+            SayInfoLine("1 {0}", "Red Hat OpenShift");
+        }
+        #endregion
 
         #endregion
 
@@ -25,45 +47,7 @@ namespace Victor
         protected string ApiUrl { get; }
         #endregion
 
-        #region Overriden members
-        public override string[] VariableNames { get; } = { };
-
-        public override string[] MenuItemNames { get; } = { "VISH_PACKAGES" };
-
-        public override bool ParseIntent(CUIContext context, DateTime time, string input)
-        {
-            var intent = NLUEngine.GetIntent(input);
-            if (intent.Top.Score < 0.8)
-            {
-                return false;
-            }
-            else
-            {
-                switch (intent.Top.Label)
-                {
-                    default:
-                        return false;
-                }
-            }
-        }
-
-        public override void Welcome(Intent intent = null)
-        {
-            SayInfoLine("Welcome to the Voice Interactive Shell.");
-            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
-        }
-        #endregion
-
         #region Methods
-
-        #region Functions
-        public override void Menu(Intent intent)
-        {
-            Controller.SetContext("MENU_VISH_PACKAGES", intent, Menu);
-            SayInfoLine("1 {0}", "Red Hat OpenShift");   
-        }
-
-        #endregion
         protected void GetPackagesMenuItem(int i)
         {
             switch (i - 1)
@@ -73,10 +57,22 @@ namespace Victor
                     {
                         SayInfoLine("Loading OpenShift package...");
                         Controller.StartBeeper();
-                        SubPackages.Add(new OpenShift(this.Controller));
+                        var _oc = new OpenShift(this.Controller);
+                        if (_oc.Initialized)
+                        {
+                            SubPackages.Add(_oc);
+                        }
                         Controller.StopBeeper();
                     }
-                    Controller.ActivePackage = SubPackages.Single(p => p.Name == "OpenShift");
+                    var oc = SubPackages.Single(p => p.Name == "OpenShift");
+                    if (oc.Initialized)
+                    {
+                        Controller.ActivePackage = oc;
+                    }
+                    else
+                    {
+                        SayErrorLine("The OpenShift package failed to initialize.");
+                    }
                     DispatchIntent(null, Controller.ActivePackage.Menu);
                     break;
                 default:

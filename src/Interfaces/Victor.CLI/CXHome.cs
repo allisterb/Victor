@@ -25,7 +25,7 @@ namespace Victor.CLI
         #region Overriden members
         public override string[] VariableNames { get; } = { "HOME_NAME" };
 
-        public override string[] MenuItemNames { get; } = { "HOME_PACKAGES" };
+        public override string[] MenuNames { get; } = { "HOME_PACKAGES" };
 
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
@@ -67,25 +67,30 @@ namespace Victor.CLI
                 return true;
             }
         }
-
+        
+        #region Intents
         public override void Welcome(Intent intent = null)
         {
             Controller.SetContext("WELCOME");
             SayInfoLine("Welcome to Victor CX."); 
-            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
+            SayInfoLine("Say {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.\nTo get background information on any part of Victor CX enter {3}.", 
+                "menu", "help", "exit", "info");
         }
         public override void Menu(Intent intent)
         {
-            Controller.SetContext("MENU_PACKAGES");
+            Controller.SetContext("MENU_HOME_PACKAGES");
             SayInfoLine("Select a package to use.");
             SayInfoLine("1 {0}", "Vish");
+            SayInfoLine("2 {0}", "Services");
+            SayInfoLine("3 {0}", "Bots");
         }
+        #endregion
 
         #endregion
 
         #region Methods
 
-        #region CUI Functions
+        #region Intents
 
         public void Exit(Intent intent)
         {

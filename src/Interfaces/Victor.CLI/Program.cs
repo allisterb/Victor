@@ -143,7 +143,7 @@ namespace Victor
             {
                 //StartBeeper();
                 //new CX(o).Start();
-                new CX2(o).Start();
+                new CXController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
 
