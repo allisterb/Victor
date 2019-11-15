@@ -67,6 +67,14 @@
         {
           "synonyms": [],
           "value": "debug"
+        },
+        {
+          "synonyms": [],
+          "value": "asr"
+        },
+        {
+          "synonyms": [],
+          "value": "nlu"
         }
       ],
       "matching_strictness": 1.0,
@@ -252,8 +260,8 @@
               "text": "turn off "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             }
           ]
@@ -276,8 +284,8 @@
               "text": "disable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             }
           ]
@@ -318,8 +326,8 @@
               "text": "turn "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             },
             {
@@ -348,8 +356,8 @@
               "text": "I want "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             },
             {
@@ -363,8 +371,8 @@
               "text": "I don't want "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             },
             {
@@ -393,8 +401,8 @@
               "text": "I want to disable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             }
           ]
@@ -478,8 +486,8 @@
               "text": "turn on "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             }
           ]
@@ -490,8 +498,8 @@
               "text": "enable "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             }
           ]
@@ -502,8 +510,8 @@
               "text": "turn "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             },
             {
@@ -532,8 +540,8 @@
               "text": "turn "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             },
             {
@@ -562,8 +570,8 @@
               "text": "I want "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
+              "entity": "function",
+              "slot_name": "function",
               "text": "asr"
             },
             {
@@ -1426,46 +1434,6 @@
             },
             {
               "text": " work"
-            }
-          ]
-        }
-      ]
-    },
-    "launch": {
-      "utterances": [
-        {
-          "data": [
-            {
-              "text": "_ "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "vish"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "_ "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "bots"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "_ "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "services"
             }
           ]
         }

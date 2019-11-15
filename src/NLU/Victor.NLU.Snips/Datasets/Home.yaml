@@ -1,17 +1,4 @@
-﻿# launch intent
----
-type: intent
-name: launch
-slots:
-  - name: package
-    entity: package
-utterances:
-  - _ [package](vish)
-  - _ [package](bots)
-  - _ [package](services)
-
-
-# help intent
+﻿# help intent
 ---
 type: intent
 name: help
@@ -133,19 +120,19 @@ utterances:
 type: intent
 name: enable
 slots:
-  - name: feature
-    entity: feature
+  - name: function
+    entity: function
 utterances:
   - enable [function](debug)
   - enable [function](debug) now
   - turn on [function](debug)
-  - turn on [feature](asr)
-  - enable [feature](asr)
-  - turn [feature](asr) on
+  - turn on [function](asr)
+  - enable [function](asr)
+  - turn [function](asr) on
   - turn [function](debug) on
-  - turn [feature](asr) on please
+  - turn [function](asr) on please
   - enable [function](debug) now
-  - I want [feature](asr) on now
+  - I want [function](asr) on now
   - I want to turn on [function](debug) now
   - I want to enable [function](debug)
   - Please turn on [function](debug) now
@@ -156,23 +143,23 @@ utterances:
 type: intent
 name: disable
 slots:
-  - name: feature
-    entity: feature
+  - name: function
+    entity: function
 utterances:
   - disable [function](debug)
   - disable [function](debug) now
   - turn off [function](debug)
-  - turn off [feature](asr)
+  - turn off [function](asr)
   - off [function](debug)
-  - disable [feature](asr)
+  - disable [function](asr)
   - turn [feature](asr) off
   - turn [function](debug) off
-  - turn [feature](asr) off please
+  - turn [function](asr) off please
   - disable [function](debug) now
-  - I want [feature](asr) off now
-  - I don't want [feature](asr) now
+  - I want [function](asr) off now
+  - I don't want [function](asr) now
   - I want to turn off [function](debug) now
-  - I want to disable [feature](asr)
+  - I want to disable [function](asr)
   - Please disable [function](debug) now 
   - Please turn off [function](debug) now
 
@@ -219,6 +206,8 @@ values:
 - this
 - [exit, end, end the program, end this]
 - debug
+- asr
+- nlu
 
 # package entity
 ---

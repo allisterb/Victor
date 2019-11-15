@@ -27,12 +27,13 @@ namespace Victor.CLI
             Packages.Add(new CXHome(this));
             HomePackage = Packages[0];
             ActivePackage = Packages[0];
+            JuliusSession = new JuliusSession();
             Initialized = Packages[0].Initialized;
             StopBeeper();
         }
         #endregion
 
-        #region Overriden methods
+        #region Overriden members
         public override void Start()
         {
             ThrowIfNotInitialized();
@@ -69,6 +70,7 @@ namespace Victor.CLI
             Prompt();
         }
 
+
         public override void SayInfoLine(string template, params object[] args) => Co.WriteLineFormatted(template, Color.Pink, Color.PaleGoldenrod, args);
 
         public override void SayErrorLine(string template, params object[] args) => Co.WriteLineFormatted(template, Color.Pink, Color.Red, args);
@@ -81,10 +83,39 @@ namespace Victor.CLI
         public override void StartBeeper() => _StartBeeper();
 
         public override void StopBeeper() => _StopBeeper();
+
+        public override void EnableASR()
+        {
+            if (JuliusSession == null || !JuliusSession.Initialized)
+            {
+                SayInfoLine("Sorry ASR is not available. Check that your Victor binary release has the required files or check the Victor log file for errors.");
+                return;
+            }
+            if (JuliusSession != null && JuliusSession.Initialized && JuliusSession.IsStarted)
+            {
+                SayInfoLine("ASR is already enabled.");
+                return;
+            }
+            else if (JuliusSession != null && JuliusSession.Initialized && !JuliusSession.IsStarted)
+            {
+                SayInfoLine("Enabling ASR...");
+                JuliusSession.Recognized += JuliusSession_Recognized;
+                JuliusSession.Listening += JuliusSession_Listening;
+                StartBeeper();
+                JuliusSession.Start();
+                SayInfoLine("Waiting for the ASR process to become ready...");
+            }
+        }
+
+        public override void StopASR() => JuliusSession.Stop();
+
+        public override bool ASREnabled => JuliusSession.Initialized && JuliusSession.IsListening;
         #endregion
 
         #region Properties
         public CXOptions Options { get; }
+
+        public JuliusSession JuliusSession { get; protected set; }
         #endregion
         
         #region Methods
@@ -116,6 +147,15 @@ namespace Victor.CLI
             beeperOn = false;
         }
 
+        private void JuliusSession_Listening()
+        {
+            if (beeperOn)
+            {
+                StopBeeper();
+            }
+            SayInfoLine("ASR enabled.");
+        }
+
         protected void SayCouldNotUnderstand(string input)
         {
             if (DebugEnabled)
@@ -126,6 +166,16 @@ namespace Victor.CLI
         }
         #endregion
 
+        #region Event Handlers
+        private void JuliusSession_Recognized(string sentence)
+        {
+            if (InputEnabled)
+            {
+                ReadLine.Send(sentence);
+                ReadLine.Send(ConsoleKey.Enter);
+            };
+        }
+        #endregion
         #region Fields
         static Thread _beeperThread;
 

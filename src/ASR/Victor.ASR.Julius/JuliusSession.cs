@@ -9,6 +9,7 @@ namespace Victor
 {
     public delegate void RecognizedHandler(string sentence);
 
+    public delegate void ListeningHandler();
     public class JuliusSession : Api
     {
         #region Constructors
@@ -81,7 +82,12 @@ namespace Victor
         }
         public void OnProcessOutput(string line)
         {
-            if (line.Trim().StartsWith("sentence1: <s> "))
+            if (!IsListening && line.Trim().Contains("So, the first input will not be recognized."))
+            {
+                IsListening = true;
+                Listening?.Invoke();
+            }
+            else if (line.Trim().StartsWith("sentence1: <s> "))
             {
                 IsPass1Recognizing = false;
                 IsPass1Complete = true;
@@ -90,11 +96,6 @@ namespace Victor
                 Recognized?.Invoke(Pass1Text);
             }
             /*
-             if (line.Trim().StartsWith("Stat: adin_portaudio: latency was set to 30.000000 msec"))
-            {
-                Info("Listening...");
-                IsListening = true;
-            }
             if (line.Trim().StartsWith("pass1_best"))
             {
                 IsListening = false;
@@ -125,6 +126,8 @@ namespace Victor
 
         #region Events
         public event RecognizedHandler Recognized;
+
+        public event ListeningHandler Listening;
         #endregion
     }
 }

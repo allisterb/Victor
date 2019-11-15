@@ -13,7 +13,7 @@ namespace Victor
         public bool Debug { get; set; }
     }
 
-    [Verb("sr", HelpText = "Test the default speech recognition feature of Victor with the default mic as the input source.")]
+    [Verb("asr", HelpText = "Test the default speech recognition feature of Victor with the default mic as the input source.")]
     class SpeechRecognitionOptions : Options
     {
 

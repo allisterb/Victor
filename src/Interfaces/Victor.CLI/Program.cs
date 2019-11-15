@@ -141,8 +141,6 @@ namespace Victor
             })
             .WithParsed<CXOptions>(o =>
             {
-                //StartBeeper();
-                //new CX(o).Start();
                 new CXController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
@@ -159,7 +157,7 @@ namespace Victor
                 Error("Could not initialize Julius session.");
                 Exit(ExitResult.UNKNOWN_ERROR);
             }
-            SnipsNLUEngine engine = new SnipsNLUEngine("nlu_engine_beverage");
+            SnipsNLUEngine engine = new SnipsNLUEngine(Path.Combine("Engines", "beverage"));
             if (!engine.Initialized)
             {
                 Error("Could not initialize SnipsNLU engine.");
@@ -168,22 +166,36 @@ namespace Victor
         
             s.Recognized += (text) =>
             {
+                Info("Text: {0}", text);
                 engine.GetSnipsIntents(text, out string[] intents, out string json, out string error);
                 if (intents.Length > 0)
                 {
                     Info("Intents: {0}", intents);
                     if (!intents.First().StartsWith("None"))
                     {
-                        new MimicSession(intents.First().Split(':').First()).Run();
+                        Info(intents.First().Split(':').First());
                     }
                     if (!string.IsNullOrEmpty(json))
                     {
                         Info("Slots: {0}", json);
                     }
                 }
+                Info("Press any key to exit...");
             };
             s.Start();
-            s.WaitForExit();
+            Info("Waiting for the ASR process to become ready...");
+            s.Listening += () =>
+            {
+                Info("ASR process listening.");
+            };
+            System.Console.ReadKey(false);
+            Info("Exiting...");
+            s.Stop();
+        }
+
+        private static void S_Listening()
+        {
+            throw new NotImplementedException();
         }
 
         static void TTS(string text)

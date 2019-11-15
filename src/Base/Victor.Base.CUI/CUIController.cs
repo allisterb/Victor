@@ -61,6 +61,10 @@ namespace Victor
 
         public abstract void StopBeeper();
 
+        public abstract void EnableASR();
+
+        public abstract void StopASR();
+        public abstract bool ASREnabled { get; }
         #endregion
 
         #region Methods

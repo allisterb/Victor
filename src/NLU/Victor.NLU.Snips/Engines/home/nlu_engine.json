@@ -218,7 +218,6 @@
         "function": "function"
       },
       "enable": {
-        "feature": "feature",
         "function": "function"
       },
       "exit": {},
@@ -233,9 +232,6 @@
       "home": {},
       "info": {
         "feature": "feature",
-        "package": "package"
-      },
-      "launch": {
         "package": "package"
       },
       "menu": {}

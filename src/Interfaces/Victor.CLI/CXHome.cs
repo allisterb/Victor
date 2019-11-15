@@ -155,6 +155,11 @@ namespace Victor.CLI
                             SayInfoLine("A user does not have to enter an exact phrase or the exact command syntax but can express their intent using natural language and different phrases and synonymns.");
                             SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
                             break;
+                        case "asr":
+                            SayInfoLine("Victor CX can use automatic speech recognition as an input method instead of or in addition to a keyboard or character input device.");
+                            SayInfoLine("To enable ASR say {0} or {1}.", "asr on", "enable asr");
+                            SayInfoLine("ASR quality may vary depending on your mic and environment. To test how ASR works with your hardware and environment run {0} from a command line.", "victor asr");
+                            break;
                         case "package":
                             SayInfoLine("There are 3 package categories: {0}, {1} and {2}.", "Vish", "Services", "Bots.\n");
                             SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.\n");
@@ -242,6 +247,10 @@ namespace Victor.CLI
         public void Exit(Intent intent)
         {
             SayInfoLine("Shutting down...");
+            if (Controller.ASREnabled)
+            {
+                Controller.StopASR();
+            }
             Program.Exit(ExitResult.SUCCESS);
         }
 
@@ -284,6 +293,17 @@ namespace Victor.CLI
                         else
                         {
                             SayErrorLine("Debug is already enabled.");
+                        }
+                        break;
+                    case "asr":
+                        if (!Controller.ASREnabled)
+                        {
+                            Controller.EnableASR();
+                            break;
+                        }
+                        else
+                        {
+                            SayErrorLine("ASR is already enabled.");
                         }
                         break;
                     default:
