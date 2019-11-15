@@ -22,6 +22,10 @@ namespace Victor
             {
                 Variables.Add(vn, null);
             }
+            foreach(var i in ItemNames)
+            {
+                Items.Add(i, null);
+            }
             foreach(var m in MenuNames)
             {
                 MenuHandlers.Add(m, null);
@@ -46,7 +50,8 @@ namespace Victor
 
         protected Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
 
-        protected Dictionary<string, List<object>> MenuItems { get; } = new Dictionary<string, List<object>>();
+        protected Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
+
 
         protected Dictionary<string, int> SelectedMenuItem = new Dictionary<string, int>();
 
@@ -147,6 +152,11 @@ namespace Victor
                 DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
                 return true;
             }
+            else if (Int32.TryParse(input, out int _) && !CanDispatchToMenuItemSelection(Controller.Context.Peek()))
+            {
+                SayInfoLine("A menu is not currently active. Try entering {0} to bring up the available menu.", "menu");
+                return true;
+            }
             else
             {
                 return ParseIntent(Controller.Context.Peek(), time, input);
@@ -164,9 +174,19 @@ namespace Victor
             {
                 switch (intent.Top.Label)
                 {
+                    case "help":
+                        Help(intent);
+                        break;
+                    case "info":
+                        Info(intent);
+                        break;
+                    case "menu":
+                        DispatchIntent(intent, Controller.ActivePackage.Menu);
+                        break;
                     default:
-                        return false;
+                        break;
                 }
+                return true;
             }
 
         }
@@ -209,8 +229,14 @@ namespace Victor
 
         public abstract string[] MenuNames { get; }
 
+        public abstract string[] ItemNames { get; }
+
         #region Intents
         public abstract void Welcome(Intent intent = null);
+
+        public abstract void Help(Intent intent = null);
+
+        public abstract void Info(Intent intent = null);
 
         public abstract void Menu(Intent intent = null);
         #endregion

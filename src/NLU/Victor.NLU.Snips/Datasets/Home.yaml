@@ -1,4 +1,87 @@
-﻿# hello intent
+﻿# launch intent
+---
+type: intent
+name: launch
+slots:
+  - name: package
+    entity: package
+utterances:
+  - _ [package](vish)
+  - _ [package](bots)
+  - _ [package](services)
+
+
+# help intent
+---
+type: intent
+name: help
+slots:
+  - name: feature
+    entity: feature
+utterances:
+  - help
+  - help [function](debug)
+  - help [feature](packages)
+  - help on [function](menu)
+  - help me on [feature](packages)
+  - How do I use this
+  - How do I [package](apply for a loan)
+  - Can I [package](send email)
+  - How do I [function](end this)
+  - How can I [function](exit the program)
+  - How do I use [package](vish)
+  - How does the [package](calendar) work
+  - I want to [function](exit) the program
+  - help [package](vish)
+  - help on [package](github)
+  - help me on [feature](packages)
+  - help me with [feature](packages)
+  - How do I use [feature](this)
+  - What does [feature](this) do
+  - How do I [package](apply for a loan)
+  - Can I [package](send email)
+  - How do I [feature](end this)
+  - How can I [feature](exit) the program
+  - How do I use [package](email)
+  
+# info intent
+---
+type: intent
+name: info
+slots:
+  - name: feature
+    entity: feature
+utterances:
+  - info
+  - info [feature](nlp)
+  - info on [feature](packages)
+  - What's [feature](this)
+  - What does this do
+  - What is [feature](this)
+  - What is [feature](nlu)
+  - Tell me about [feature](this)
+  - Talk about [feature](nlu) 
+  - What's [feature](this)
+  - What is [feature](this)
+  - What is [feature](nlu)
+  - Tell me about [feature](this)
+  - Talk about [feature](nlu)
+  - How does the [package](calendar) work
+
+# menu intent
+---
+type: intent
+name: menu
+utterances:
+    - menu
+    - show menu
+    - go to menu
+    - packages
+    - show packages
+    - go to packages
+    - get packages
+
+# hello intent
 ---
 type: intent
 name: hello
@@ -44,53 +127,6 @@ utterances:
   - I want to go
   - I'm leaving
   - bye bye
-
-# help intent
----
-type: intent
-name: help
-slots:
-  - name: feature
-    entity: feature
-utterances:
-  - help
-  - help [feature](nlp)
-  - help [function](debug)
-  - help on [feature](menu)
-  - help me on [feature](packages)
-  - What's [feature](this)
-  - How do I use this
-  - What does this do
-  - What is [feature](this)
-  - What is [feature](nlu)
-  - Tell me about [feature](this)
-  - Talk about [feature](nlu)
-  - How do I [package](apply for a loan)
-  - Can I [package](send email)
-  - How do I [function](end this)
-  - How can I [function](exit the program)
-  - How do I use [package](vish)
-  - How does the [package](calendar) work
-  - I want to [function](exit) the program
-   
-  - What is [package](vish)
-  - help [package](vish)
-  - help on [package](github)
-  - help me on [feature](packages)
-  - help me with [feature](packages)
-  - What's [feature](this)
-  - How do I use [feature](this)
-  - What does [feature](this) do
-  - What is [feature](this)
-  - What is [feature](nlu)
-  - Tell me about [feature](this)
-  - Talk about [feature](nlu)
-  - How do I [package](apply for a loan)
-  - Can I [package](send email)
-  - How do I [feature](end this)
-  - How can I [feature](exit) the program
-  - How do I use [package](email)
-  - How does the [package](calendar) work
   
 # enable intent
 ---
@@ -140,18 +176,60 @@ utterances:
   - Please disable [function](debug) now 
   - Please turn off [function](debug) now
 
-# menu intent
+# back intent
 ---
 type: intent
-name: menu
+name: back
 utterances:
-    - menu
-    - show menu
-    - go to menu
-    - packages
-    - show packages
-    - go to packages
-    - get packages
+    - back
+    - go back
+    - I want to go back
+    - please go back
+
+# home intent
+---
+type: intent
+name: home
+utterances:
+    - home
+    - go home
+    - I want to go home
+    - please go back
+
+# feature entity
+---
+type: entity
+name: feature
+automatically_extensible: no
+values:
+- [package, packages]
+- [vish, voice interactive shell]
+- [services, service]
+- [bots, bot]
+- [menu, menus]
+- [nlu, nlp]
+- [asr, automatic speech recognition]
+
+# function entity
+---
+type: entity
+name: function
+automatically_extensible: no
+values:
+- this
+- [exit, end, end the program, end this]
+- debug
+
+# package entity
+---
+type: entity
+name: package
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [vish, visual interactive shell]
+- [services, email, send email, send an email, send emails, redhat news, red hat news, redhat products, red hat product, github]
+- [bots, banking, loan, apply for loan, get a loan]
 
 # person entity
 ---
@@ -173,37 +251,3 @@ values:
 - Sean 
 - Tim 
 - Hubert
-
-# feature entity
----
-type: entity
-name: feature
-automatically_extensible: no
-values:
-- [packages, services]
-- [menu, menus]
-- [nlu, nlp]
-- asr
-
-# function entity
----
-type: entity
-name: function
-automatically_extensible: no
-values:
-- this
-- [exit, end, end the program, end this]
-- debug
-
-
-# package entity
----
-type: entity
-name: package
-automatically_extensible: no
-values:
-- vish
-- [email, send email, send an email, send emails]
-- [calendar, calendars]
-- [loan, apply for loan, get a loan]
-- github

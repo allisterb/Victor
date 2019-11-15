@@ -18,13 +18,13 @@ namespace Victor.Tests
         [Fact]
         public void CanGetProjects()
         {
-            var p = oc.GetProjects();
+            var p = oc.FetchProjects();
             Assert.NotEmpty(p.Items);
         }
         [Fact]
         public void CanGetPods()
         {
-            var r = oc.GetPods("evals25-shared-7daa", null);
+            var r = oc.FetchPods("evals25-shared-7daa", null);
             Assert.NotEmpty(r.Items);
         }
 

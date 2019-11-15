@@ -24,6 +24,8 @@ namespace Victor
 
         public override string[] MenuNames { get; } = { "VISH_PACKAGES" };
 
+        public override string[] ItemNames { get; } = Array.Empty<string>();
+
         #region Intent
         public override void Welcome(Intent intent = null)
         {
@@ -36,6 +38,16 @@ namespace Victor
         {
             Controller.SetContext("MENU_VISH_PACKAGES", intent, Menu);
             SayInfoLine("1 {0}", "Red Hat OpenShift");
+        }
+
+        public override void Help(Intent intent = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Info(Intent intent = null)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

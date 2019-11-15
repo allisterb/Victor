@@ -100,7 +100,9 @@
       },
       {
         "args": {
-          "entities": [],
+          "entities": [
+            "package"
+          ],
           "entity_filter": {
             "automatically_extensible": false
           },
@@ -116,9 +118,7 @@
       },
       {
         "args": {
-          "entities": [
-            "person"
-          ],
+          "entities": [],
           "entity_filter": {
             "automatically_extensible": true
           },
@@ -176,9 +176,9 @@
     "unit_name": "crf_slot_filler"
   },
   "crf_model_file": "model.crfsuite",
-  "intent": "hello",
+  "intent": "launch",
   "language_code": "en",
   "slot_name_mapping": {
-    "person": "person"
+    "package": "package"
   }
 }

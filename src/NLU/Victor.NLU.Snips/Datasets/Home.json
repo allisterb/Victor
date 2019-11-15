@@ -5,9 +5,27 @@
       "data": [
         {
           "synonyms": [
-            "services"
+            "packages"
           ],
-          "value": "packages"
+          "value": "package"
+        },
+        {
+          "synonyms": [
+            "voice interactive shell"
+          ],
+          "value": "vish"
+        },
+        {
+          "synonyms": [
+            "service"
+          ],
+          "value": "services"
+        },
+        {
+          "synonyms": [
+            "bot"
+          ],
+          "value": "bots"
         },
         {
           "synonyms": [
@@ -22,7 +40,9 @@
           "value": "nlu"
         },
         {
-          "synonyms": [],
+          "synonyms": [
+            "automatic speech recognition"
+          ],
           "value": "asr"
         }
       ],
@@ -56,33 +76,33 @@
       "automatically_extensible": false,
       "data": [
         {
-          "synonyms": [],
+          "synonyms": [
+            "visual interactive shell"
+          ],
           "value": "vish"
         },
         {
           "synonyms": [
+            "email",
             "send email",
             "send an email",
-            "send emails"
+            "send emails",
+            "redhat news",
+            "red hat news",
+            "redhat products",
+            "red hat product",
+            "github"
           ],
-          "value": "email"
+          "value": "services"
         },
         {
           "synonyms": [
-            "calendars"
-          ],
-          "value": "calendar"
-        },
-        {
-          "synonyms": [
+            "banking",
+            "loan",
             "apply for loan",
             "get a loan"
           ],
-          "value": "loan"
-        },
-        {
-          "synonyms": [],
-          "value": "github"
+          "value": "bots"
         }
       ],
       "matching_strictness": 1.0,
@@ -153,6 +173,38 @@
     }
   },
   "intents": {
+    "back": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "back"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go back"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to go back"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "please go back"
+            }
+          ]
+        }
+      ]
+    },
     "disable": {
       "utterances": [
         {
@@ -891,18 +943,6 @@
               "text": "help "
             },
             {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "nlp"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "help "
-            },
-            {
               "entity": "function",
               "slot_name": "function",
               "text": "debug"
@@ -912,11 +952,23 @@
         {
           "data": [
             {
-              "text": "help on "
+              "text": "help "
             },
             {
               "entity": "feature",
               "slot_name": "feature",
+              "text": "packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help on "
+            },
+            {
+              "entity": "function",
+              "slot_name": "function",
               "text": "menu"
             }
           ]
@@ -936,74 +988,7 @@
         {
           "data": [
             {
-              "text": "What's "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
               "text": "How do I use this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "What does this do"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "What is "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "What is "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "nlu"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Tell me about "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Talk about "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "nlu"
             }
           ]
         },
@@ -1100,18 +1085,6 @@
         {
           "data": [
             {
-              "text": "What is "
-            },
-            {
-              "entity": "package",
-              "slot_name": "package",
-              "text": "vish"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
               "text": "help "
             },
             {
@@ -1160,18 +1133,6 @@
         {
           "data": [
             {
-              "text": "What's "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
               "text": "How do I use "
             },
             {
@@ -1193,54 +1154,6 @@
             },
             {
               "text": " do"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "What is "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "What is "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "nlu"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Tell me about "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "this"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "Talk about "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "nlu"
             }
           ]
         },
@@ -1306,6 +1219,200 @@
               "text": "email"
             }
           ]
+        }
+      ]
+    },
+    "home": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "home"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go home"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to go home"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "please go back"
+            }
+          ]
+        }
+      ]
+    },
+    "info": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "info"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "info "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "nlp"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "info on "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What does this do"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "nlu"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Talk about "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "nlu"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "nlu"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Talk about "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "nlu"
+            }
+          ]
         },
         {
           "data": [
@@ -1319,6 +1426,46 @@
             },
             {
               "text": " work"
+            }
+          ]
+        }
+      ]
+    },
+    "launch": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "_ "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "vish"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "_ "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "bots"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "_ "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "services"
             }
           ]
         }

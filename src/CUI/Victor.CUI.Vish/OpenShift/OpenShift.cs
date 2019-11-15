@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,41 +47,80 @@ namespace Victor
         #region Overriden members
         public override string[] VariableNames { get; } = { "OPENSHIFT_PROJECT" };
 
-        public override string[] MenuNames { get; } = { "PROJECTS", "PODS", "BUILD_CONFIGS", "BUILDS",  "DEPLOYMENT_CONFIGS" };
+        public override string[] MenuNames { get; } = { "OPENSHIFT_PROJECTS", "OPENSHIFT_PODS", "OPENSHIFT_BUILD_CONFIGS", "OPENSHIFT_BUILDS", "OPENSHIFT_DEPLOYMENT_CONFIGS" };
 
-        public override bool ParseIntent(CUIContext context, DateTime time, string input)
-        {
-            var intent = NLUEngine.GetIntent(input);
-            if (intent.Top.Score < 0.8)
-            {
-                return false;
-            }
-            else
-            {
-                switch (intent.Top.Label)
-                {
-                    case "menu":
-                        DispatchIntent(intent, Menu);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        }
+        public override string[] ItemNames { get; } = { "OPENSHIFT_PROJECTS", "OPENSHIFT_PODS", "OPENSHIFT_BUILD_CONFIGS", "OPENSHIFT_BUILDS", "OPENSHIFT_DEPLOYMENT_CONFIGS" };
 
+        #region Intents
         public override void Welcome(Intent intent = null)
         {
             SayInfoLine("Welcome to the OpenShift administration package.");
             SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
         }
+
+        public override void Help(Intent intent)
+        {
+            if (intent.Entities.Length == 0)
+            {
+                SayInfoLine("This package allows you to administer an OpenShift cluser. Say something like {0} to get help with a specific topic.");
+            }
+            else if (!intent.Entities.Any(e => e.Entity == "openshift_object"))
+            {
+                SayInfoLine("Sorry I did not understand what you said. You can say something like {0} or {1} to get background information on an OpenShift topic.", "info pods", "what are projects");
+            }
+            else
+            {
+                var entity = intent.Entities.First(e => e.Entity == "openshift_object");
+
+                switch (entity.Value)
+                {
+                    case "pod":
+                        SayInfoLine("Pod is a collection of containers that can run on a host. This resource is created by clients and scheduled onto hosts.");
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        }
+
+        public override void Info(Intent intent)
+        {
+            if (intent.Entities.Length == 0)
+            {
+                SayInfoLine("OpenShift is an open source container application platform by Red Hat based on the Kubernetes container orchestrator for enterprise app development.");
+            }
+            else if (!intent.Entities.Any(e => e.Entity == "openshift_object"))
+            {
+                SayInfoLine("Sorry I did not understand what you said. You can say something like {0} or {1} to get background information on an OpenShift topic.", "info pods", "what are projects");
+            }
+            else
+            {
+                var entity = intent.Entities.First(e => e.Entity == "openshift_object");
+
+                switch (entity.Value)
+                {
+                    case "pod":
+                        SayInfoLine("Pod is a collection of containers that can run on a host. This resource is created by clients and scheduled onto hosts.");
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        }
+
         public override void Menu(Intent intent)
         {
             Controller.SetContext("MENU_OPENSHIFT");
-            SayInfoLine("RedHat OpenShift");
-            SayInfoLine("1 {0}", "Get pods");
+            SayInfoLine("Red Hat OpenShift");
+            SayInfoLine("1 {0}", "Projects");
+            SayInfoLine("2 {0}", "Pods");
         }
+        #endregion
 
         #endregion
+
         #region Properties
         protected string ApiToken { get; }
 
@@ -90,50 +130,67 @@ namespace Victor
         #endregion
 
         #region Methods
+
+        #region Intents
+        
+        public void Projects(Intent intent)
+        {
+            Controller.SetContext("OPENSHIFT_PROJECTS");
+            SayInfoLine("Fetching projects for your cluster...");
+            Controller.StartBeeper();
+            var projects = FetchProjects();
+            Controller.StopBeeper();
+            Items["OPENSHIFT_PROJECTS"] = projects;
+            SayInfoLine("Fetched {0} projects.", projects.Items.Count);
+        }
+
+        public void Pods(Intent intent)
+        {
+            Controller.SetContext("OPENSHIFT_PODS");
+            if (string.IsNullOrEmpty(Variables["OPENSHIFT_PROJECT"]))
+            {
+                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "OPENSHIFT_PROJECT");
+                GetInput("OPENSHIFT_PROJECT", Pods, intent);
+                return;
+            }
+            SayInfoLine("Fetching pods for project {0}.", Variables["OPENSHIFT_PROJECT"]);
+            Controller.StartBeeper();
+            var pods = FetchPods(Variables["OPENSHIFT_PROJECT"], null);
+            Controller.StopBeeper();
+            Items["OPENSHIFT_PODS"] = pods;
+            SayInfoLine("Fetched {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
+        }
+
+        #endregion
+
         protected void GetOpenShiftMenuItem(int i)
         {
             switch (i - 1)
             {
                 case 0:
-                    DispatchIntent(null, GetPods);
+                    DispatchIntent(null, Projects);
                     break;
+                case 1:
+                    DispatchIntent(null, Pods);
+                    break;
+
                 default:
                     throw new IndexOutOfRangeException();
             }
         }
-        #region Functions
-        public void GetPods(Intent intent)
-        {
-            Controller.SetContext("PODS");
-            if (string.IsNullOrEmpty(Variables["OPENSHIFT_PROJECT"]))
-            {
-                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "OPENSHIFT_PROJECT");
-                GetInput("OPENSHIFT_PROJECT", GetPods, intent);
-
-            }
-            else
-            {
-                SayInfoLine("Get pods for project {0}.", Variables["OPENSHIFT_PROJECT"]);
-                Controller.StartBeeper();
-                var pods = GetPods(Variables["OPENSHIFT_PROJECT"], null);
-                Controller.StopBeeper();
-                SayInfoLine("Got {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
-            }
-           
-        }
-        #endregion
 
         #region OpenShift API
-        public Iok8sapicorev1PodList GetPods(string ns, string label)
+        public Iok8sapicorev1PodList FetchPods(string ns, string label)
         {
             ThrowIfNotInitialized();
             return Client.ListCoreV1NamespacedPod(namespaceParameter: ns, labelSelector: label);
         }
 
-        public Comgithubopenshiftapiprojectv1ProjectList GetProjects()
+        public Comgithubopenshiftapiprojectv1ProjectList FetchProjects()
         {
             ThrowIfNotInitialized();
             return Client.ListProject();
+            //Client.in
 
         }
 

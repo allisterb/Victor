@@ -27,15 +27,42 @@ namespace Victor.CLI
 
         public override string[] MenuNames { get; } = { "HOME_PACKAGES" };
 
+        public override string[] ItemNames { get; } = Array.Empty<string>();
+
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
+            if (input == "")
+            {
+                return true;
+            }
+            else if (input == "vish")
+            {
+                GetPackagesMenuItem(1);
+                return true;
+            }
+            else if (input == "services")
+            {
+                GetPackagesMenuItem(2);
+                return true;
+            }
+            else if (input == "bots")
+            {
+                GetPackagesMenuItem(3);
+                return true;
+            }
+            
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {
                 DebugIntent(intent);
             }
-
-            if (intent.Top.Score < 0.6)
+            
+            if (intent == null || intent.IsNone)
+            {
+                return false;
+            }
+            
+            else if (intent.Top.Score < 0.6)
             {
                 return false;
             }
@@ -72,9 +99,8 @@ namespace Victor.CLI
         public override void Welcome(Intent intent = null)
         {
             Controller.SetContext("WELCOME");
-            SayInfoLine("Welcome to Victor CX."); 
-            SayInfoLine("Say {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.\nTo get background information on any part of Victor CX enter {3}.", 
-                "menu", "help", "exit", "info");
+            SayInfoLine("Welcome to Victor CX.");
+            Help(null);
         }
         public override void Menu(Intent intent)
         {
@@ -83,6 +109,127 @@ namespace Victor.CLI
             SayInfoLine("1 {0}", "Vish");
             SayInfoLine("2 {0}", "Services");
             SayInfoLine("3 {0}", "Bots");
+        }
+
+        public override void Help(Intent intent)
+        {
+            var context = Context.Count > 0 ? Context.Peek().Label : "";
+            if (intent == null || intent.Entities.Length == 0)
+            {
+                switch (context)
+                {
+                    case "WELCOME":
+                        SayInfoLine("The different VictorCX functions and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
+                        SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit", "menu", "info", "help");
+                        break;
+                    case "MENU_HOME_PACKAGES":
+                        SayInfoLine("Enter the number associated with the VictorCX package category you want to select.");
+                        break;
+                    default:
+                        SayErrorLine("Unknown HOME context: {0}.", context);
+                        SayInfoLine("Say {0} to enable debug mode.", "enable debug");
+                        break;
+                }
+            }
+            else
+            {
+                var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value : null;
+                var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
+                var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value : null;
+
+                if (string.IsNullOrEmpty(feature) && string.IsNullOrEmpty(package) && string.IsNullOrEmpty(function))
+                {
+                    SayInfoLine("Sorry I didn't understand what you said.");
+                    SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
+                }
+                else if (!string.IsNullOrEmpty(feature))
+                {
+                    feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
+                    switch (feature)
+                    {
+                        case "this":
+                            Help(null);
+                            break;
+                        case "nlu":
+                            SayInfoLine("Victor CX uses natural language understanding to understand a user's intent and the entities that are part of that intent.");
+                            SayInfoLine("A user does not have to enter an exact phrase or the exact command syntax but can express their intent using natural language and different phrases and synonymns.");
+                            SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
+                            break;
+                        case "package":
+                            SayInfoLine("There are 3 package categories: {0}, {1} and {2}.", "Vish", "Services", "Bots.\n");
+                            SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.\n");
+                            SayInfoLine("Services let you access services like news and product information that do not require much interactivity.\n");
+                            SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.\n");
+                            SayInfoLine("Use the {0} command to bring up the packages menu. You can also jump to a package category by entering the category name like {1}.\n", "menu", "vish");
+                            break;
+                        case "vish":
+                            SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.\n");
+                            break;
+                        case "services":
+                            SayInfoLine("Services let you access services like news and product information that do not require much interactivity.\n");
+                            break;
+                        case "bots":
+                            SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.\n");
+                            SayInfoLine("You can administer Victor CX bots by running {0} from the command-line.", "victor cui");
+                            break;
+                        case "menu":
+                            SayInfoLine("Menus provide an accessible way to break up or categorize a multi-step task. Enter the number corresponding to the task or category you would like to select next.");
+                            break;
+                        default:
+                            SayInfoLine("No help so far for feature {0}.", feature);
+                            break;
+                    }
+                }
+            }
+        }
+
+        public override void Info(Intent intent = null)
+        {
+            if (intent == null || intent.Entities.Length == 0)
+            {
+                SayInfoLine("Victor CX is an auditory conversational user interface for interacting with an organization's products and online customer services.");
+                SayInfoLine("It is designed specifically for vision-impaired and differently-abled users and customers who are unable to effectively use a complex GUI or pointing devices like mice and touchscreens when interacting with applications and documents presented in a visual medium.");
+            }
+            else
+            {
+                var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value : null;
+                var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
+                var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value : null;
+                var context = Context.Count > 0 ? Context.Peek().Label : "";
+
+                if (!string.IsNullOrEmpty(feature))
+                {
+                    feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
+                    switch (feature)
+                    {
+                        case null:
+                        case "":
+                        case "this":
+                            switch (context)
+                            {
+                                case "WELCOME":
+                                    Hello(null);
+                                    break;
+                                case "MENU_HOME_PACKAGES":
+                                    Help(null);
+                                    break;
+                                default:
+                                    SayErrorLine("Unknown home context: {0}.", context);
+                                    break;
+                            }
+                            break;
+                        case "nlu":
+                            SayInfoLine("Victor CX uses natural language understanding to understand a user's intent and the entities that are part of that intent.");
+                            SayInfoLine("A user does not have to enter an exact phrase or command but can express their intent using natural language and different phrases and synonymns.");
+                            SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
+                            break;
+                        default:
+                            SayInfoLine("No help so far for {0}.", feature);
+                            break;
+                    }
+                }
+            }
+
         }
         #endregion
 
@@ -98,56 +245,23 @@ namespace Victor.CLI
             Program.Exit(ExitResult.SUCCESS);
         }
 
-        protected void Hello(Intent intent)
+        public void Hello(Intent intent)
         {
-            var name = intent.Entities.Length > 0 ? intent.Entities.First().Value : "";
+            var name = intent != null && intent.Entities.Length > 0 ? intent.Entities.First().Value : "";
             if (!string.IsNullOrEmpty(name))
             {
                 SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
-                Variables["Name"] = name;
+                Variables["HOME_NAME"] = name;
             }
-            else 
+            else if (Variables["HOME_NAME"] != null)
+            {
+                SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", Variables["HOME_NAME"]);
+            }
+            else
             {
                 SayInfoLine("Hello, welcome to the Victor CX auditory user interface.");
             }
             SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
-        }
-
-        protected void Help(Intent intent)
-        {
-            var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value : null;
-            var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
-            var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value : null;
-            if (!string.IsNullOrEmpty(feature))
-            {
-                feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
-            }
-            var context = Context.Count > 0 ? Context.Peek().Label : "";
-            switch (feature)
-            {
-                case null:
-                case "":
-                case "this":
-                    switch (context)
-                    {
-                        case "WELCOME":
-                            SayInfoLine("Victor CX is an auditory conversational user interface for interacting with an organisation\'s online services like product registration and on-boarding, product documentation, customer service and support.");
-                            break;
-
-                        default:
-                            break;
-                    }
-                    break;
-                case "nlu":
-                    SayInfoLine("Victor CX uses natural language understanding to understand a user's intent and the entities that are part of that intent.");
-                    SayInfoLine("A user does not have to enter an exact phrase or command but can express their intent using natural language and different phrases and synonymns.");
-                    SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
-                    break;
-                default:
-                    SayInfoLine("No help so far for {0}.", feature);
-                    break;
-            }
-
         }
 
         protected void Enable(Intent intent)

@@ -212,6 +212,7 @@
     },
     "language_code": "en",
     "slot_name_mappings": {
+      "back": {},
       "disable": {
         "feature": "feature",
         "function": "function"
@@ -227,6 +228,14 @@
       "help": {
         "feature": "feature",
         "function": "function",
+        "package": "package"
+      },
+      "home": {},
+      "info": {
+        "feature": "feature",
+        "package": "package"
+      },
+      "launch": {
         "package": "package"
       },
       "menu": {}
