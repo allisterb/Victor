@@ -4,6 +4,5 @@
   "Julius:Args": "-dnnconf ENVR-v5.4.Dnn.Bin/dnn.jconf",
   "SnipsNLU:EngineDir": "Engines",
   "Mimic:Exe": "mimic.exe",
-  "Mimic:Args": "",
-  "CUI_EDDI_SERVER_URL": "http://eddi-evals25-shared-7daa.apps.hackathon.rhmi.io"
+  "Mimic:Args": ""
 }

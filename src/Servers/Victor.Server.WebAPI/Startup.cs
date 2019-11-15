@@ -31,12 +31,12 @@ namespace Victor.Server.WebAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddTransient((provider) => new EDDIClient("http://victor-webapi-evals25-shared-7daa.apps.hackathon.rhmi.io/", Api.HttpClient));
+            services.AddTransient((provider) => new EDDIClient(Api.Config("CUI_EDDI_SERVER_URL"), Api.HttpClient));
 
             services.AddTransient((provider) =>
             {
                 var config = new Configuration();
-                config.BasePath = "https://victor-kieserver-evals25-shared-7daa.apps.hackathon.rhmi.io/services/rest/";
+                config.BasePath = Api.Config("KIE_SERVER_URL");
                 config.Username = Api.Config("KIE_ADMIN_USER");
                 config.Password = Api.Config("KIE_ADMIN_PWD");
                 config.ApiClient.RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(config.Username, config.Password);
