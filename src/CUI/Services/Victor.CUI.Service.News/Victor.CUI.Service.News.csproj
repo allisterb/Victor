@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Base\Victor.Base\Victor.Base.csproj" />
-    <ProjectReference Include="..\..\..\Extractors\Victor.Extractor.WebScraper\Victor.Extractor.WebScraper.csproj" />
+    <ProjectReference Include="..\..\..\Web\Victor.Web.WebScraper\Victor.Web.WebScraper.csproj" />
   </ItemGroup>
 
 </Project>
