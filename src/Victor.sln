@@ -48,6 +48,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libsoundio-sharp.Tests", "..\ext\libsoundio-sharp\dotnetcore\libsoundio-sharp.Tests\libsoundio-sharp.Tests.csproj", "{C28CDB5A-3BF3-48DE-8158-193EABD1DF90}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CUI", "CUI", "{0D85527C-44EE-499A-8024-402349632FA6}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.CUI.Vish", "CUI\Victor.CUI.Vish\Victor.CUI.Vish.csproj", "{8B3AEC2C-231F-4206-968F-C670C737B092}"
 EndProject
@@ -99,7 +102,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extractors", "Extractors", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Extractor.WebScraper", "Extractors\Victor.Extractor.WebScraper\Victor.Extractor.WebScraper.csproj", "{8E9A5094-90F9-410F-934B-9C89DDAB8840}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.CUI.Service.Products", "CUI\Services\Victor.CUI.Service.Products\Victor.CUI.Service.Products.csproj", "{105A7A6E-C529-4DDD-AF9D-C3B546A9FDFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.CUI.Service.Products", "CUI\Services\Victor.CUI.Service.Products\Victor.CUI.Service.Products.csproj", "{105A7A6E-C529-4DDD-AF9D-C3B546A9FDFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
