@@ -241,7 +241,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>List&lt;KieMessage&gt;</returns>
-        List<KieMessage> Healthcheck (bool? report = null);
+        List<HealthCheck> Healthcheck (bool? report = null);
 
         /// <summary>
         /// Liveness check for KIE Server that validates both kie server and all extensions, optionally produces report
@@ -252,7 +252,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>ApiResponse of List&lt;KieMessage&gt;</returns>
-        ApiResponse<List<KieMessage>> HealthcheckWithHttpInfo (bool? report = null);
+        ApiResponse<List<HealthCheck>> HealthcheckWithHttpInfo (bool? report = null);
         /// <summary>
         /// Returns a list of KIE containers on the KIE Server.
         /// </summary>
@@ -566,7 +566,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>Task of List&lt;KieMessage&gt;</returns>
-        System.Threading.Tasks.Task<List<KieMessage>> HealthcheckAsync (bool? report = null);
+        System.Threading.Tasks.Task<List<HealthCheck>> HealthcheckAsync (bool? report = null);
 
         /// <summary>
         /// Liveness check for KIE Server that validates both kie server and all extensions, optionally produces report
@@ -577,7 +577,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>Task of ApiResponse (List&lt;KieMessage&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<KieMessage>>> HealthcheckAsyncWithHttpInfo (bool? report = null);
+        System.Threading.Tasks.Task<ApiResponse<List<HealthCheck>>> HealthcheckAsyncWithHttpInfo (bool? report = null);
         /// <summary>
         /// Returns a list of KIE containers on the KIE Server.
         /// </summary>
@@ -680,6 +680,8 @@ namespace Victor.CUI.RHDM.KIE.Api
     /// </summary>
     public partial class KIEServerAndKIEContainersApi : IKIEServerAndKIEContainersApi
     {
+        public static IRestResponse LastResponse { get; protected set; }
+        
         private Victor.CUI.RHDM.KIE.Client.ExceptionFactory _exceptionFactory = (name, response) => null;
 
         /// <summary>
@@ -1736,6 +1738,7 @@ namespace Victor.CUI.RHDM.KIE.Api
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
 
+            LastResponse = localVarResponse;
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("GetInfo", localVarResponse);
@@ -2140,9 +2143,9 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>List&lt;KieMessage&gt;</returns>
-        public List<KieMessage> Healthcheck (bool? report = null)
+        public List<HealthCheck> Healthcheck (bool? report = null)
         {
-             ApiResponse<List<KieMessage>> localVarResponse = HealthcheckWithHttpInfo(report);
+             ApiResponse<List<HealthCheck>> localVarResponse = HealthcheckWithHttpInfo(report);
              return localVarResponse.Data;
         }
 
@@ -2152,7 +2155,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>ApiResponse of List&lt;KieMessage&gt;</returns>
-        public ApiResponse< List<KieMessage> > HealthcheckWithHttpInfo (bool? report = null)
+        public ApiResponse< List<HealthCheck> > HealthcheckWithHttpInfo (bool? report = null)
         {
 
             var localVarPath = "/server/healthcheck";
@@ -2193,9 +2196,9 @@ namespace Victor.CUI.RHDM.KIE.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<KieMessage>>(localVarStatusCode,
+            return new ApiResponse<List<HealthCheck>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<KieMessage>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<KieMessage>)));
+                (List<HealthCheck>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<HealthCheck>)));
         }
 
         /// <summary>
@@ -2204,9 +2207,9 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>Task of List&lt;KieMessage&gt;</returns>
-        public async System.Threading.Tasks.Task<List<KieMessage>> HealthcheckAsync (bool? report = null)
+        public async System.Threading.Tasks.Task<List<HealthCheck>> HealthcheckAsync (bool? report = null)
         {
-             ApiResponse<List<KieMessage>> localVarResponse = await HealthcheckAsyncWithHttpInfo(report);
+             ApiResponse<List<HealthCheck>> localVarResponse = await HealthcheckAsyncWithHttpInfo(report);
              return localVarResponse.Data;
 
         }
@@ -2217,7 +2220,7 @@ namespace Victor.CUI.RHDM.KIE.Api
         /// <exception cref="Victor.CUI.RHDM.KIE.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="report">optional report flag to return detailed report of the check, defaults to false (optional, default to false)</param>
         /// <returns>Task of ApiResponse (List&lt;KieMessage&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<KieMessage>>> HealthcheckAsyncWithHttpInfo (bool? report = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<HealthCheck>>> HealthcheckAsyncWithHttpInfo (bool? report = null)
         {
 
             var localVarPath = "/server/healthcheck";
@@ -2257,10 +2260,10 @@ namespace Victor.CUI.RHDM.KIE.Api
                 Exception exception = ExceptionFactory("Healthcheck", localVarResponse);
                 if (exception != null) throw exception;
             }
-
-            return new ApiResponse<List<KieMessage>>(localVarStatusCode,
+            LastResponse = localVarResponse;
+            return new ApiResponse<List<HealthCheck>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<KieMessage>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<KieMessage>)));
+                (List<HealthCheck>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<HealthCheck>)));
         }
 
         /// <summary>

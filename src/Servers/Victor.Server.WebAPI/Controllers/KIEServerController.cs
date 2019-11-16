@@ -28,14 +28,11 @@ namespace Victor.Server.WebAPI
             CApi = cApi;
             SApi = sApi;
         }
-        
+
         // GET api/fruits
         [HttpGet]
-        public async Task<ActionResult<List<KieMessage>>> Get()
-        {
-            var response = await CApi.HealthcheckAsync(true);
-            return response;
-        }
+        public async Task<ActionResult<List<HealthCheck>>> Get() => await CApi.HealthcheckAsync(true);
+        
         /*
         // GET api/fruits/5
         [HttpGet("{id}")]
