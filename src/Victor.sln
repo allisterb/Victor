@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libsoundio-sharp.Tests", ".
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CUI", "CUI", "{0D85527C-44EE-499A-8024-402349632FA6}"
 	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
+		CUI\README.md = CUI\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.CUI.Vish", "CUI\Victor.CUI.Vish\Victor.CUI.Vish.csproj", "{8B3AEC2C-231F-4206-968F-C670C737B092}"
