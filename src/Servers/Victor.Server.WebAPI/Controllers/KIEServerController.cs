@@ -6,28 +6,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+using Victor.CUI.RHDM.KIE.Client;
+using Victor.CUI.RHDM.KIE.Api;
+using Victor.CUI.RHDM.KIE.Model;
 
 namespace Victor.Server.WebAPI
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/kie_server")]
     [ApiController]
-    public class BusinessRulesController : ControllerBase
+    public class KIEServerController : ControllerBase
     {
+        protected ILogger<KIEServerController> Logger { get; }
 
- 
-        public BusinessRulesController(ILogger<BotController> logger, EDDIClient c)
+        protected KIEServerAndKIEContainersApi CApi { get; }
+        
+        protected KIESessionAssetsApi SApi { get; }
+        public KIEServerController(ILogger<KIEServerController> logger, KIEServerAndKIEContainersApi cApi, KIESessionAssetsApi sApi)
         {
-           
+            Logger = logger;
+            CApi = cApi;
+            SApi = sApi;
         }
-        /*
+        
         // GET api/fruits
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Fruit>>> Get()
+        public async Task<ActionResult<List<KieMessage>>> Get()
         {
-            return await _context.Fruits.ToListAsync();
+            var response = await CApi.HealthcheckAsync(true);
+            return response;
         }
-
+        /*
         // GET api/fruits/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Fruit>> Get(long id)

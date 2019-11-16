@@ -40,7 +40,19 @@ namespace Victor.Server.WebAPI
                 config.Username = Api.Config("KIE_ADMIN_USER");
                 config.Password = Api.Config("KIE_ADMIN_PWD");
                 config.ApiClient.RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(config.Username, config.Password);
+                config.ApiClient.RestClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
                 return new KIESessionAssetsApi(config);
+            });
+
+            services.AddTransient((provider) =>
+            {
+                var config = new Configuration();
+                config.BasePath = Api.Config("KIE_SERVER_URL");
+                config.Username = Api.Config("KIE_ADMIN_USER");
+                config.Password = Api.Config("KIE_ADMIN_PWD");
+                config.ApiClient.RestClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(config.Username, config.Password);
+                config.ApiClient.RestClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+                return new KIEServerAndKIEContainersApi(config);
             });
         }
 
