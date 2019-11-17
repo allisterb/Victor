@@ -20,16 +20,16 @@ namespace Victor
             }
             foreach(var vn in VariableNames)
             {
-                Variables.Add(vn, null);
+                Variables.Add(Prefixed(vn), null);
             }
             foreach(var i in ItemNames)
             {
-                Items.Add(i, null);
+                Items.Add(Prefixed(i), null);
             }
             foreach(var m in MenuNames)
             {
-                MenuHandlers.Add(m, null);
-                MenuIndexes.Add(m, 0);
+                MenuHandlers.Add(Prefixed(m), null);
+                MenuIndexes.Add(Prefixed(m), 0);
             }
         }
         public CUIPackage(string name, NLUEngine engine, CUIController controller, params CUIPackage[] subPackages) : this(name, engine, controller, Ct, subPackages) {}
@@ -63,6 +63,10 @@ namespace Victor
 
         #region Controller
         public Stack<CUIContext> Context => Controller.Context;
+
+        public string Prefixed(string name) => Name.ToUpper() + "_" + name;
+
+        public string Suffixed(string name) => name +"_" + Name.ToUpper();
         #endregion
 
         #region Input
@@ -225,6 +229,11 @@ namespace Victor
             
         }
 
+        public virtual void Welcome(Intent intent = null)
+        {
+            Controller.SetContext("WELCOME_" + this.Name.ToUpper());
+            Help(null);
+        }
         public abstract string[] VariableNames { get; }
 
         public abstract string[] MenuNames { get; }
@@ -232,8 +241,7 @@ namespace Victor
         public abstract string[] ItemNames { get; }
 
         #region Intents
-        public abstract void Welcome(Intent intent = null);
-
+        
         public abstract void Help(Intent intent = null);
 
         public abstract void Info(Intent intent = null);

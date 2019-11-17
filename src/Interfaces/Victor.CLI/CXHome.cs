@@ -11,8 +11,8 @@ namespace Victor.CLI
         #region Constructors
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
-            MenuHandlers["HOME_PACKAGES"] = GetPackagesMenuItem;
-            MenuIndexes["HOME_PACKAGES"] = 1;
+            MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
+            MenuIndexes[Prefixed("PACKAGES")] = 1;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -23,9 +23,9 @@ namespace Victor.CLI
         #endregion
 
         #region Overriden members
-        public override string[] VariableNames { get; } = { "HOME_NAME" };
+        public override string[] VariableNames { get; } = { "NAME" };
 
-        public override string[] MenuNames { get; } = { "HOME_PACKAGES" };
+        public override string[] MenuNames { get; } = { "PACKAGES" };
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
@@ -76,6 +76,9 @@ namespace Victor.CLI
                     case "help":
                         Help(intent);
                         break;
+                    //case "info":
+                    //    Info(intent);
+                    //    break;
                     case "hello":
                         Hello(intent);
                         break;
@@ -99,12 +102,6 @@ namespace Victor.CLI
         }
         
         #region Intents
-        public override void Welcome(Intent intent = null)
-        {
-            Controller.SetContext("WELCOME");
-            SayInfoLine("Welcome to Victor CX.");
-            Help(null);
-        }
         public override void Menu(Intent intent)
         {
             Controller.SetContext("MENU_HOME_PACKAGES");
@@ -122,9 +119,10 @@ namespace Victor.CLI
             {
                 switch (context)
                 {
-                    case "WELCOME":
-                        SayInfoLine("The different VictorCX functions and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
-                        SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit", "menu", "info", "help");
+                    case "WELCOME_HOME":
+                        SayInfoLine("Welcome to Victor CX.");
+                        SayInfoLine("VictorCX tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
+                        SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit", "menu", "info", "exit");
                         break;
                     case "MENU_HOME_PACKAGES":
                         SayInfoLine("Enter the number associated with the VictorCX package category you want to select.");
@@ -216,8 +214,8 @@ namespace Victor.CLI
                         case "this":
                             switch (context)
                             {
-                                case "WELCOME":
-                                    Hello(null);
+                                case "WELCOME_HOME":
+                                    Info(null);
                                     break;
                                 case "MENU_HOME_PACKAGES":
                                     Help(null);
@@ -233,7 +231,7 @@ namespace Victor.CLI
                             SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
                             break;
                         default:
-                            SayInfoLine("No help so far for {0}.", feature);
+                            SayInfoLine("No info so far for {0}.", feature);
                             break;
                     }
                 }
@@ -383,7 +381,7 @@ namespace Victor.CLI
                         Controller.StopBeeper();
                     }
                     Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
-                    DispatchIntent(null, Controller.ActivePackage.Menu);
+                    DispatchIntent(null, Controller.ActivePackage.Welcome);
                     break;
                 default:
                     throw new IndexOutOfRangeException();

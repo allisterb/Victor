@@ -31,6 +31,7 @@ namespace Victor
             {
                 Configuration = new ConfigurationBuilder()
                 .AddJsonFile("config.json", optional: true)
+                .AddEnvironmentVariables()
                 .Build();
             }
             else
@@ -40,7 +41,6 @@ namespace Victor
                 .AddUserSecrets("d24251d3-99ae-4afc-a9d8-bf9eafcc0ca0")
                 .Build();
             }
-            
 
             HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Victor/0.1");
         }

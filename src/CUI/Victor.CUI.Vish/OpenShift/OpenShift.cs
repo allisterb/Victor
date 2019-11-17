@@ -20,8 +20,8 @@ namespace Victor
         #region Constructors
         public OpenShift(CUIController controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
         {
-            MenuHandlers["OPENSHIFT"] = GetOpenShiftMenuItem;
-            MenuIndexes["OPENSHIFT"] = 5;
+            MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuItem;
+            MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
 
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
@@ -45,24 +45,19 @@ namespace Victor
         #endregion
 
         #region Overriden members
-        public override string[] VariableNames { get; } = { "OPENSHIFT_PROJECT" };
+        public override string[] VariableNames { get; } = { "PROJECT" };
+         
+        public override string[] MenuNames { get; } = { "OBJECTS","PROJECTS", "PODS", "BUILD_CONFIGS", "BUILDS", "DEPLOYMENT_CONFIGS" };
 
-        public override string[] MenuNames { get; } = { "OPENSHIFT_PROJECTS", "OPENSHIFT_PODS", "OPENSHIFT_BUILD_CONFIGS", "OPENSHIFT_BUILDS", "OPENSHIFT_DEPLOYMENT_CONFIGS" };
-
-        public override string[] ItemNames { get; } = { "OPENSHIFT_PROJECTS", "OPENSHIFT_PODS", "OPENSHIFT_BUILD_CONFIGS", "OPENSHIFT_BUILDS", "OPENSHIFT_DEPLOYMENT_CONFIGS" };
+        public override string[] ItemNames { get; } = { "PROJECTS", "PODS", "BUILD_CONFIGS", "BUILDS", "DEPLOYMENT_CONFIGS" };
 
         #region Intents
-        public override void Welcome(Intent intent = null)
-        {
-            SayInfoLine("Welcome to the OpenShift administration package.");
-            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
-        }
 
         public override void Help(Intent intent)
         {
-            if (intent.Entities.Length == 0)
+            if (intent == null || intent.Entities.Length == 0)
             {
-                SayInfoLine("This package allows you to administer an OpenShift cluser. Say something like {0} to get help with a specific topic.");
+                SayInfoLine("This package allows you to administer an OpenShift cluser. Say something like {0} to get help with a specific topic.", "help podss");
             }
             else if (!intent.Entities.Any(e => e.Entity == "openshift_object"))
             {
@@ -112,7 +107,7 @@ namespace Victor
 
         public override void Menu(Intent intent)
         {
-            Controller.SetContext("MENU_OPENSHIFT");
+            Controller.SetContext("MENU_OPENSHIFT_OBJECTS");
             SayInfoLine("Red Hat OpenShift");
             SayInfoLine("1 {0}", "Projects");
             SayInfoLine("2 {0}", "Pods");

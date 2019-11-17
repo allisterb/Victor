@@ -128,7 +128,7 @@ namespace Victor
 
     }
 
-    [Verb("cx", HelpText = "Use the CX features of Victor.")]
+    [Verb("cx", HelpText = "Launch the Victor CX auditory CUI.")]
     public class CXOptions : Options
     {
 

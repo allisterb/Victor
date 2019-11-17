@@ -22,16 +22,11 @@ namespace Victor
         #region Overriden members
         public override string[] VariableNames { get; } = { };
 
-        public override string[] MenuNames { get; } = { "VISH_PACKAGES" };
+        public override string[] MenuNames { get; } = { "PACKAGES" };
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
         #region Intents
-        public override void Welcome(Intent intent = null)
-        {
-            Help(null);
-        }
-
         public override void Menu(Intent intent)
         {
             Controller.SetContext("MENU_VISH_PACKAGES", intent, Menu);
@@ -46,7 +41,7 @@ namespace Victor
             {
                 switch (context)
                 {
-                    case "WELCOME":
+                    case "WELCOME_VISH":
                         SayInfoLine("Welcome to the Voice Interactive Shell.");
                         SayInfoLine("Say {0} to see a menu of Vish packages available or {1} or {2} to go back to HOME.",
                             "menu", "back", "home");
@@ -132,7 +127,7 @@ namespace Victor
                     {
                         SayErrorLine("The OpenShift package failed to initialize.");
                     }
-                    DispatchIntent(null, Controller.ActivePackage.Menu);
+                    DispatchIntent(null, Controller.ActivePackage.Welcome);
                     break;
                 default:
                     throw new IndexOutOfRangeException();
