@@ -19,7 +19,7 @@ namespace Victor
         #region Abstract properties
         public IntentScore Top => Scores.OrderByDescending(s => s.Score).First();
 
-        public bool IsNone => Top.Label == "None";
+        public bool IsNone => Scores.Count() == 0 || Top.Label == "None";
         #endregion
 
         #region Properties

@@ -113,16 +113,15 @@ namespace Victor.CLI
 
         public override void Help(Intent intent)
         {
-            var context = Context.Count > 0 ? Context.Peek().Label : "";
-            
-            if (intent == null || intent.Entities.Length == 0)
+            var context = Context.PeekIfNotEmpty()?.Label;
+            if (Empty(intent) || ObjectEmpty(intent))
             {
                 switch (context)
                 {
                     case "WELCOME_HOME":
                         SayInfoLine("Welcome to Victor CX.");
                         SayInfoLine("VictorCX tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
-                        SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit", "menu", "info", "exit");
+                        SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
                         break;
                     case "MENU_HOME_PACKAGES":
                         SayInfoLine("Enter the number associated with the VictorCX package category you want to select.");
@@ -135,18 +134,10 @@ namespace Victor.CLI
             }
             else
             {
-                var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value : null;
-                var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
-                var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value : null;
-
-                if (string.IsNullOrEmpty(feature) && string.IsNullOrEmpty(package) && string.IsNullOrEmpty(function))
+                var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
+                
+                if (!string.IsNullOrEmpty(feature))
                 {
-                    SayInfoLine("Sorry I didn't understand what you said.");
-                    SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
-                }
-                else if (!string.IsNullOrEmpty(feature))
-                {
-                    feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
                     switch (feature)
                     {
                         case "this":
@@ -169,6 +160,18 @@ namespace Victor.CLI
                             SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.");
                             SayInfoLine("Use the {0} command to bring up the packages menu. You can also jump to a package category by entering the category name like {1}.\n", "menu", "vish");
                             break;
+                        case "menu":
+                            SayInfoLine("Menus provide an accessible way to break up or categorize a multi-step task. Enter the number corresponding to the task or category you would like to select next.");
+                            break;
+                        default:
+                            SayInfoLine("No help so far for feature {0}.", feature);
+                            break;
+                    }
+                }
+                else if(!string.IsNullOrEmpty(package))
+                {
+                    switch(package)
+                    {
                         case "vish":
                             SayInfoLine("Vish is the Voice Interactive Shell with packages to help you manage and administer your computer or network or technology products like Red Hat OpenShift.");
                             break;
@@ -179,11 +182,8 @@ namespace Victor.CLI
                             SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.");
                             SayInfoLine("You can administer Victor CX bots by running {0} from the command-line.", "victor cui");
                             break;
-                        case "menu":
-                            SayInfoLine("Menus provide an accessible way to break up or categorize a multi-step task. Enter the number corresponding to the task or category you would like to select next.");
-                            break;
                         default:
-                            SayInfoLine("No help so far for feature {0}.", feature);
+                            SayInfoLine("No help so far for package {0}.", package);
                             break;
                     }
                 }

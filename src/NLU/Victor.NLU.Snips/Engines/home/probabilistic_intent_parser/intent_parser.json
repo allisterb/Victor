@@ -218,12 +218,8 @@
       "slot_filler_name": "slot_filler_7"
     },
     {
-      "intent": "launch",
-      "slot_filler_name": "slot_filler_8"
-    },
-    {
       "intent": "menu",
-      "slot_filler_name": "slot_filler_9"
+      "slot_filler_name": "slot_filler_8"
     }
   ]
 }

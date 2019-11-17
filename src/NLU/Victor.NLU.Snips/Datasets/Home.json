@@ -11,24 +11,6 @@
         },
         {
           "synonyms": [
-            "voice interactive shell"
-          ],
-          "value": "vish"
-        },
-        {
-          "synonyms": [
-            "service"
-          ],
-          "value": "services"
-        },
-        {
-          "synonyms": [
-            "bot"
-          ],
-          "value": "bots"
-        },
-        {
-          "synonyms": [
             "menus"
           ],
           "value": "menu"

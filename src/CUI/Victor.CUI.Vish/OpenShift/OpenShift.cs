@@ -22,7 +22,6 @@ namespace Victor
         {
             MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuItem;
             MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
-
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
@@ -130,7 +129,7 @@ namespace Victor
         
         public void Projects(Intent intent)
         {
-            Controller.SetContext("OPENSHIFT_PROJECTS");
+            SetContext("PROJECTS");
             SayInfoLine("Fetching projects for your cluster...");
             Controller.StartBeeper();
             var projects = FetchProjects();
@@ -141,21 +140,27 @@ namespace Victor
 
         public void Pods(Intent intent)
         {
-            Controller.SetContext("OPENSHIFT_PODS");
-            if (string.IsNullOrEmpty(Variables["OPENSHIFT_PROJECT"]))
+            SetContext("PODS");
+          
+            if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
                 SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "OPENSHIFT_PROJECT");
                 GetInput("OPENSHIFT_PROJECT", Pods, intent);
                 return;
             }
-            SayInfoLine("Fetching pods for project {0}.", Variables["OPENSHIFT_PROJECT"]);
-            Controller.StartBeeper();
-            var pods = FetchPods(Variables["OPENSHIFT_PROJECT"], null);
-            Controller.StopBeeper();
-            Items["OPENSHIFT_PODS"] = pods;
-            SayInfoLine("Fetched {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
+            else
+            {
+                FetchPods(GetVar("Pods"));
+            }
         }
 
+        public void DisplayPods(Intent intent)
+        {
+            Controller.SetContext("MENU_PAGE_OPENSHIFT_PODS_0");
+            var pods = GetItem<Iok8sapicorev1PodList>("PODS");
+            var pages = pods.Items.Count / 10 + 1;
+            
+        }
         #endregion
 
         protected void GetOpenShiftMenuItem(int i)
@@ -175,10 +180,16 @@ namespace Victor
         }
 
         #region OpenShift API
-        public Iok8sapicorev1PodList FetchPods(string ns, string label)
+        public Iok8sapicorev1PodList FetchPods(string ns, string label = null)
         {
             ThrowIfNotInitialized();
-            return Client.ListCoreV1NamespacedPod(namespaceParameter: ns, labelSelector: label);
+            SayInfoLine("Fetching pods for project {0}.", Variables["OPENSHIFT_PROJECT"]);
+            Controller.StartBeeper();
+            var pods = Client.ListCoreV1NamespacedPod(namespaceParameter: ns, labelSelector: label);
+            Controller.StopBeeper();
+            Items["OPENSHIFT_PODS"] = pods;
+            SayInfoLine("Fetched {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
+            return pods;
         }
 
         public Comgithubopenshiftapiprojectv1ProjectList FetchProjects()

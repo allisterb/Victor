@@ -50,8 +50,9 @@ namespace Victor
 
         protected Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
 
-        protected Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
+        protected Dictionary<string, int> MenuPages { get; } = new Dictionary<string, int>();
 
+        protected Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
 
         protected Dictionary<string, int> SelectedMenuItem = new Dictionary<string, int>();
 
@@ -64,18 +65,33 @@ namespace Victor
         #region Controller
         public Stack<CUIContext> Context => Controller.Context;
 
-        public string Prefixed(string name) => Name.ToUpper() + "_" + name;
+        public void SetContext(string name) => Controller.SetContext(Prefixed(name));
+        #endregion
 
-        public string Suffixed(string name) => name +"_" + Name.ToUpper();
+        #region UI
+        public void DebugIntent(Intent intent)
+        {
+            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, Controller.ActivePackage.Name, intent.Top.Label, intent.Top.Score);
+            foreach (var e in intent.Entities)
+            {
+                SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
+
+            }
+        }
+        protected void SayInfoLine(string template, params object[] args) => Controller.SayInfoLine(template, args);
+
+        protected void SayErrorLine(string template, params object[] args) => Controller.SayErrorLine("Error: " + template, args);
+
+        protected void SayWarningLine(string template, params object[] args) => Controller.SayWarningLine("Warning: " + template, args);
         #endregion
 
         #region Input
         public void GetInput(string variableName, Action<Intent> action = null, Intent intent = null)
         {
-            Controller.SetContext("INPUT_" + variableName, intent, action);
+            Controller.SetContext("INPUT_" + Prefixed(variableName), intent, action);
             if (Controller.DebugEnabled)
             {
-                SayInfoLine("Get input for variable {0}.", variableName);
+                SayInfoLine("Get input for variable {0}.", Prefixed(variableName));
             }
         }
 
@@ -94,7 +110,33 @@ namespace Victor
 
         #endregion
 
-        #region Menu and Intents
+        #region Intent parsing
+        public Tuple<string, string, string> GetIntentFeaturePackageFunction(Intent intent)
+        {
+            if (ObjectEmpty(intent))
+            {
+                throw new InvalidOperationException("The intent has no object.");
+            }
+            var feature = intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value.ToAlphaNumeric();
+            var package = intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value.ToAlphaNumeric();
+            var function = intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value.ToAlphaNumeric();
+            return new Tuple<string, string, string>(feature, package, function);
+
+        }
+
+        public Tuple<string, string, List<string>> GetIntentTaskCommandObjects(Intent intent)
+        {
+            if (ObjectEmpty(intent))
+            {
+                throw new InvalidOperationException("The intent has no object.");
+            }
+            var task = intent.Entities.FirstOrDefault(e => e.SlotName == "task")?.Value;
+            var command = intent.Entities.FirstOrDefault(e => e.SlotName == "command")?.Value;
+            var objects = intent.Entities.Any(e => e.SlotName == "object") ?
+                intent.Entities.Where(e => e.SlotName == "object").Select(e => e.Value?.ToAlphaNumeric()).ToList() : new List<string>();
+            return new Tuple<string, string, List<string>>(task, command, objects);
+
+        }
         public bool CanDispatchToMenuItemSelection(CUIContext context)
         {
             if (Controller.Context.Peek().Label.StartsWith("MENU"))
@@ -121,23 +163,20 @@ namespace Victor
                 SayInfoLine("New context: {0}", Context.Peek().Label);
             }
         }
+
+        public bool Empty(Intent intent) => intent == null || intent.IsNone;
+
+        public bool ObjectEmpty(Intent intent) => !Empty(intent) && intent.Entities.Count() == 0;
         #endregion
 
-        #region UI
-        public void DebugIntent(Intent intent)
-        {
-            SayInfoLine("Context: {0}, Package: {1}, Intent: {2} Score: {3}.", Context.PeekIfNotEmpty().Label, Controller.ActivePackage.Name, intent.Top.Label, intent.Top.Score);
-            foreach (var e in intent.Entities)
-            {
-                SayInfoLine("Entity:{0} Value:{1}.", e.Entity, e.Value);
+        #region Variables and Items
+        public string Prefixed(string name) => Name.ToUpper() + "_" + name;
 
-            }
-        }
-        protected void SayInfoLine(string template, params object[] args) => Controller.SayInfoLine(template, args);
+        public string Suffixed(string name) => name + "_" + Name.ToUpper();
 
-        protected void SayErrorLine(string template, params object[] args) => Controller.SayErrorLine("Error: " + template, args);
-        
-        protected void SayWarningLine(string template, params object[] args) => Controller.SayWarningLine("Warning: " + template, args);
+        public string GetVar(string name) => Variables[Prefixed(name)];
+
+        public T GetItem<T>(string name) => (T)Items[Prefixed(name)];
         #endregion
 
         #endregion
@@ -169,6 +208,7 @@ namespace Victor
 
         public virtual bool ParseIntent(CUIContext context, DateTime time, string input)
         {
+            ThrowIfNotInitialized();
             var intent = NLUEngine.GetIntent(input);
             if (intent.Top.Score < 0.8)
             {
@@ -193,14 +233,6 @@ namespace Victor
                 return true;
             }
 
-        }
-
-        public virtual void HandleMenuItem(int i)
-        {
-            if (CanDispatchToMenuItemSelection(Context.Peek()))
-            {
-                DispatchToMenuItem(Context.Peek(), DateTime.Now, i);
-            }
         }
 
         public virtual void DispatchToMenuItem(CUIContext context, DateTime time, int i)
@@ -229,25 +261,27 @@ namespace Victor
             
         }
 
+        #region Intents
+
         public virtual void Welcome(Intent intent = null)
         {
             Controller.SetContext("WELCOME_" + this.Name.ToUpper());
             Help(null);
         }
-        public abstract string[] VariableNames { get; }
 
-        public abstract string[] MenuNames { get; }
-
-        public abstract string[] ItemNames { get; }
-
-        #region Intents
-        
         public abstract void Help(Intent intent = null);
 
         public abstract void Info(Intent intent = null);
 
         public abstract void Menu(Intent intent = null);
         #endregion
+
+        public abstract string[] VariableNames { get; }
+
+        public abstract string[] MenuNames { get; }
+
+        public abstract string[] ItemNames { get; }
+
         #endregion
     }
 }

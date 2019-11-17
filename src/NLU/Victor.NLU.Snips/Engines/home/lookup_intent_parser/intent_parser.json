@@ -20,8 +20,8 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "function",
-          "feature"
+          "feature",
+          "function"
         ]
       },
       "intent_group": [
@@ -54,9 +54,9 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
+          "feature",
           "package",
-          "function",
-          "feature"
+          "function"
         ]
       },
       "intent_group": [
@@ -67,8 +67,8 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "package",
-          "feature"
+          "feature",
+          "package"
         ]
       },
       "intent_group": [
@@ -85,8 +85,7 @@
     "help",
     "home",
     "info",
-    "menu",
-    "launch"
+    "menu"
   ],
   "language_code": "en",
   "map": {

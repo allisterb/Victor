@@ -191,11 +191,6 @@ namespace Victor
             s.Stop();
         }
 
-        private static void S_Listening()
-        {
-            throw new NotImplementedException();
-        }
-
         static void TTS(string text)
         {
             new MimicSession(text).Run();
@@ -1112,6 +1107,7 @@ namespace Victor
         #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            
             Error((Exception)e.ExceptionObject, "Unhandled error occurred during operation. Victor CLI will now shutdown.");
             Exit(ExitResult.UNHANDLED_EXCEPTION);
         }

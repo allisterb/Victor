@@ -5,6 +5,10 @@ name: help
 slots:
   - name: feature
     entity: feature
+  - name: package
+    entity: package
+  - name: function
+    entity: function
 utterances:
   - help
   - help [function](debug)
@@ -190,9 +194,6 @@ name: feature
 automatically_extensible: no
 values:
 - [package, packages]
-- [vish, voice interactive shell]
-- [services, service]
-- [bots, bot]
 - [menu, menus]
 - [nlu, nlp]
 - [asr, automatic speech recognition]
