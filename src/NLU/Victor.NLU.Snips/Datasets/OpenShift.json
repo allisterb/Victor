@@ -5,6 +5,12 @@
       "data": [
         {
           "synonyms": [
+            "projects"
+          ],
+          "value": "project"
+        },
+        {
+          "synonyms": [
             "pods"
           ],
           "value": "pod"
@@ -51,6 +57,18 @@
         {
           "data": [
             {
+              "text": "What is a openshift "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "project"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "What are "
             },
             {
@@ -63,7 +81,7 @@
         {
           "data": [
             {
-              "text": "help with "
+              "text": "help with openshift "
             },
             {
               "entity": "openshift_object",
@@ -123,7 +141,7 @@
             {
               "entity": "openshift_object",
               "slot_name": "openshift_object",
-              "text": "pods"
+              "text": "  pods"
             }
           ]
         },
@@ -185,7 +203,47 @@
             {
               "entity": "openshift_object",
               "slot_name": "openshift_object",
-              "text": "users"
+              "text": "routes"
+            }
+          ]
+        }
+      ]
+    },
+    "list": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "list "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show me "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "display "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "pods"
             }
           ]
         }

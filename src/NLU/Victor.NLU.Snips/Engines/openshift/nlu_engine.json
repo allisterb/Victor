@@ -205,6 +205,9 @@
     "slot_name_mappings": {
       "help": {
         "openshift_object": "openshift_object"
+      },
+      "list": {
+        "openshift_object": "openshift_object"
       }
     }
   },

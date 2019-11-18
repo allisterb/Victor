@@ -14,6 +14,7 @@ namespace Victor
             Name = name;
             NLUEngine = engine;
             Controller = controller;
+            Intents.Add("menu", Menu);
             if (subPackages != null && subPackages.Length > 0)
             {
                 SubPackages = subPackages.ToList();
@@ -25,6 +26,10 @@ namespace Victor
             foreach(var i in ItemNames)
             {
                 Items.Add(Prefixed(i), null);
+                ItemsPageSize.Add(Prefixed(i), 10);
+                ItemsCurrentPage.Add(Prefixed(i), -1);
+                ItemsSelection.Add(Prefixed(i), -1);
+                ItemsDescriptionHandlers.Add(Prefixed(i), null);
             }
             foreach(var m in MenuNames)
             {
@@ -44,19 +49,27 @@ namespace Victor
 
         public List<CUIPackage> SubPackages { get; } = new List<CUIPackage>();
 
+        public Dictionary<string, Action<Intent>> Intents { get; } = new Dictionary<string, Action<Intent>>();
+
         public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
+        
+        public Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
 
-        protected Dictionary<string, Action<int>> MenuHandlers { get; } = new Dictionary<string, Action<int>>();
+        protected Dictionary<string, int> ItemsPageSize { get; } = new Dictionary<string, int>();
 
-        protected Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> ItemsCurrentPage { get; } = new Dictionary<string, int>();
 
-        protected Dictionary<string, int> MenuPages { get; } = new Dictionary<string, int>();
+        
+        public Dictionary<string, int> ItemsSelection = new Dictionary<string, int>();
 
-        protected Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
+        public Dictionary<string, Action<int, CUIPackage>> ItemsDescriptionHandlers { get; } = new Dictionary<string, Action<int, CUIPackage>>();
+            
+        public Dictionary<string, Action<int>> MenuHandlers { get; } = new Dictionary<string, Action<int>>();
 
-        protected Dictionary<string, int> SelectedMenuItem = new Dictionary<string, int>();
-
-        protected Dictionary<string, List<string>> Pages { get; } = new Dictionary<string, List<string>>();
+        public Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
+        
+        
+        public Dictionary<string, int> MenuSelection = new Dictionary<string, int>();
 
         #endregion
 
@@ -174,9 +187,14 @@ namespace Victor
 
         public string Suffixed(string name) => name + "_" + Name.ToUpper();
 
-        public string GetVar(string name) => Variables[Prefixed(name)];
+        public string GetVar(string name) => Variables[Prefixed(name).ToUpper()];
 
-        public T GetItem<T>(string name) => (T)Items[Prefixed(name)];
+        public T GetItem<T>(string name) => (T)Items[Prefixed(name).ToUpper()];
+
+        public T SetItem<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
+
+        public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
+
         #endregion
 
         #endregion
@@ -224,10 +242,16 @@ namespace Victor
                     case "info":
                         Info(intent);
                         break;
-                    case "menu":
-                        DispatchIntent(intent, Controller.ActivePackage.Menu);
-                        break;
                     default:
+                        if (Intents.ContainsKey(intent.Top.Label))
+                        {
+                            DispatchIntent(intent, Intents[intent.Top.Label]);
+                        }
+                        else
+                        {
+                            SayErrorLine("Unknown intent: {0}.", intent.Top.Label);
+                            DebugIntent(intent);
+                        }
                         break;
                 }
                 return true;

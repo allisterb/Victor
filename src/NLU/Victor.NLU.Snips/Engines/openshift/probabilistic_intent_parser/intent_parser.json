@@ -186,8 +186,44 @@
   },
   "slot_fillers": [
     {
-      "intent": "help",
+      "intent": "back",
       "slot_filler_name": "slot_filler_0"
+    },
+    {
+      "intent": "disable",
+      "slot_filler_name": "slot_filler_1"
+    },
+    {
+      "intent": "enable",
+      "slot_filler_name": "slot_filler_2"
+    },
+    {
+      "intent": "exit",
+      "slot_filler_name": "slot_filler_3"
+    },
+    {
+      "intent": "hello",
+      "slot_filler_name": "slot_filler_4"
+    },
+    {
+      "intent": "help",
+      "slot_filler_name": "slot_filler_5"
+    },
+    {
+      "intent": "home",
+      "slot_filler_name": "slot_filler_6"
+    },
+    {
+      "intent": "info",
+      "slot_filler_name": "slot_filler_7"
+    },
+    {
+      "intent": "list",
+      "slot_filler_name": "slot_filler_8"
+    },
+    {
+      "intent": "menu",
+      "slot_filler_name": "slot_filler_9"
     }
   ]
 }

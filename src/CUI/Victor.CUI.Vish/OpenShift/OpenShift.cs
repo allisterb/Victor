@@ -20,8 +20,10 @@ namespace Victor
         #region Constructors
         public OpenShift(CUIController controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
         {
-            MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuItem;
+            Intents.Add("list", List);
+            MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuSelection;
             MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
+            ItemsDescriptionHandlers["OPENSHIFT_PODS"] = DescribePods;
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
@@ -134,36 +136,32 @@ namespace Victor
             Controller.StartBeeper();
             var projects = FetchProjects();
             Controller.StopBeeper();
-            Items["OPENSHIFT_PROJECTS"] = projects;
+            SetItem("PROJECTS", projects);
             SayInfoLine("Fetched {0} projects.", projects.Items.Count);
         }
 
         public void Pods(Intent intent)
         {
             SetContext("PODS");
-          
             if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
-                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", "OPENSHIFT_PROJECT");
-                GetInput("OPENSHIFT_PROJECT", Pods, intent);
+                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", Prefixed("PROJECT"));
+                GetInput("PROJECT", Pods, intent);
                 return;
             }
             else
             {
-                FetchPods(GetVar("Pods"));
+                FetchPods(GetVar("PROJECT"));
             }
         }
 
-        public void DisplayPods(Intent intent)
+        public void List(Intent intent)
         {
-            Controller.SetContext("MENU_PAGE_OPENSHIFT_PODS_0");
-            var pods = GetItem<Iok8sapicorev1PodList>("PODS");
-            var pages = pods.Items.Count / 10 + 1;
-            
-        }
+            var (task, command, objects) = GetIntentTaskCommandObjects(intent);
+        }        
         #endregion
 
-        protected void GetOpenShiftMenuItem(int i)
+        protected void GetOpenShiftMenuSelection(int i)
         {
             switch (i - 1)
             {
@@ -179,6 +177,19 @@ namespace Victor
             }
         }
 
+        protected void DescribePods(int page, CUIPackage package)
+        {
+            var oc = (OpenShift)package;
+            var pods = oc.GetItem<Iok8sapicorev1PodList>("PODS");
+            int start = (page - 1)* oc.ItemsPageSize["OPENSHIFT_PODS"];
+            int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
+            if (end > pods.Items.Count) end = pods.Items.Count;
+            for(int i = start; i < end; i++)
+            {
+                var pod = pods.Items[i];
+                oc.SayInfoLine("{0} Name: {1}", i, pod.Metadata.Name);
+            }
+        }
         #region OpenShift API
         public Iok8sapicorev1PodList FetchPods(string ns, string label = null)
         {
@@ -187,7 +198,8 @@ namespace Victor
             Controller.StartBeeper();
             var pods = Client.ListCoreV1NamespacedPod(namespaceParameter: ns, labelSelector: label);
             Controller.StopBeeper();
-            Items["OPENSHIFT_PODS"] = pods;
+            SetItem("PODS", pods);
+            ItemsCurrentPage["OPENSHIFT_PODS"] = pods.Items.Count / 10 + 1;
             SayInfoLine("Fetched {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
             return pods;
         }

@@ -203,6 +203,7 @@ values:
 type: entity
 name: function
 automatically_extensible: no
+use_synonyms: yes
 values:
 - this
 - [exit, end, end the program, end this]
@@ -218,8 +219,8 @@ automatically_extensible: no
 use_synonyms: yes
 values:
 - [vish, visual interactive shell]
-- [services, email, send email, send an email, send emails, redhat news, red hat news, redhat products, red hat product, github]
-- [bots, banking, loan, apply for loan, get a loan]
+- [service, services, email, send email, send an email, send emails, redhat news, red hat news, redhat products, red hat product, github]
+- [bot, bots, banking, loan, apply for loan, get a loan]
 
 # person entity
 ---

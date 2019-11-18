@@ -14,7 +14,7 @@ utterances:
   - help administer [openshift_object](build_configs)
   - help administer openshift
   - help manage [openshift_object](build configs)
-  - help with [openshift_object](pods)
+  - help with [openshift_object](  pods)
   - help with vish openshift
   - help with vish openshift [openshift_object](pods)
   - What is a [openshift_object](pods)
@@ -22,29 +22,17 @@ utterances:
   - How do I use this
   - How do I administer [openshift_object](routes)
 
-# object command intent
+# list command intent
 ---
 type: intent
-name: openshift_command
+name: list
 slots:
-  - name: command
+  - name: object
     entity: openshift_object
 utterances:
-  - ah
-  - What is a openshift [openshift_object](project)
-  - What are [openshift_object](pods)
-  - help with openshift [openshift_object](builds)
-  - help [openshift_object](pods)
-  - help administer [openshift_object](build_configs)
-  - help administer openshift
-  - help manage [openshift_object](build configs)
-  - help with [openshift_object](pods)
-  - help with vish openshift
-  - help with vish openshift [openshift_object](pods)
-  - What is a [openshift_object](pods)
-  - Tell me about [openshift_object](pods)
-  - How do I use this
-  - How do I administer [openshift_object](routes)
+  - list [openshift_object](pods)
+  - show me [openshift_object](pods)
+  - display [openshift_object](pods)
 
 # openshift_object entity
 ---
