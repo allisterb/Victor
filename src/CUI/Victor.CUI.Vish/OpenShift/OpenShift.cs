@@ -24,6 +24,7 @@ namespace Victor
             MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuSelection;
             MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
             ItemsDescriptionHandlers["OPENSHIFT_PODS"] = DescribePods;
+            ItemsDescriptionHandlers["OPENSHIFT_PROJECTS"] = DescribeProjects;
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
@@ -48,7 +49,7 @@ namespace Victor
         #region Overriden members
         public override string[] VariableNames { get; } = { "PROJECT" };
          
-        public override string[] MenuNames { get; } = { "OBJECTS","PROJECTS", "PODS", "BUILD_CONFIGS", "BUILDS", "DEPLOYMENT_CONFIGS" };
+        public override string[] MenuNames { get; } = { "OBJECTS" };
 
         public override string[] ItemNames { get; } = { "PROJECTS", "PODS", "BUILD_CONFIGS", "BUILDS", "DEPLOYMENT_CONFIGS" };
 
@@ -56,9 +57,9 @@ namespace Victor
 
         public override void Help(Intent intent)
         {
-            if (intent == null || intent.Entities.Length == 0)
+            if (Empty(intent))
             {
-                SayInfoLine("This package allows you to administer an OpenShift cluser. Say something like {0} to get help with a specific topic.", "help podss");
+                SayInfoLine("This package allows you to administer an OpenShift cluser. Say something like {0} to get help with a specific topic.", "help pods");
             }
             else if (!intent.Entities.Any(e => e.Entity == "openshift_object"))
             {
@@ -108,7 +109,7 @@ namespace Victor
 
         public override void Menu(Intent intent)
         {
-            Controller.SetContext("MENU_OPENSHIFT_OBJECTS");
+            SetMenuContext("OBJECTS");
             SayInfoLine("Red Hat OpenShift");
             SayInfoLine("1 {0}", "Projects");
             SayInfoLine("2 {0}", "Pods");
@@ -131,18 +132,16 @@ namespace Victor
         
         public void Projects(Intent intent)
         {
-            SetContext("PROJECTS");
-            SayInfoLine("Fetching projects for your cluster...");
-            Controller.StartBeeper();
-            var projects = FetchProjects();
-            Controller.StopBeeper();
-            SetItem("PROJECTS", projects);
-            SayInfoLine("Fetched {0} projects.", projects.Items.Count);
+            SetItemsContext("PROJECTS");
+            if (GetItem<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS") == null)
+            {
+                FetchProjects();
+            }
         }
 
         public void Pods(Intent intent)
         {
-            SetContext("PODS");
+            SetItemsContext("PODS");
             if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
                 SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", Prefixed("PROJECT"));
@@ -157,7 +156,31 @@ namespace Victor
 
         public void List(Intent intent)
         {
-            var (task, command, objects) = GetIntentTaskCommandObjects(intent);
+            if (ObjectEmpty(intent))
+            {
+                switch (GetItemsContext())
+                {
+                    case "PODS":
+                        DescribePods(1, this);
+                        SetItemsPageSize("PODS", 1); 
+                        SetItemsContext("PODS");
+                        break;
+                    case "PROJECTS":
+                        DescribeProjects(1, this);
+                        SetItemsPageSize("PROJECTS", 1);
+                        SetItemsContext("PROJECTS");
+                        break;
+                    default:
+                        SayErrorLine("I don't know how to list that.");
+                        DebugIntent(intent);
+                        break;
+                }
+                return;
+            }
+            else
+            {
+                var (task, command, objects) = GetIntentTaskCommandObjects(intent);
+            }
         }        
         #endregion
 
@@ -179,6 +202,7 @@ namespace Victor
 
         protected void DescribePods(int page, CUIPackage package)
         {
+            ThrowIfNotInitialized();
             var oc = (OpenShift)package;
             var pods = oc.GetItem<Iok8sapicorev1PodList>("PODS");
             int start = (page - 1)* oc.ItemsPageSize["OPENSHIFT_PODS"];
@@ -188,6 +212,21 @@ namespace Victor
             {
                 var pod = pods.Items[i];
                 oc.SayInfoLine("{0} Name: {1}", i, pod.Metadata.Name);
+            }
+        }
+
+        protected void DescribeProjects(int page, CUIPackage package)
+        {
+            ThrowIfNotInitialized();
+            var oc = (OpenShift)package;
+            var projects = oc.GetItem<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
+            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+            int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+            if (end > projects.Items.Count) end = projects.Items.Count;
+            for (int i = start; i < end; i++)
+            {
+                var project = projects.Items[i];
+                oc.SayInfoLine("{0} Name: {1}", i + 1, project.Metadata.Name);
             }
         }
         #region OpenShift API
@@ -207,9 +246,13 @@ namespace Victor
         public Comgithubopenshiftapiprojectv1ProjectList FetchProjects()
         {
             ThrowIfNotInitialized();
-            return Client.ListProject();
-            //Client.in
-
+            SayInfoLine("Fetching projects for your cluster...");
+            Controller.StartBeeper();
+            var projects = Client.ListProject();
+            SetItem("PROJECTS", projects);
+            Controller.StopBeeper();
+            SayInfoLine("Fetched {0} projects.", projects.Items.Count);
+            return projects;
         }
 
         public Comgithubopenshiftapiroutev1RouteList GetRoutes(string ns, string label = null)

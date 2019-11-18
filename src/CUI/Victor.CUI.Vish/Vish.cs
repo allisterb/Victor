@@ -29,14 +29,13 @@ namespace Victor
         #region Intents
         public override void Menu(Intent intent)
         {
-            Controller.SetContext("MENU_VISH_PACKAGES", intent, Menu);
+            SetMenuContext("PACKAGES", intent, Menu);
             SayInfoLine("1 {0}", "Red Hat OpenShift");
         }
 
         public override void Help(Intent intent = null)
         {
-            var context = Context.Count > 0 ? Context.Peek().Label : "";
-
+            var context = CurrentContext;
             if (intent == null || intent.Entities.Length == 0)
             {
                 switch (context)
@@ -127,7 +126,15 @@ namespace Victor
                     {
                         SayErrorLine("The OpenShift package failed to initialize.");
                     }
-                    DispatchIntent(null, Controller.ActivePackage.Welcome);
+                    if (CurrentContext.StartsWith("MENU_"))
+                    {
+                        DispatchIntent(null, Controller.ActivePackage.Menu);
+                    }
+                    else
+                    {
+                        DispatchIntent(null, Controller.ActivePackage.Welcome);
+                    }
+                    
                     break;
                 default:
                     throw new IndexOutOfRangeException();

@@ -120,7 +120,7 @@ namespace Victor
             })
             .WithParsed<SpeechRecognitionOptions>(o =>
             {
-                Recognize();
+                ASR();
                 Exit(ExitResult.SUCCESS);
             })
             .WithParsed<TTSOptions>(o =>
@@ -147,7 +147,7 @@ namespace Victor
         #endregion
 
         #region Methods
-        static void Recognize()
+        static void ASR()
         {
             JuliusSession s = new JuliusSession();
             if (!s.Initialized)
@@ -198,7 +198,6 @@ namespace Victor
 
         static async Task CUI(CUIOptions o)
         {
-            PrintLogo();
             EDDIClient c = new EDDIClient(Config("CUI_EDDI_SERVER_URL"), HttpClient);
             if (o.GetBots)
             {
@@ -1107,7 +1106,8 @@ namespace Victor
         #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            
+
+            System.Console.Clear();
             Error((Exception)e.ExceptionObject, "Unhandled error occurred during operation. Victor CLI will now shutdown.");
             Exit(ExitResult.UNHANDLED_EXCEPTION);
         }

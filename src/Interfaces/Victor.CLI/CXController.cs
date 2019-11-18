@@ -22,6 +22,7 @@ namespace Victor.CLI
             {
                 EnableBeeper();
             }
+            SayInfoLine("Victor CX loading...");
             StartBeeper();
             Options = o;
             Packages.Add(new CXHome(this));

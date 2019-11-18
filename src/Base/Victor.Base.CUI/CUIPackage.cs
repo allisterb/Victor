@@ -27,7 +27,7 @@ namespace Victor
             {
                 Items.Add(Prefixed(i), null);
                 ItemsPageSize.Add(Prefixed(i), 10);
-                ItemsCurrentPage.Add(Prefixed(i), -1);
+                ItemsCurrentPage.Add(Prefixed(i), 1);
                 ItemsSelection.Add(Prefixed(i), -1);
                 ItemsDescriptionHandlers.Add(Prefixed(i), null);
             }
@@ -75,12 +75,6 @@ namespace Victor
 
         #region Methods
 
-        #region Controller
-        public Stack<CUIContext> Context => Controller.Context;
-
-        public void SetContext(string name) => Controller.SetContext(Prefixed(name));
-        #endregion
-
         #region UI
         public void DebugIntent(Intent intent)
         {
@@ -96,6 +90,20 @@ namespace Victor
         protected void SayErrorLine(string template, params object[] args) => Controller.SayErrorLine("Error: " + template, args);
 
         protected void SayWarningLine(string template, params object[] args) => Controller.SayWarningLine("Warning: " + template, args);
+        #endregion
+
+        #region Context
+        public Stack<CUIContext> Context => Controller.Context;
+
+        public string CurrentContext => Context.Count > 0 ? Context.Peek().Label : "";
+
+        public string GetItemsContext() => CurrentContext.Replace("ITEMS_", "").Replace(this.Name.ToUpper() + "_", "");
+
+        public void SetItemsContext(string name) => Controller.SetContext("ITEMS_" + Prefixed(name));
+
+        public string GetMenuContext() => CurrentContext.Replace("MENU_", "").Replace(this.Name.ToUpper() + "_", "");
+
+        public void SetMenuContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext("MENU_" + Prefixed(name), intent, action);
         #endregion
 
         #region Input
@@ -121,6 +129,47 @@ namespace Victor
             }
         }
 
+        #endregion
+
+        #region Variables
+        public string Prefixed(string name) => Name.ToUpper() + "_" + name;
+
+        public string Suffixed(string name) => name + "_" + Name.ToUpper();
+
+        public string GetVar(string name) => Variables[Prefixed(name).ToUpper()];
+        #endregion
+
+        #region Items
+        public T GetItem<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default;
+
+        public T SetItem<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
+
+        public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
+
+        public int SetItemsPageSize(string name, int value) => ItemsPageSize[Prefixed(name).ToUpper()] = value;
+
+        public void DescribeItem(string name, int index) => ItemsDescriptionHandlers[Prefixed(name)].Invoke(index, this);
+
+        public bool CanDispatchToItemsPage()
+        {
+            if (CurrentContext.StartsWith("ITEMS"))
+            {
+                string label = CurrentContext.Replace("ITEMS_", "");
+                return Items.ContainsKey(label);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void DispatchToItemsPage(int page)
+        {
+            var itemsContext = GetItemsContext();
+            var handler = ItemsDescriptionHandlers[itemsContext];
+            handler.Invoke(page, this);
+            ItemsCurrentPage[itemsContext] = page;
+        }
         #endregion
 
         #region Intent parsing
@@ -150,11 +199,11 @@ namespace Victor
             return new Tuple<string, string, List<string>>(task, command, objects);
 
         }
-        public bool CanDispatchToMenuItemSelection(CUIContext context)
+        public bool CanDispatchToMenuSelection()
         {
-            if (Controller.Context.Peek().Label.StartsWith("MENU"))
+            if (CurrentContext.StartsWith("MENU"))
             {
-                string label = context.Label.Replace("MENU_", "");
+                string label = CurrentContext.Replace("MENU_", "");
                 return MenuHandlers.ContainsKey(label);
             }
             else
@@ -182,21 +231,6 @@ namespace Victor
         public bool ObjectEmpty(Intent intent) => !Empty(intent) && intent.Entities.Count() == 0;
         #endregion
 
-        #region Variables and Items
-        public string Prefixed(string name) => Name.ToUpper() + "_" + name;
-
-        public string Suffixed(string name) => name + "_" + Name.ToUpper();
-
-        public string GetVar(string name) => Variables[Prefixed(name).ToUpper()];
-
-        public T GetItem<T>(string name) => (T)Items[Prefixed(name).ToUpper()];
-
-        public T SetItem<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
-
-        public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
-
-        #endregion
-
         #endregion
 
         #region Virtual and abstract members
@@ -208,15 +242,23 @@ namespace Victor
                 DispatchInput(Context.Peek(), input);
                 return true;
             }
-            else if (Int32.TryParse(input, out int result) && CanDispatchToMenuItemSelection(Controller.Context.Peek()))
+            else if (Int32.TryParse(input, out int result))
             {
-                DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
-                return true;
-            }
-            else if (Int32.TryParse(input, out int _) && !CanDispatchToMenuItemSelection(Controller.Context.Peek()))
-            {
-                SayInfoLine("A menu is not currently active. Try entering {0} to bring up the available menu.", "menu");
-                return true;
+                if (CanDispatchToMenuSelection())
+                {
+                    DispatchToMenuItem(Controller.Context.Peek(), DateTime.Now, result);
+                    return true;
+                }
+                else if (CanDispatchToItemsPage())
+                {
+                    DispatchToItemsPage(result);
+                    return true;
+                }
+                else
+                {
+                    SayInfoLine("A menu is not currently active. Try entering {0} to bring up the available menu.", "menu");
+                    return true;
+                }
             }
             else
             {

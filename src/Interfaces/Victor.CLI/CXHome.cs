@@ -104,7 +104,7 @@ namespace Victor.CLI
         #region Intents
         public override void Menu(Intent intent)
         {
-            Controller.SetContext("MENU_HOME_PACKAGES");
+            SetMenuContext("PACKAGES");
             SayInfoLine("Select a package to use.");
             SayInfoLine("1 {0}", "Vish");
             SayInfoLine("2 {0}", "Services");
@@ -120,11 +120,11 @@ namespace Victor.CLI
                 {
                     case "WELCOME_HOME":
                         SayInfoLine("Welcome to Victor CX.");
-                        SayInfoLine("VictorCX tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
+                        SayInfoLine("Victor CX tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
                         SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
                         break;
                     case "MENU_HOME_PACKAGES":
-                        SayInfoLine("Enter the number associated with the VictorCX package category you want to select.");
+                        SayInfoLine("Enter the number associated with the Victor CX package category you want to select.");
                         break;
                     default:
                         SayErrorLine("Unknown HOME context: {0}.", context);
@@ -381,7 +381,14 @@ namespace Victor.CLI
                         Controller.StopBeeper();
                     }
                     Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
-                    DispatchIntent(null, Controller.ActivePackage.Welcome);
+                    if (Context.Peek().Label.StartsWith("MENU"))
+                    {
+                        DispatchIntent(null, Controller.ActivePackage.Menu);
+                    }
+                    else
+                    {
+                        DispatchIntent(null, Controller.ActivePackage.Welcome);
+                    }
                     break;
                 default:
                     throw new IndexOutOfRangeException();
