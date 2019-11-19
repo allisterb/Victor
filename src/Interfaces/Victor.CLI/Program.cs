@@ -1107,7 +1107,6 @@ namespace Victor
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
 
-            System.Console.Clear();
             Error((Exception)e.ExceptionObject, "Unhandled error occurred during operation. Victor CLI will now shutdown.");
             Exit(ExitResult.UNHANDLED_EXCEPTION);
         }

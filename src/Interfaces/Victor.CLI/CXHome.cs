@@ -113,8 +113,8 @@ namespace Victor.CLI
 
         public override void Help(Intent intent)
         {
-            var context = Context.PeekIfNotEmpty()?.Label;
-            if (Empty(intent) || ObjectEmpty(intent))
+            var context = CurrentContext;
+            if (ObjectEmpty(intent))
             {
                 switch (context)
                 {

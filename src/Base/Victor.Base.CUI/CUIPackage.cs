@@ -97,9 +97,13 @@ namespace Victor
 
         public string CurrentContext => Context.Count > 0 ? Context.Peek().Label : "";
 
+        public bool IsItemsContext => CurrentContext.StartsWith("ITEMS_");
+
         public string GetItemsContext() => CurrentContext.Replace("ITEMS_", "").Replace(this.Name.ToUpper() + "_", "");
 
         public void SetItemsContext(string name) => Controller.SetContext("ITEMS_" + Prefixed(name));
+
+        public bool IsMenuContext => CurrentContext.StartsWith("MENU_");
 
         public string GetMenuContext() => CurrentContext.Replace("MENU_", "").Replace(this.Name.ToUpper() + "_", "");
 
@@ -140,11 +144,13 @@ namespace Victor
         #endregion
 
         #region Items
-        public T GetItem<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default;
+        public T GetItems<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default;
 
-        public T SetItem<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
+        public T SetItems<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
 
         public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
+
+        public int GetItemsCurrentPage(string name) => ItemsCurrentPage[Prefixed(name).ToUpper()];
 
         public int SetItemsPageSize(string name, int value) => ItemsPageSize[Prefixed(name).ToUpper()] = value;
 
@@ -152,7 +158,7 @@ namespace Victor
 
         public bool CanDispatchToItemsPage()
         {
-            if (CurrentContext.StartsWith("ITEMS"))
+            if (IsItemsContext)
             {
                 string label = CurrentContext.Replace("ITEMS_", "");
                 return Items.ContainsKey(label);
@@ -163,13 +169,43 @@ namespace Victor
             }
         }
 
-        public void DispatchToItemsPage(int page)
+        public void DescribeItems(CUIContext context, int page)
         {
-            var itemsContext = GetItemsContext();
-            var handler = ItemsDescriptionHandlers[itemsContext];
-            handler.Invoke(page, this);
-            ItemsCurrentPage[itemsContext] = page;
+            var name = context.Label.Replace("ITEMS_", "");
+            var itemsPage = GetItemsCurrentPage(name);
+            var handler = ItemsDescriptionHandlers[name];
+            handler.Invoke(itemsPage, this);
+            ItemsCurrentPage[name] = page;
         }
+        #endregion
+
+        #region Menus
+        public bool CanDispatchToMenuSelection()
+        {
+            if (IsMenuContext)
+            {
+                string label = CurrentContext.Replace("MENU_", "");
+                return MenuHandlers.ContainsKey(label);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void DispatchToMenuItem(CUIContext context, DateTime time, int i)
+        {
+            string label = context.Label.Replace("MENU_", "");
+            if (i < 1 || i > MenuIndexes[label])
+            {
+                SayInfoLine("Enter a number between {0} and {1}.", 1, MenuIndexes[label]);
+            }
+            else
+            {
+                MenuHandlers[label].Invoke(i);
+            }
+        }
+
         #endregion
 
         #region Intent parsing
@@ -179,9 +215,9 @@ namespace Victor
             {
                 throw new InvalidOperationException("The intent has no object.");
             }
-            var feature = intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value.ToAlphaNumeric();
-            var package = intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value.ToAlphaNumeric();
-            var function = intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value.ToAlphaNumeric();
+            var feature = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("feature"))?.Value.ToAlphaNumeric();
+            var package = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("package"))?.Value.ToAlphaNumeric();
+            var function = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("function"))?.Value.ToAlphaNumeric();
             return new Tuple<string, string, string>(feature, package, function);
 
         }
@@ -194,22 +230,16 @@ namespace Victor
             }
             var task = intent.Entities.FirstOrDefault(e => e.SlotName == "task")?.Value;
             var command = intent.Entities.FirstOrDefault(e => e.SlotName == "command")?.Value;
-            var objects = intent.Entities.Any(e => e.SlotName == "object") ?
-                intent.Entities.Where(e => e.SlotName == "object").Select(e => e.Value?.ToAlphaNumeric()).ToList() : new List<string>();
+            var objects = 
+                intent.Entities.Any(e => e.SlotName.EndsWith("_object")) ?
+                intent.Entities
+                .Where(e => e.SlotName.EndsWith("_object"))
+                .Select(e => e.Value?.ToAlphaNumeric()).ToList() : new List<string>();
+            if (Controller.DebugEnabled)
+            {
+                SayInfoLine("Task: {0}, Command: {1}, Objects: {2}.", task ?? "None", command ?? "None", objects);
+            }
             return new Tuple<string, string, List<string>>(task, command, objects);
-
-        }
-        public bool CanDispatchToMenuSelection()
-        {
-            if (CurrentContext.StartsWith("MENU"))
-            {
-                string label = CurrentContext.Replace("MENU_", "");
-                return MenuHandlers.ContainsKey(label);
-            }
-            else
-            {
-                return false;
-            }
 
         }
 
@@ -228,7 +258,7 @@ namespace Victor
 
         public bool Empty(Intent intent) => intent == null || intent.IsNone;
 
-        public bool ObjectEmpty(Intent intent) => !Empty(intent) && intent.Entities.Count() == 0;
+        public bool ObjectEmpty(Intent intent) => Empty(intent) || intent.Entities.Count() == 0;
         #endregion
 
         #endregion
@@ -251,7 +281,7 @@ namespace Victor
                 }
                 else if (CanDispatchToItemsPage())
                 {
-                    DispatchToItemsPage(result);
+                    DescribeItems(Controller.Context.Peek(), GetItemsPageSize(GetItemsContext()));
                     return true;
                 }
                 else
@@ -299,19 +329,6 @@ namespace Victor
                 return true;
             }
 
-        }
-
-        public virtual void DispatchToMenuItem(CUIContext context, DateTime time, int i)
-        {
-            string label = context.Label.Replace("MENU_", "");
-            if (i < 1 || i > MenuIndexes[label])
-            {
-                SayInfoLine("Enter a number between {0} and {1}.", 1, MenuIndexes[label]);
-            }
-            else
-            {
-                MenuHandlers[label].Invoke(i);
-            }
         }
 
         public virtual void DispatchInput(CUIContext context, string input)

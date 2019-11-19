@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,8 +14,10 @@ using Newtonsoft.Json;
 using Victor.CUI.Vish.OpenShift.Client;
 using Victor.CUI.Vish.OpenShift.Client.Models;
 
+[assembly: InternalsVisibleTo("Victor.Tests.Vish")]
 namespace Victor
 {
+    
     public class OpenShift : CUIPackage
     {
         #region Constructors
@@ -132,15 +135,20 @@ namespace Victor
         
         public void Projects(Intent intent)
         {
+            ThrowIfNotInitialized();
             SetItemsContext("PROJECTS");
-            if (GetItem<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS") == null)
+            var projects = GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
+            if ( projects == null)
             {
-                FetchProjects();
+                SetItems("PROJECTS", projects = FetchProjects());
+                SetItemsPageSize("PROJECTS", 1);
             }
+            SayInfoLine("{0} projects.", projects.Items.Count);
         }
 
         public void Pods(Intent intent)
         {
+            ThrowIfNotInitialized();
             SetItemsContext("PODS");
             if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
@@ -150,8 +158,17 @@ namespace Victor
             }
             else
             {
-                FetchPods(GetVar("PROJECT"));
+                var pods = GetItems<Iok8sapicorev1PodList>("PODS");
+                if ( pods == null)
+                {
+                    SetItems("PODS", FetchPods(GetVar("PROJECT")));
+                    SetItemsPageSize("PODS", 1);
+                    pods = GetItems<Iok8sapicorev1PodList>("PODS");
+                }
+                SayInfoLine("{0} pods.", pods.Items.Count);
+                //DescribeItem()
             }
+
         }
 
         public void List(Intent intent)
@@ -161,17 +178,13 @@ namespace Victor
                 switch (GetItemsContext())
                 {
                     case "PODS":
-                        DescribePods(1, this);
-                        SetItemsPageSize("PODS", 1); 
-                        SetItemsContext("PODS");
+                        DispatchIntent(intent, Pods);
                         break;
                     case "PROJECTS":
-                        DescribeProjects(1, this);
-                        SetItemsPageSize("PROJECTS", 1);
-                        SetItemsContext("PROJECTS");
+                        DispatchIntent(intent, Projects);
                         break;
                     default:
-                        SayErrorLine("I don't know how to list that.");
+                        SayErrorLine("Sorry I don't know how to list that.");
                         DebugIntent(intent);
                         break;
                 }
@@ -180,6 +193,26 @@ namespace Victor
             else
             {
                 var (task, command, objects) = GetIntentTaskCommandObjects(intent);
+                if (objects.Count == 0 )
+                {
+                    SayInfoLine("Sorry I don't know how to list that. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
+                }
+                else
+                {
+                    var openshift_object = objects.First();
+                    switch(openshift_object)
+                    {
+                        case "project":
+                            DispatchIntent(intent, Projects);
+                            break;
+                        case "pod":
+                            DispatchIntent(intent, Pods);
+                            break;
+                        default:
+                            SayInfoLine("Sorry I don't know how to list that. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
+                            break;
+                    }
+                }
             }
         }        
         #endregion
@@ -200,56 +233,25 @@ namespace Victor
             }
         }
 
-        protected void DescribePods(int page, CUIPackage package)
-        {
-            ThrowIfNotInitialized();
-            var oc = (OpenShift)package;
-            var pods = oc.GetItem<Iok8sapicorev1PodList>("PODS");
-            int start = (page - 1)* oc.ItemsPageSize["OPENSHIFT_PODS"];
-            int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
-            if (end > pods.Items.Count) end = pods.Items.Count;
-            for(int i = start; i < end; i++)
-            {
-                var pod = pods.Items[i];
-                oc.SayInfoLine("{0} Name: {1}", i, pod.Metadata.Name);
-            }
-        }
-
-        protected void DescribeProjects(int page, CUIPackage package)
-        {
-            ThrowIfNotInitialized();
-            var oc = (OpenShift)package;
-            var projects = oc.GetItem<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
-            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-            int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-            if (end > projects.Items.Count) end = projects.Items.Count;
-            for (int i = start; i < end; i++)
-            {
-                var project = projects.Items[i];
-                oc.SayInfoLine("{0} Name: {1}", i + 1, project.Metadata.Name);
-            }
-        }
         #region OpenShift API
-        public Iok8sapicorev1PodList FetchPods(string ns, string label = null)
+        internal Iok8sapicorev1PodList FetchPods(string ns, string label = null)
         {
             ThrowIfNotInitialized();
             SayInfoLine("Fetching pods for project {0}.", Variables["OPENSHIFT_PROJECT"]);
             Controller.StartBeeper();
             var pods = Client.ListCoreV1NamespacedPod(namespaceParameter: ns, labelSelector: label);
             Controller.StopBeeper();
-            SetItem("PODS", pods);
-            ItemsCurrentPage["OPENSHIFT_PODS"] = pods.Items.Count / 10 + 1;
-            SayInfoLine("Fetched {0} pods for project {1}.", pods.Items.Count, Variables["OPENSHIFT_PROJECT"]);
+            SayInfoLine("Fetched {0} pods.", pods.Items.Count);
             return pods;
         }
 
-        public Comgithubopenshiftapiprojectv1ProjectList FetchProjects()
+        internal Comgithubopenshiftapiprojectv1ProjectList FetchProjects()
         {
             ThrowIfNotInitialized();
             SayInfoLine("Fetching projects for your cluster...");
             Controller.StartBeeper();
             var projects = Client.ListProject();
-            SetItem("PROJECTS", projects);
+            SetItems("PROJECTS", projects);
             Controller.StopBeeper();
             SayInfoLine("Fetched {0} projects.", projects.Items.Count);
             return projects;
@@ -273,6 +275,42 @@ namespace Victor
             ThrowIfNotInitialized();
             return Client.ListBuildOpenshiftIoV1NamespacedBuildConfig(namespaceParameter: ns, labelSelector: label);
         }
+
+        protected void DescribePods(int page, CUIPackage package)
+        {
+            ThrowIfNotInitialized();
+            var oc = (OpenShift)package;
+            var pods = oc.GetItems<Iok8sapicorev1PodList>("PODS");
+            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PODS"];
+            int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
+            if (end > pods.Items.Count) end = pods.Items.Count;
+            for (int i = start; i < end; i++)
+            {
+                var pod = pods.Items[i];
+                oc.SayInfoLine("{0} Name: {1}", i, pod.Metadata.Name);
+            }
+
+        }
+
+        protected void DescribeProjects(int page, CUIPackage package)
+        {
+            ThrowIfNotInitialized();
+            var oc = (OpenShift)package;
+            var projects = oc.GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
+            if (projects == null)
+            {
+                projects = FetchProjects();
+            }
+            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+            int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+            if (end > projects.Items.Count) end = projects.Items.Count;
+            for (int i = start; i < end; i++)
+            {
+                var project = projects.Items[i];
+                oc.SayInfoLine("{0} Name: {1}", i + 1, project.Metadata.Name);
+            }
+        }
+
         #endregion
 
         #endregion
