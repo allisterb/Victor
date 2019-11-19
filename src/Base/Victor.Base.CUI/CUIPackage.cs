@@ -302,6 +302,10 @@ namespace Victor
         {
             ThrowIfNotInitialized();
             var intent = NLUEngine.GetIntent(input);
+            if (Controller.DebugEnabled)
+            {
+                DebugIntent(intent);
+            }
             if (intent.Top.Score < 0.8)
             {
                 return false;
@@ -309,12 +313,12 @@ namespace Victor
             else
             {
                 switch (intent.Top.Label)
-                {
+                { 
                     case "help":
                         Help(intent);
                         break;
-                    case "info":
-                        Info(intent);
+                    case "menu":
+                        DispatchIntent(intent, Menu);
                         break;
                     default:
                         if (Intents.ContainsKey(intent.Top.Label))

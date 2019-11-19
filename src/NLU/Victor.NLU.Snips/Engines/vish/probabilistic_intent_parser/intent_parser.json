@@ -222,8 +222,16 @@
       "slot_filler_name": "slot_filler_8"
     },
     {
-      "intent": "menu",
+      "intent": "list",
       "slot_filler_name": "slot_filler_9"
+    },
+    {
+      "intent": "menu",
+      "slot_filler_name": "slot_filler_10"
+    },
+    {
+      "intent": "page",
+      "slot_filler_name": "slot_filler_11"
     }
   ]
 }

@@ -101,8 +101,8 @@
       {
         "args": {
           "entities": [
-            "package",
-            "feature"
+            "feature",
+            "package"
           ],
           "entity_filter": {
             "automatically_extensible": false

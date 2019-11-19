@@ -17,7 +17,6 @@ using Victor.CUI.Vish.OpenShift.Client.Models;
 [assembly: InternalsVisibleTo("Victor.Tests.Vish")]
 namespace Victor
 {
-    
     public class OpenShift : CUIPackage
     {
         #region Constructors

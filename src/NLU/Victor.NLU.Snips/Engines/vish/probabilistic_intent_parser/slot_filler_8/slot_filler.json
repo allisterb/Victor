@@ -101,7 +101,7 @@
       {
         "args": {
           "entities": [
-            "package"
+            "vish_package"
           ],
           "entity_filter": {
             "automatically_extensible": false
@@ -179,6 +179,6 @@
   "intent": "launch",
   "language_code": "en",
   "slot_name_mapping": {
-    "package": "package"
+    "package": "vish_package"
   }
 }

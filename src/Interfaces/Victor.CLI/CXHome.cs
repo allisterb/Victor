@@ -61,12 +61,15 @@ namespace Victor.CLI
             {
                 switch (intent.Top.Label)
                 {
+                    case "help":
+                        Help(intent);
+                        break;
+                    case "menu":
+                        Menu(intent);
+                        break;
                     case "exit":
                         Exit(intent);
                         break;
-                    case "help":
-                        Help(intent);
-                        break;        
                     case "hello":
                         Hello(intent);
                         break;
@@ -75,9 +78,6 @@ namespace Victor.CLI
                         break;
                     case "disable":
                         Disable(intent);
-                        break;
-                    case "menu":
-                        DispatchIntent(intent, Controller.ActivePackage.Menu);
                         break;
                     case "back":
                         Back(intent);

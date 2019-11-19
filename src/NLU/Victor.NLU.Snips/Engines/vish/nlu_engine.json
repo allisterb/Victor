@@ -198,6 +198,9 @@
   "dataset_metadata": {
     "entities": {
       "package": {
+        "automatically_extensible": true
+      },
+      "vish_package": {
         "automatically_extensible": false
       }
     },
@@ -205,6 +208,9 @@
     "slot_name_mappings": {
       "help": {
         "package": "package"
+      },
+      "launch": {
+        "package": "vish_package"
       }
     }
   },

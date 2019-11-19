@@ -25,6 +25,11 @@ namespace Victor.CLI
             SayInfoLine("Victor CX loading...");
             StartBeeper();
             Options = o;
+            if(Options.Debug)
+            {
+                DebugEnabled = true;
+                SayInfoLine("Debug enabled.");
+            }
             Packages.Add(new CXHome(this));
             HomePackage = Packages[0];
             ActivePackage = Packages[0];

@@ -1,10 +1,18 @@
 {
   "entities": {
     "package": {
+      "automatically_extensible": true,
+      "data": [],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "vish_package": {
       "automatically_extensible": false,
       "data": [
         {
-          "synonyms": [],
+          "synonyms": [
+            "redhat openshift"
+          ],
           "value": "openshift"
         }
       ],
@@ -74,7 +82,7 @@
         {
           "data": [
             {
-              "text": "help with vish "
+              "text": "help with "
             },
             {
               "entity": "package",
@@ -96,12 +104,12 @@
         {
           "data": [
             {
-              "text": "help with vish "
+              "text": "help with "
             },
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "openshit"
+              "text": "openshift"
             }
           ]
         },
@@ -174,7 +182,7 @@
         {
           "data": [
             {
-              "text": "How do I administer "
+              "text": "How do I use "
             },
             {
               "entity": "package",
@@ -202,6 +210,58 @@
               "entity": "package",
               "slot_name": "package",
               "text": "openshift"
+            }
+          ]
+        }
+      ]
+    },
+    "launch": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "launch "
+            },
+            {
+              "entity": "vish_package",
+              "slot_name": "package",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "launch "
+            },
+            {
+              "entity": "vish_package",
+              "slot_name": "package",
+              "text": "redhat openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "start "
+            },
+            {
+              "entity": "vish_package",
+              "slot_name": "package",
+              "text": "openshift"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goto "
+            },
+            {
+              "entity": "vish_package",
+              "slot_name": "package",
+              "text": "redhat openshift"
             }
           ]
         }

@@ -10,6 +10,7 @@ namespace Victor
         #region Constructors
         public Vish(CUIController controller, CancellationToken ct) : base("Vish", new SnipsNLUEngine(Path.Combine("Engines", "vish")), controller, ct)
         {
+            Intents.Add("launch", Launch);
             MenuIndexes["VISH_PACKAGES"] = 3;
             MenuHandlers["VISH_PACKAGES"] = GetPackagesMenuItem;
             Initialized = NLUEngine.Initialized;
@@ -29,12 +30,14 @@ namespace Victor
         #region Intents
         public override void Menu(Intent intent)
         {
+            ThrowIfNotInitialized();
             SetMenuContext("PACKAGES", intent, Menu);
             SayInfoLine("1 {0}", "Red Hat OpenShift");
         }
 
         public override void Help(Intent intent = null)
         {
+            ThrowIfNotInitialized();
             var context = CurrentContext;
             if (intent == null || intent.Entities.Length == 0)
             {
@@ -101,40 +104,68 @@ namespace Victor
         #endregion
 
         #region Methods
+        
+        #region Intents
+        public void Launch(Intent intent)
+        {
+            var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
+            if (string.IsNullOrEmpty(package))
+            {
+                SayErrorLine("No package to launch.");
+                return;
+            }
+            else
+            {
+                if (package == "openshift")
+                {
+                    LoadOpenShift();
+                }
+                else
+                {
+                    SayErrorLine("I don't know how to launch package {0}.", package);
+                }
+            }
+        }
+        #endregion
+
+        public void LoadOpenShift()
+        {
+            if (!SubPackages.Any(p => p.Name == "OpenShift"))
+            {
+                SayInfoLine("Loading OpenShift package...");
+                Controller.StartBeeper();
+                var _oc = new OpenShift(this.Controller);
+                if (_oc.Initialized)
+                {
+                    SubPackages.Add(_oc);
+                }
+                Controller.StopBeeper();
+            }
+            var oc = SubPackages.Single(p => p.Name == "OpenShift");
+            if (oc.Initialized)
+            {
+                Controller.ActivePackage = oc;
+            }
+            else
+            {
+                SayErrorLine("The OpenShift package failed to initialize.");
+            }
+            if (CurrentContext.StartsWith("MENU_"))
+            {
+                DispatchIntent(null, Controller.ActivePackage.Menu);
+            }
+            else
+            {
+                DispatchIntent(null, Controller.ActivePackage.Welcome);
+            }
+
+        }
         protected void GetPackagesMenuItem(int i)
         {
             switch (i - 1)
             {
                 case 0:
-                    if (!SubPackages.Any(p => p.Name == "OpenShift"))
-                    {
-                        SayInfoLine("Loading OpenShift package...");
-                        Controller.StartBeeper();
-                        var _oc = new OpenShift(this.Controller);
-                        if (_oc.Initialized)
-                        {
-                            SubPackages.Add(_oc);
-                        }
-                        Controller.StopBeeper();
-                    }
-                    var oc = SubPackages.Single(p => p.Name == "OpenShift");
-                    if (oc.Initialized)
-                    {
-                        Controller.ActivePackage = oc;
-                    }
-                    else
-                    {
-                        SayErrorLine("The OpenShift package failed to initialize.");
-                    }
-                    if (CurrentContext.StartsWith("MENU_"))
-                    {
-                        DispatchIntent(null, Controller.ActivePackage.Menu);
-                    }
-                    else
-                    {
-                        DispatchIntent(null, Controller.ActivePackage.Welcome);
-                    }
-                    
+                    LoadOpenShift();
                     break;
                 default:
                     throw new IndexOutOfRangeException();
