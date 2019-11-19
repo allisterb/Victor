@@ -138,10 +138,10 @@ namespace Victor
             ThrowIfNotInitialized();
             SetItemsContext("PROJECTS");
             var projects = GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
-            if ( projects == null)
+            if (projects == null)
             {
-                SetItems("PROJECTS", projects = FetchProjects());
-                SetItemsPageSize("PROJECTS", 1);
+                SetItems("PROJECTS", projects = projects = FetchProjects());
+                ItemsCurrentPage[Prefixed("PROJECTS")] = 1;
             }
             SayInfoLine("{0} projects.", projects.Items.Count);
         }
@@ -161,12 +161,11 @@ namespace Victor
                 var pods = GetItems<Iok8sapicorev1PodList>("PODS");
                 if ( pods == null)
                 {
-                    SetItems("PODS", FetchPods(GetVar("PROJECT")));
-                    SetItemsPageSize("PODS", 1);
-                    pods = GetItems<Iok8sapicorev1PodList>("PODS");
+                    SetItems("PODS", pods = FetchPods(GetVar("PROJECT")));
+                    ItemsCurrentPage[Prefixed("PODS")] = 1;
                 }
                 SayInfoLine("{0} pods.", pods.Items.Count);
-                //DescribeItem()
+                DescribePods(GetItemsCurrentPage("PODS"), this);
             }
 
         }
@@ -284,10 +283,14 @@ namespace Victor
             int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PODS"];
             int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
             if (end > pods.Items.Count) end = pods.Items.Count;
+            if (Controller.DebugEnabled)
+            {
+                SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", pods.Items.Count, page, start, end);
+            }
             for (int i = start; i < end; i++)
             {
                 var pod = pods.Items[i];
-                oc.SayInfoLine("{0} Name: {1}", i, pod.Metadata.Name);
+                oc.SayInfoLine("{0} Name: {1} Phase: {2}", i, pod.Metadata.Name, pod.Status.Phase);
             }
 
         }

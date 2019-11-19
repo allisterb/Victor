@@ -169,13 +169,13 @@ namespace Victor
             }
         }
 
-        public void DescribeItems(CUIContext context, int page)
+        public void DescribeItems(int page)
         {
-            var name = context.Label.Replace("ITEMS_", "");
-            var itemsPage = GetItemsCurrentPage(name);
-            var handler = ItemsDescriptionHandlers[name];
+            var items = GetItemsContext();
+            var itemsPage = GetItemsCurrentPage(items);
+            var handler = ItemsDescriptionHandlers[Prefixed(items)];
             handler.Invoke(itemsPage, this);
-            ItemsCurrentPage[name] = page;
+            ItemsCurrentPage[items] = page;
         }
         #endregion
 
@@ -281,7 +281,7 @@ namespace Victor
                 }
                 else if (CanDispatchToItemsPage())
                 {
-                    DescribeItems(Controller.Context.Peek(), GetItemsPageSize(GetItemsContext()));
+                    DescribeItems(GetItemsPageSize(GetItemsContext()));
                     return true;
                 }
                 else
