@@ -164,8 +164,7 @@ namespace Victor
                     SetItems("PODS", pods = FetchPods(GetVar("PROJECT")));
                     ItemsCurrentPage[Prefixed("PODS")] = 1;
                 }
-                SayInfoLine("{0} pods.", pods.Items.Count);
-                DescribePods(GetItemsCurrentPage("PODS"), this);
+                DescribeItems(GetItemsCurrentPage("PODS"));
             }
 
         }

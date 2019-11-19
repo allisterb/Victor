@@ -62,6 +62,12 @@
       "matching_strictness": 1.0,
       "use_synonyms": true
     },
+    "no": {
+      "automatically_extensible": true,
+      "data": [],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
     "package": {
       "automatically_extensible": false,
       "data": [
@@ -73,6 +79,7 @@
         },
         {
           "synonyms": [
+            "services",
             "email",
             "send email",
             "send an email",
@@ -83,16 +90,25 @@
             "red hat product",
             "github"
           ],
-          "value": "services"
+          "value": "service"
         },
         {
           "synonyms": [
+            "bots",
             "banking",
             "loan",
             "apply for loan",
             "get a loan"
           ],
-          "value": "bots"
+          "value": "bot"
+        },
+        {
+          "synonyms": [
+            "open shift",
+            "red hat open shift",
+            "redhat openshift"
+          ],
+          "value": "openshift"
         }
       ],
       "matching_strictness": 1.0,
@@ -1209,73 +1225,6 @@
               "text": "email"
             }
           ]
-        }
-      ]
-    },
-    "home": {
-      "utterances": [
-        {
-          "data": [
-            {
-              "text": "home"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "go home"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "I want to go home"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "please go back"
-            }
-          ]
-        }
-      ]
-    },
-    "info": {
-      "utterances": [
-        {
-          "data": [
-            {
-              "text": "info"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "info "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "nlp"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "info on "
-            },
-            {
-              "entity": "feature",
-              "slot_name": "feature",
-              "text": "packages"
-            }
-          ]
         },
         {
           "data": [
@@ -1421,6 +1370,38 @@
         }
       ]
     },
+    "home": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "home"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go home"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "I want to go home"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "please go back"
+            }
+          ]
+        }
+      ]
+    },
     "menu": {
       "utterances": [
         {
@@ -1469,6 +1450,191 @@
           "data": [
             {
               "text": "get packages"
+            }
+          ]
+        }
+      ]
+    },
+    "page": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "next page"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "np"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "pp"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "previous page"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goto next page"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go to next page"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goto previous page"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "7"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "22"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "3"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "display page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "thirty two"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goto page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "5"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go to page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "20"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "p "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "10"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "p "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "three"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "go to "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "15"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goto "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "fifteen"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "goto page "
+            },
+            {
+              "entity": "no",
+              "slot_name": "no",
+              "text": "16"
             }
           ]
         }

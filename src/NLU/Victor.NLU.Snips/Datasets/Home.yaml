@@ -34,18 +34,6 @@ utterances:
   - How do I [feature](end this)
   - How can I [feature](exit) the program
   - How do I use [package](email)
-  
-# info intent
----
-type: intent
-name: info
-slots:
-  - name: feature
-    entity: feature
-utterances:
-  - info
-  - info [feature](nlp)
-  - info on [feature](packages)
   - What's [feature](this)
   - What does this do
   - What is [feature](this)
@@ -71,6 +59,33 @@ utterances:
     - show packages
     - go to packages
     - get packages
+
+# page intent
+---
+type: intent
+name: page
+slots:
+  - name: no
+    entity: snips/number
+utterances:
+    - next page
+    - np
+    - pp
+    - previous page
+    - goto next page
+    - go to next page
+    - goto previous page
+    - page [no](7)
+    - page [no](22)
+    - show page [no](3)
+    - display page [no](thirty two)
+    - goto page [no](5)
+    - go to page [no](20)
+    - p [no](10)
+    - p [no](three)
+    - go to [no](15)
+    - goto [no](fifteen)
+    - goto page [no](16)
 
 # hello intent
 ---
@@ -221,6 +236,7 @@ values:
 - [vish, visual interactive shell]
 - [service, services, email, send email, send an email, send emails, redhat news, red hat news, redhat products, red hat product, github]
 - [bot, bots, banking, loan, apply for loan, get a loan]
+- [openshift, open shift, red hat open shift, redhat openshift]
 
 # person entity
 ---

@@ -9,12 +9,16 @@
       "entity_parser": "parser_2"
     },
     {
-      "entity_identifier": "package",
+      "entity_identifier": "no",
       "entity_parser": "parser_3"
     },
     {
-      "entity_identifier": "person",
+      "entity_identifier": "package",
       "entity_parser": "parser_4"
+    },
+    {
+      "entity_identifier": "person",
+      "entity_parser": "parser_5"
     }
   ]
 }

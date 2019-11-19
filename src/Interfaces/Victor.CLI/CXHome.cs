@@ -31,21 +31,17 @@ namespace Victor.CLI
 
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
-            if (input == "")
-            {
-                return true;
-            }
-            else if (input == "vish")
+            if (input.ToLower() == "vish")
             {
                 GetPackagesMenuItem(1);
                 return true;
             }
-            else if (input == "services")
+            else if (input.ToLower() == "services")
             {
                 GetPackagesMenuItem(2);
                 return true;
             }
-            else if (input == "bots")
+            else if (input.ToLower() == "bots")
             {
                 GetPackagesMenuItem(3);
                 return true;
@@ -56,13 +52,8 @@ namespace Victor.CLI
             {
                 DebugIntent(intent);
             }
-            
-            if (intent == null || intent.IsNone)
-            {
-                return false;
-            }
-            
-            else if (intent.Top.Score < 0.6)
+                      
+            if (Empty(intent) || intent.Top.Score < 0.6)
             {
                 return false;
             }
@@ -75,10 +66,7 @@ namespace Victor.CLI
                         break;
                     case "help":
                         Help(intent);
-                        break;
-                    //case "info":
-                    //    Info(intent);
-                    //    break;
+                        break;        
                     case "hello":
                         Hello(intent);
                         break;

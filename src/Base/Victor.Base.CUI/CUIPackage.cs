@@ -152,6 +152,8 @@ namespace Victor
 
         public int GetItemsCurrentPage(string name) => ItemsCurrentPage[Prefixed(name).ToUpper()];
 
+        public Action<int, CUIPackage> GetItemsDescriptionHandler(string name) => ItemsDescriptionHandlers[Prefixed(name).ToUpper()];
+
         public int SetItemsPageSize(string name, int value) => ItemsPageSize[Prefixed(name).ToUpper()] = value;
 
         public void DescribeItem(string name, int index) => ItemsDescriptionHandlers[Prefixed(name)].Invoke(index, this);
@@ -173,7 +175,7 @@ namespace Victor
         {
             var items = GetItemsContext();
             var itemsPage = GetItemsCurrentPage(items);
-            var handler = ItemsDescriptionHandlers[Prefixed(items)];
+            var handler = GetItemsDescriptionHandler(items);
             handler.Invoke(itemsPage, this);
             ItemsCurrentPage[items] = page;
         }

@@ -203,6 +203,9 @@
       "function": {
         "automatically_extensible": false
       },
+      "no": {
+        "automatically_extensible": true
+      },
       "package": {
         "automatically_extensible": false
       },
@@ -230,11 +233,10 @@
         "package": "package"
       },
       "home": {},
-      "info": {
-        "feature": "feature",
-        "package": "package"
-      },
-      "menu": {}
+      "menu": {},
+      "page": {
+        "no": "no"
+      }
     }
   },
   "intent_parsers": [
