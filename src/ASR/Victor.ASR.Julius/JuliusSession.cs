@@ -44,6 +44,8 @@ namespace Victor
 
         public bool IsListening { get; protected set; } = false;
 
+        public bool IsStopped => JuliusProcess != null && JuliusProcess.IsDisposed;
+
         public bool IsPass1Recognizing { get; protected set; } = false;
 
         public bool IsPass1Complete { get; protected set; } = false;
@@ -61,6 +63,10 @@ namespace Victor
             if (IsStarted)
             {
                 throw new InvalidOperationException("The Julius session is already started.");
+            }
+            else if (IsStopped)
+            {
+                JuliusProcess = new ConsoleProcess(JuliusExe, JuliusArgs.ToArray(), onOutput: OnProcessOutput, onError: OnErrorOutput);
             }
             JuliusProcess.Start();
             IsStarted = true;

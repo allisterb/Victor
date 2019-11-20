@@ -142,7 +142,6 @@ namespace Victor
                 SetItems("PROJECTS", projects = projects = FetchProjects());
                 ItemsCurrentPage[Prefixed("PROJECTS")] = 1;
             }
-            SayInfoLine("{0} projects.", projects.Items.Count);
             SetItemsContext("PROJECTS");
             if (!Empty(intent) && intent.Top.Label == "list")
             {
@@ -220,9 +219,10 @@ namespace Victor
                 }
             }
         }
-        
+
         #endregion
 
+        #region Menus
         protected void GetOpenShiftMenuSelection(int i)
         {
             switch (i - 1)
@@ -238,6 +238,60 @@ namespace Victor
                     throw new IndexOutOfRangeException();
             }
         }
+        #endregion
+
+        #region Items
+        protected void DescribePods(int page, CUIPackage package)
+        {
+            var oc = (OpenShift)package;
+            var pageSize = oc.ItemsPageSize["OPENSHIFT_PODS"];
+            var pods = oc.GetItems<Iok8sapicorev1PodList>("PODS");
+            var count = pods.Items.Count;
+            var pages = count / pageSize + 1;
+            if (page > pages)
+            {
+                SayErrorLine("There are only {0} pages available.", pages);
+                return;
+            }
+            else
+            {
+                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PODS"];
+                int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
+                if (end > count) end = count;
+                if (Controller.DebugEnabled)
+                {
+                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", pods.Items.Count, page, start, end);
+                }
+                SayInfoLine("Pods page {0} of {1}.", page, pages);
+                for (int i = start; i < end; i++)
+                {
+                    var pod = pods.Items[i];
+                    oc.SayInfoLine("{0}. Name: {1}. Phase: {2}.", i + 1, pod.Metadata.Name, pod.Status.Phase);
+                }
+                oc.ItemsCurrentPage["OPENSHIFT_PODS"] = page;
+            }
+
+        }
+
+        protected void DescribeProjects(int page, CUIPackage package)
+        {
+            var oc = (OpenShift)package;
+            var projects = oc.GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
+            if (projects == null)
+            {
+                projects = FetchProjects();
+            }
+            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+            int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+            if (end > projects.Items.Count) end = projects.Items.Count;
+            for (int i = start; i < end; i++)
+            {
+                var project = projects.Items[i];
+                oc.SayInfoLine("{0} Name: {1}", i + 1, project.Metadata.Name);
+            }
+        }
+
+        #endregion
 
         #region OpenShift API
         internal Iok8sapicorev1PodList FetchPods(string ns, string label = null)
@@ -281,55 +335,6 @@ namespace Victor
             ThrowIfNotInitialized();
             return Client.ListBuildOpenshiftIoV1NamespacedBuildConfig(namespaceParameter: ns, labelSelector: label);
         }
-
-        protected void DescribePods(int page, CUIPackage package)
-        {
-            var oc = (OpenShift)package;
-            var pageSize = oc.ItemsPageSize["OPENSHIFT_PODS"];
-            var pods = oc.GetItems<Iok8sapicorev1PodList>("PODS");
-            var count = pods.Items.Count;
-            var pages = count / pageSize + 1;
-            if (page > pages)
-            {
-                SayErrorLine("There are only {0} pages available.");
-                return;
-            }
-            else
-            {
-                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PODS"];
-                int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
-                if (end > count) end = count;
-                if (Controller.DebugEnabled)
-                {
-                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", pods.Items.Count, page, start, end);
-                }
-                for (int i = start; i < end; i++)
-                {
-                    var pod = pods.Items[i];
-                    oc.SayInfoLine("{0} Name: {1} Phase: {2}", i, pod.Metadata.Name, pod.Status.Phase);
-                }
-            }
-
-        }
-
-        protected void DescribeProjects(int page, CUIPackage package)
-        {
-            var oc = (OpenShift)package;
-            var projects = oc.GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
-            if (projects == null)
-            {
-                projects = FetchProjects();
-            }
-            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-            int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-            if (end > projects.Items.Count) end = projects.Items.Count;
-            for (int i = start; i < end; i++)
-            {
-                var project = projects.Items[i];
-                oc.SayInfoLine("{0} Name: {1}", i + 1, project.Metadata.Name);
-            }
-        }
-
         #endregion
 
         #endregion

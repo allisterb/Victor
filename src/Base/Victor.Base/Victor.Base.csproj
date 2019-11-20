@@ -12,6 +12,7 @@
     <UserSecretsId>d24251d3-99ae-4afc-a9d8-bf9eafcc0ca0</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />

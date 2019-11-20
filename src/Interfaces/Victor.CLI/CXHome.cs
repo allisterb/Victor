@@ -372,14 +372,7 @@ namespace Victor.CLI
                         Controller.StopBeeper();
                     }
                     Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
-                    if (Context.Peek().Label.StartsWith("MENU"))
-                    {
-                        DispatchIntent(null, Controller.ActivePackage.Menu);
-                    }
-                    else
-                    {
-                        DispatchIntent(null, Controller.ActivePackage.Welcome);
-                    }
+                    DispatchIntent(null, Controller.ActivePackage.Menu);
                     break;
                 default:
                     throw new IndexOutOfRangeException();

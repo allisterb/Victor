@@ -9,5 +9,12 @@ namespace Victor.Tests
         {
             Api.SetDefaultLoggerIfNone();
         }
+
+        [Fact]
+        public void CanConvertToInteger()
+        {
+            Assert.Equal(33, "thirty-three".ToInteger());
+
+        }
     }
 }

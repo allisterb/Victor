@@ -67,12 +67,15 @@ namespace Victor.CLI
         {
             ThrowIfNotInitialized();
             InputEnabled = false;
-            if (!ActivePackage.HandleInput(time, input))
+            if (!string.IsNullOrEmpty(input.Trim()))
             {
-                SayInfoLineIfDebugEnabled("Input handled by HOME package.");
-                if (!HomePackage.HandleInput(time, input))
+                if (!ActivePackage.HandleInput(time, input))
                 {
-                    SayCouldNotUnderstand(input);
+                    SayInfoLineIfDebugEnabled("Input handled by HOME package.");
+                    if (!HomePackage.HandleInput(time, input))
+                    {
+                        SayCouldNotUnderstand(input);
+                    }
                 }
             }
             Prompt();

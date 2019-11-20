@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+using Humanizer;
 namespace Victor
 {
     public abstract class CUIPackage : Api
@@ -37,6 +38,7 @@ namespace Victor
                 MenuHandlers.Add(Prefixed(m), null);
                 MenuIndexes.Add(Prefixed(m), 0);
             }
+            
         }
         public CUIPackage(string name, NLUEngine engine, CUIController controller, params CUIPackage[] subPackages) : this(name, engine, controller, Ct, subPackages) {}
         #endregion
@@ -76,6 +78,7 @@ namespace Victor
 
         #region Methods
 
+
         #region UI
         public void DebugIntent(Intent intent)
         {
@@ -111,7 +114,7 @@ namespace Victor
         public void SetMenuContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext("MENU_" + Prefixed(name), intent, action);
         #endregion
 
-        #region Input
+        #region User Input
         public void GetInput(string variableName, Action<Intent> action = null, Intent intent = null)
         {
             Controller.SetContext("INPUT_" + Prefixed(variableName), intent, action);
@@ -253,7 +256,7 @@ namespace Victor
             var input = intent.Input.Trim().ToLower();
             var items = GetItemsContext();
             var current = GetItemsCurrentPage(items);
-            int page = -1;
+            int page;
             if (ObjectEmpty(intent))
             {
                 if (input == "np" || input.Contains("next"))
@@ -273,15 +276,7 @@ namespace Victor
             else
             {
                 string _no = intent.Entities.FirstOrDefault(e => e.SlotName == "no")?.Value;
-                if (!string.IsNullOrEmpty(_no) && Int32.TryParse(_no, out int no))
-                {
-                    page =  no;
-                }
-                else
-                {
-                    SayErrorLine("Sorry I don't understand what you mean. Say something like {0} or {1}.", "page 5", "goto pag 6");
-                    return;
-                }
+                page = _no.ToInteger();
             }
             DescribeItems(page);
         }
@@ -347,7 +342,10 @@ namespace Victor
             {
                 DebugIntent(intent);
             }
-            
+            if (!intent.IsNone && intent.Top.Label == "menu" && intent.Top.Score > 0.7)
+            {
+                Menu(intent);
+            }
             if (intent.Top.Score < 0.8)
             {
                 return false;
