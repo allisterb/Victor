@@ -188,6 +188,7 @@ namespace Victor.CLI
         }
 
         #endregion
+
         #region Fields
         static Thread _beeperThread;
 

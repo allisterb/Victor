@@ -23,6 +23,7 @@ namespace Victor
         public OpenShift(CUIController controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
         {
             Intents.Add("list", List);
+            Intents.Add("page", Page);
             MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuSelection;
             MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
             ItemsDescriptionHandlers["OPENSHIFT_PODS"] = DescribePods;
@@ -37,11 +38,11 @@ namespace Victor
             }
             else if (string.IsNullOrEmpty(ApiUrl))
             {
-                SayErrorLine("I could not determine your OpenShift API URL. Please ensure the item exists in your config.json configuration file.");
+                SayErrorLine("I could not determine your OpenShift API URL. Please ensure the value exists in your config.json configuration file or as the environment variable {0}.", "CUI_VISH_OPENSHIFT_URL");
             }
             else if (string.IsNullOrEmpty(ApiToken))
             {
-                SayErrorLine("I could not determine your OpenShift service API token. Please ensure the item exists in your config.json configuration file");
+                SayErrorLine("I could not determine your OpenShift service API token. Please ensure the value exists in your config.json configuration file or as the environment variable {0}.", "CUI_VISH_OPENSHIFT_TOKENs");
             }
         }
 
@@ -135,7 +136,6 @@ namespace Victor
         public void Projects(Intent intent)
         {
             ThrowIfNotInitialized();
-            SetItemsContext("PROJECTS");
             var projects = GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
             if (projects == null)
             {
@@ -143,12 +143,17 @@ namespace Victor
                 ItemsCurrentPage[Prefixed("PROJECTS")] = 1;
             }
             SayInfoLine("{0} projects.", projects.Items.Count);
+            SetItemsContext("PROJECTS");
+            if (!Empty(intent) && intent.Top.Label == "list")
+            {
+                DescribeItems(GetItemsCurrentPage("PROJECTS"));
+            }
+
         }
 
         public void Pods(Intent intent)
         {
             ThrowIfNotInitialized();
-            SetItemsContext("PODS");
             if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
                 SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", Prefixed("PROJECT"));
@@ -163,7 +168,11 @@ namespace Victor
                     SetItems("PODS", pods = FetchPods(GetVar("PROJECT")));
                     ItemsCurrentPage[Prefixed("PODS")] = 1;
                 }
-                DescribeItems(GetItemsCurrentPage("PODS"));
+                SetItemsContext("PODS");
+                if (!Empty(intent) && intent.Top.Label == "list")
+                {
+                    DescribeItems(GetItemsCurrentPage("PODS"));
+                }
             }
 
         }
@@ -185,14 +194,13 @@ namespace Victor
                         DebugIntent(intent);
                         break;
                 }
-                return;
             }
             else
             {
                 var (task, command, objects) = GetIntentTaskCommandObjects(intent);
                 if (objects.Count == 0 )
                 {
-                    SayInfoLine("Sorry I don't know how to list that. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
+                    SayInfoLine("Sorry I don't know how to list what you are saying: {0}. Say something like {1} or say {2} to see the OpenShift menu.", intent.Top.Label, "list pods", "menu");
                 }
                 else
                 {
@@ -206,12 +214,13 @@ namespace Victor
                             DispatchIntent(intent, Pods);
                             break;
                         default:
-                            SayInfoLine("Sorry I don't know how to list that. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
+                            SayInfoLine("Sorry I don't know how to list what you are saying. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
                             break;
                     }
                 }
             }
-        }        
+        }
+        
         #endregion
 
         protected void GetOpenShiftMenuSelection(int i)
@@ -275,27 +284,36 @@ namespace Victor
 
         protected void DescribePods(int page, CUIPackage package)
         {
-            ThrowIfNotInitialized();
             var oc = (OpenShift)package;
+            var pageSize = oc.ItemsPageSize["OPENSHIFT_PODS"];
             var pods = oc.GetItems<Iok8sapicorev1PodList>("PODS");
-            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PODS"];
-            int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
-            if (end > pods.Items.Count) end = pods.Items.Count;
-            if (Controller.DebugEnabled)
+            var count = pods.Items.Count;
+            var pages = count / pageSize + 1;
+            if (page > pages)
             {
-                SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", pods.Items.Count, page, start, end);
+                SayErrorLine("There are only {0} pages available.");
+                return;
             }
-            for (int i = start; i < end; i++)
+            else
             {
-                var pod = pods.Items[i];
-                oc.SayInfoLine("{0} Name: {1} Phase: {2}", i, pod.Metadata.Name, pod.Status.Phase);
+                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PODS"];
+                int end = start + oc.ItemsPageSize["OPENSHIFT_PODS"];
+                if (end > count) end = count;
+                if (Controller.DebugEnabled)
+                {
+                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", pods.Items.Count, page, start, end);
+                }
+                for (int i = start; i < end; i++)
+                {
+                    var pod = pods.Items[i];
+                    oc.SayInfoLine("{0} Name: {1} Phase: {2}", i, pod.Metadata.Name, pod.Status.Phase);
+                }
             }
 
         }
 
         protected void DescribeProjects(int page, CUIPackage package)
         {
-            ThrowIfNotInitialized();
             var oc = (OpenShift)package;
             var projects = oc.GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
             if (projects == null)

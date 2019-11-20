@@ -14,6 +14,7 @@ namespace Victor
             Name = name;
             NLUEngine = engine;
             Controller = controller;
+            Intents.Add("help", Help);
             Intents.Add("menu", Menu);
             if (subPackages != null && subPackages.Length > 0)
             {
@@ -99,7 +100,7 @@ namespace Victor
 
         public bool IsItemsContext => CurrentContext.StartsWith("ITEMS_");
 
-        public string GetItemsContext() => CurrentContext.Replace("ITEMS_", "").Replace(this.Name.ToUpper() + "_", "");
+        public string GetItemsContext() => CurrentContext.Replace("ITEMS_"+ this.Name.ToUpper() + "_", "");
 
         public void SetItemsContext(string name) => Controller.SetContext("ITEMS_" + Prefixed(name));
 
@@ -174,10 +175,8 @@ namespace Victor
         public void DescribeItems(int page)
         {
             var items = GetItemsContext();
-            var itemsPage = GetItemsCurrentPage(items);
             var handler = GetItemsDescriptionHandler(items);
-            handler.Invoke(itemsPage, this);
-            ItemsCurrentPage[items] = page;
+            handler.Invoke(page, this);
         }
         #endregion
 
@@ -242,7 +241,49 @@ namespace Victor
                 SayInfoLine("Task: {0}, Command: {1}, Objects: {2}.", task ?? "None", command ?? "None", objects);
             }
             return new Tuple<string, string, List<string>>(task, command, objects);
+        }
 
+        public void Page(Intent intent)
+        {
+            if (!IsItemsContext)
+            {
+                SayErrorLine("Sorry I don't understand what you mean. There is not anything I can page.");
+                return;
+            }
+            var input = intent.Input.Trim().ToLower();
+            var items = GetItemsContext();
+            var current = GetItemsCurrentPage(items);
+            int page = -1;
+            if (ObjectEmpty(intent))
+            {
+                if (input == "np" || input.Contains("next"))
+                {
+                    page = current + 1;
+                }
+                else if (input == "pp" || intent.Input.Contains("previous"))
+                {
+                    page = current - 1;
+                }
+                else
+                {
+                    SayErrorLine("Sorry I don't understand what you mean. Say something like {0} or {1}.", "page 5", "next page");
+                    return;
+                }
+            }
+            else
+            {
+                string _no = intent.Entities.FirstOrDefault(e => e.SlotName == "no")?.Value;
+                if (!string.IsNullOrEmpty(_no) && Int32.TryParse(_no, out int no))
+                {
+                    page =  no;
+                }
+                else
+                {
+                    SayErrorLine("Sorry I don't understand what you mean. Say something like {0} or {1}.", "page 5", "goto pag 6");
+                    return;
+                }
+            }
+            DescribeItems(page);
         }
 
         public void DispatchIntent(Intent intent, Action<Intent> action)
@@ -306,35 +347,24 @@ namespace Victor
             {
                 DebugIntent(intent);
             }
+            
             if (intent.Top.Score < 0.8)
             {
                 return false;
             }
             else
             {
-                switch (intent.Top.Label)
-                { 
-                    case "help":
-                        Help(intent);
-                        break;
-                    case "menu":
-                        DispatchIntent(intent, Menu);
-                        break;
-                    default:
-                        if (Intents.ContainsKey(intent.Top.Label))
-                        {
-                            DispatchIntent(intent, Intents[intent.Top.Label]);
-                        }
-                        else
-                        {
-                            SayErrorLine("Unknown intent: {0}.", intent.Top.Label);
-                            DebugIntent(intent);
-                        }
-                        break;
+                if (Intents.ContainsKey(intent.Top.Label))
+                {
+                    DispatchIntent(intent, Intents[intent.Top.Label]);
                 }
+                else
+                {
+                    SayErrorLine("This package recognizes intent {0} but does not have handler for it.", intent.Top.Label);
+                    DebugIntent(intent);
+                }                     
                 return true;
             }
-
         }
 
         public virtual void DispatchInput(CUIContext context, string input)

@@ -82,6 +82,9 @@ namespace Victor.CLI
                     case "back":
                         Back(intent);
                         break;
+                    case "page":
+                        Controller.ActivePackage.Page(intent);
+                        break;
                     default:
                         break;
                 }

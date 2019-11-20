@@ -108,27 +108,42 @@ namespace Victor
         #region Intents
         public void Launch(Intent intent)
         {
-            var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
-            if (string.IsNullOrEmpty(package))
+            var input = intent.Input.ToLower();
+            if (ObjectEmpty(intent))
             {
-                SayErrorLine("No package to launch.");
-                return;
-            }
-            else
-            {
-                if (package == "openshift")
+                if (input.Contains("openshift") || input.Contains("open shift"))
                 {
-                    LoadOpenShift();
+                    LoadOpenShiftPackage();
                 }
                 else
                 {
-                    SayErrorLine("I don't know how to launch package {0}.", package);
+                    SayErrorLine("Sorry I dont know what you mean. Say something like {0}.", "launch openshift");
+                }
+            }
+            else
+            {
+                var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
+                if (string.IsNullOrEmpty(package))
+                {
+                    SayErrorLine("No package to launch.");
+                    return;
+                }
+                else
+                {
+                    if (package == "openshift")
+                    {
+                        LoadOpenShiftPackage();
+                    }
+                    else
+                    {
+                        SayErrorLine("I don't know how to launch package {0}.", package);
+                    }
                 }
             }
         }
         #endregion
 
-        public void LoadOpenShift()
+        public void LoadOpenShiftPackage()
         {
             if (!SubPackages.Any(p => p.Name == "OpenShift"))
             {
@@ -165,7 +180,7 @@ namespace Victor
             switch (i - 1)
             {
                 case 0:
-                    LoadOpenShift();
+                    LoadOpenShiftPackage();
                     break;
                 default:
                     throw new IndexOutOfRangeException();
