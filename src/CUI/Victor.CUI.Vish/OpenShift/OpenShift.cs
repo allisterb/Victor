@@ -266,7 +266,9 @@ namespace Victor
                 for (int i = start; i < end; i++)
                 {
                     var pod = pods.Items[i];
-                    oc.SayInfoLine("{0}. Name: {1}. Phase: {2}.", i + 1, pod.Metadata.Name, pod.Status.Phase);
+                    oc.SayInfoLine("{0}. Name: {1}, Namespace: {2}, Labels: {3}, Status: {4}.", i + 1, pod.Metadata.Name, pod.Metadata.NamespaceProperty, 
+                        pod.Metadata.Labels?.Select(kv => kv.Key + "=" + kv.Value).Aggregate((s1, s2) => s1 + " " + s2) ?? "{}",
+                        pod.Status.Phase);
                 }
                 oc.ItemsCurrentPage["OPENSHIFT_PODS"] = page;
             }
@@ -276,18 +278,34 @@ namespace Victor
         protected void DescribeProjects(int page, CUIPackage package)
         {
             var oc = (OpenShift)package;
+            var pageSize = oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
             var projects = oc.GetItems<Comgithubopenshiftapiprojectv1ProjectList>("PROJECTS");
-            if (projects == null)
+
+            var count = projects.Items.Count;
+            var pages = count / pageSize + 1;
+            if (page > pages)
             {
-                projects = FetchProjects();
+                SayErrorLine("There are only {0} pages available.", pages);
+                return;
             }
-            int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-            int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-            if (end > projects.Items.Count) end = projects.Items.Count;
-            for (int i = start; i < end; i++)
+            else
             {
-                var project = projects.Items[i];
-                oc.SayInfoLine("{0} Name: {1}", i + 1, project.Metadata.Name);
+                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+                int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+                if (end > count) end = count;
+                if (Controller.DebugEnabled)
+                {
+                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", projects.Items.Count, page, start, end);
+                }
+                SayInfoLine("Projects page {0} of {1}.", page, pages);
+                for (int i = start; i < end; i++)
+                {
+                    var project = projects.Items[i];
+                    oc.SayInfoLine("{0}. Name: {1}, Status: {2}, Requester: {3}, Labels: {4}.", i + 1, project.Metadata.Name, project.Status.Phase, 
+                        project.Metadata.Annotations.First(a => a.Key.ToLower().Contains("requester")).Value,
+                        project.Metadata.Labels?.Select(kv => kv.Key + "=" + kv.Value).Aggregate((s1, s2) => s1 + " " + s2) ?? "{}");
+                }
+                oc.ItemsCurrentPage["OPENSHIFT_PROJECTS"] = page;
             }
         }
 

@@ -148,7 +148,7 @@ namespace Victor
         #endregion
 
         #region Items
-        public T GetItems<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default;
+        public T GetItems<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default(T);
 
         public T SetItems<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
 
