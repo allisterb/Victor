@@ -7,6 +7,8 @@ slots:
     entity: openshift_object
 utterances:
   - help
+  - what is this
+  - what's this
   - What is a openshift [openshift_object](project)
   - What are [openshift_object](pods)
   - help with openshift [openshift_object](builds)
@@ -14,7 +16,7 @@ utterances:
   - help administer [openshift_object](build_configs)
   - help administer openshift
   - help manage [openshift_object](build configs)
-  - help with [openshift_object](  pods)
+  - help with [openshift_object](pods)
   - help with vish openshift
   - help with vish openshift [openshift_object](pods)
   - What is a [openshift_object](pods)
@@ -33,15 +35,20 @@ utterances:
   - list [openshift_object](pods)
   - show me [openshift_object](pods)
   - display [openshift_object](pods)
+  - list [openshift_object](builds)
+  - show me [openshift_object](builds)
+  - display [openshift_object](builds)
 
 # openshift_object entity
 ---
 type: entity
 name: openshift_object
 automatically_extensible: no
+use_synonyms: yes
 values:
 - [project, projects]
 - [pod, pods]
+- [build, builds]
 - [build config, build configs]
 - [deployment config, deployment configs]
 - [route, routes]

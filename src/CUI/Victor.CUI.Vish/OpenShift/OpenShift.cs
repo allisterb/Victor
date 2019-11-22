@@ -28,6 +28,7 @@ namespace Victor
             MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
             ItemsDescriptionHandlers["OPENSHIFT_PODS"] = DescribePods;
             ItemsDescriptionHandlers["OPENSHIFT_PROJECTS"] = DescribeProjects;
+            ItemsDescriptionHandlers["OPENSHIFT_BUILDS"] = DescribeBuilds;
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
@@ -116,6 +117,7 @@ namespace Victor
             SayInfoLine("Red Hat OpenShift");
             SayInfoLine("1 {0}", "Projects");
             SayInfoLine("2 {0}", "Pods");
+            SayInfoLine("3 {0}", "Builds");
         }
         #endregion
 
@@ -176,6 +178,31 @@ namespace Victor
 
         }
 
+        public void Builds(Intent intent)
+        {
+            ThrowIfNotInitialized();
+            if (string.IsNullOrEmpty(GetVar("PROJECT")))
+            {
+                SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", Prefixed("PROJECT"));
+                GetInput("PROJECT", Builds, intent);
+                return;
+            }
+            else
+            {
+                var builds = GetItems<Comgithubopenshiftapibuildv1BuildList>("BUILDS");
+                if (builds == null)
+                {
+                    SetItems("BUILDS", builds = FetchBuilds(GetVar("PROJECT")));
+                    ItemsCurrentPage[Prefixed("BUILDS")] = 1;
+                }
+                SetItemsContext("BUILDS");
+                if (!Empty(intent) && intent.Top.Label == "list")
+                {
+                    DescribeItems(GetItemsCurrentPage("BUILDS"));
+                }
+            }
+
+        }
         public void List(Intent intent)
         {
             if (ObjectEmpty(intent))
@@ -187,6 +214,9 @@ namespace Victor
                         break;
                     case "PROJECTS":
                         DispatchIntent(intent, Projects);
+                        break;
+                    case "BUILDS":
+                        DispatchIntent(intent, Builds);
                         break;
                     default:
                         SayErrorLine("Sorry I don't know how to list that.");
@@ -212,6 +242,9 @@ namespace Victor
                         case "pod":
                             DispatchIntent(intent, Pods);
                             break;
+                        case "build":
+                            DispatchIntent(intent, Builds);
+                            break;
                         default:
                             SayInfoLine("Sorry I don't know how to list what you are saying. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
                             break;
@@ -233,7 +266,9 @@ namespace Victor
                 case 1:
                     DispatchIntent(null, Pods);
                     break;
-
+                case 2:
+                    DispatchIntent(null, Builds);
+                    break;
                 default:
                     throw new IndexOutOfRangeException();
             }
@@ -309,6 +344,39 @@ namespace Victor
             }
         }
 
+        protected void DescribeBuilds(int page, CUIPackage package)
+        {
+            var oc = (OpenShift)package;
+            var pageSize = oc.ItemsPageSize["OPENSHIFT_BUILDS"];
+            var builds = oc.GetItems<Comgithubopenshiftapibuildv1BuildList>("BUILDS");
+            var count = builds.Items.Count;
+            var pages = count / pageSize + 1;
+            if (page > pages)
+            {
+                SayErrorLine("There are only {0} pages available.", pages);
+                return;
+            }
+            else
+            {
+                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_BUILDS"];
+                int end = start + oc.ItemsPageSize["OPENSHIFT_BUILDS"];
+                if (end > count) end = count;
+                if (Controller.DebugEnabled)
+                {
+                    SayInfoLine("Count: {0}, Page: {1}, Start: {2}, End: {3}", builds.Items.Count, page, start, end);
+                }
+                SayInfoLine("Builds page {0} of {1}.", page, pages);
+                for (int i = start; i < end; i++)
+                {
+                    var build = builds.Items[i];
+                    oc.SayInfoLine("{0}. Name: {1}, Namespace: {2}, Labels: {3}, Status: {4}.", i + 1, build.Metadata.Name, build.Metadata.NamespaceProperty,
+                        build.Metadata.Labels?.Select(kv => kv.Key + "=" + kv.Value).Aggregate((s1, s2) => s1 + " " + s2) ?? "{}",
+                        build.Status.Phase);
+                }
+                oc.ItemsCurrentPage["OPENSHIFT_BUILDS"] = page;
+            }
+
+        }
         #endregion
 
         #region OpenShift API
@@ -333,6 +401,18 @@ namespace Victor
             Controller.StopBeeper();
             SayInfoLine("Fetched {0} projects.", projects.Items.Count);
             return projects;
+        }
+
+        internal Comgithubopenshiftapibuildv1BuildList FetchBuilds(string ns, string label = null)
+        {
+            ThrowIfNotInitialized();
+            SayInfoLine("Fetching builds for your cluster...");
+            Controller.StartBeeper();
+            var builds = Client.ListBuildOpenshiftIoV1NamespacedBuild(namespaceParameter: ns, labelSelector: label);
+            SetItems("PROJECTS", builds);
+            Controller.StopBeeper();
+            SayInfoLine("Fetched {0} builds.", builds.Items.Count);
+            return builds;
         }
 
         public Comgithubopenshiftapiroutev1RouteList GetRoutes(string ns, string label = null)

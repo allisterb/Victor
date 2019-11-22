@@ -17,6 +17,12 @@
         },
         {
           "synonyms": [
+            "builds"
+          ],
+          "value": "build"
+        },
+        {
+          "synonyms": [
             "build configs"
           ],
           "value": "build config"
@@ -51,6 +57,20 @@
           "data": [
             {
               "text": "help"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "what is this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "what's this"
             }
           ]
         },
@@ -141,7 +161,7 @@
             {
               "entity": "openshift_object",
               "slot_name": "openshift_object",
-              "text": "  pods"
+              "text": "pods"
             }
           ]
         },
@@ -244,6 +264,42 @@
               "entity": "openshift_object",
               "slot_name": "openshift_object",
               "text": "pods"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "list "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "builds"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "show me "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "builds"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "display "
+            },
+            {
+              "entity": "openshift_object",
+              "slot_name": "openshift_object",
+              "text": "builds"
             }
           ]
         }
