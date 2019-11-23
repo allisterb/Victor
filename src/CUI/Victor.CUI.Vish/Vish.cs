@@ -150,21 +150,20 @@ namespace Victor
                 SayInfoLine("Loading OpenShift package...");
                 Controller.StartBeeper();
                 var _oc = new OpenShift(this.Controller);
+                Controller.StopBeeper();
                 if (_oc.Initialized)
                 {
                     SubPackages.Add(_oc);
                 }
-                Controller.StopBeeper();
+                else
+                {
+                    SayErrorLine("The OpenShift package failed to initialize.");
+                    return;
+                }
             }
             var oc = SubPackages.Single(p => p.Name == "OpenShift");
-            if (oc.Initialized)
-            {
-                Controller.ActivePackage = oc;
-            }
-            else
-            {
-                SayErrorLine("The OpenShift package failed to initialize.");
-            }
+            Controller.ActivePackage = oc;
+            
             if (CurrentContext.StartsWith("MENU_"))
             {
                 DispatchIntent(null, Controller.ActivePackage.Menu);

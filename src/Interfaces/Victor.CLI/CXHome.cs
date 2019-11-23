@@ -12,7 +12,7 @@ namespace Victor.CLI
         public CXHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
         {
             MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
-            MenuIndexes[Prefixed("PACKAGES")] = 1;
+            MenuIndexes[Prefixed("PACKAGES")] = 3;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -374,9 +374,46 @@ namespace Victor.CLI
                     Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
                     DispatchIntent(null, Controller.ActivePackage.Menu);
                     break;
+                case 2:
+                    LoadBots();
+                    break;
+
                 default:
                     throw new IndexOutOfRangeException();
             }
+        }
+
+        protected void LoadBots()
+        {
+            if (!SubPackages.Any(p => p.Name == "Bots"))
+            {
+                SayInfoLine("Loading Bots...");
+                Controller.StartBeeper();
+                var bots = new Bots(this.Controller);
+                Controller.StopBeeper();
+                if (bots.Initialized)
+                {
+                    SubPackages.Add(new Bots(this.Controller));
+                }
+                else
+                {
+                    SayErrorLine("The Bots package failed to initialize.");
+                    return;
+                }
+                
+            }
+           
+            Controller.ActivePackage = SubPackages.Single(p => p.Name == "Bots"); 
+
+            if (CurrentContext.StartsWith("MENU_"))
+            {
+                DispatchIntent(null, Controller.ActivePackage.Menu);
+            }
+            else
+            {
+                DispatchIntent(null, Controller.ActivePackage.Welcome);
+            }
+
         }
         #endregion
     }

@@ -192,7 +192,7 @@ namespace Victor
                 var builds = GetItems<Comgithubopenshiftapibuildv1BuildList>("BUILDS");
                 if (builds == null)
                 {
-                    SetItems("BUILDS", builds = FetchBuilds(GetVar("PROJECT")));
+                    SetItems("BUILDS", builds = FetchBuilds(GetVar("BUILDS")));
                     ItemsCurrentPage[Prefixed("BUILDS")] = 1;
                 }
                 SetItemsContext("BUILDS");

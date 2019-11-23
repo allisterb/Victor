@@ -31,6 +31,9 @@ name: list
 slots:
   - name: object
     entity: openshift_object
+slots:
+  - name: field
+    entity: openshift_object_field
 utterances:
   - list [openshift_object](pods)
   - show me [openshift_object](pods)
@@ -38,6 +41,7 @@ utterances:
   - list [openshift_object](builds)
   - show me [openshift_object](builds)
   - display [openshift_object](builds)
+  - list [openshift_object](builds) [openshift_object_field](create o)
 
 # openshift_object entity
 ---
@@ -53,3 +57,15 @@ values:
 - [deployment config, deployment configs]
 - [route, routes]
 - [service, services]
+
+# openshift_object_field entity
+---
+type: entity
+name: openshift_object_field
+automatically_extensible: no
+use_synonyms: yes
+values:
+- name
+- [created, date created, created on, created at]
+- [status, phase]
+- [label, labels]
