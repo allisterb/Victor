@@ -410,7 +410,7 @@ namespace Victor.CLI
             }
             else
             {
-                DispatchIntent(null, Controller.ActivePackage.Welcome);
+                DispatchIntent(null, Controller.ActivePackage.Menu);
             }
 
         }

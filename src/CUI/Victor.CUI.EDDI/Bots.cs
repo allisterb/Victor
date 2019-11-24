@@ -50,6 +50,10 @@ namespace Victor
                     }
                     return true;
                 }
+                else if (Int32.TryParse(input, out int result) && QuickReplies != null && (result - 1) < QuickReplies.Length)
+                {
+                    DispatchBotInput(QuickReplies[result - 1]);
+                }
                 else
                 {
                     DispatchBotInput(input);
@@ -141,16 +145,30 @@ namespace Victor
                 int i = 0;
                 foreach(dynamic qr in quickReplies)
                 {
-                    SayInfoLine("{0} {1}", i, qr.value);
+                    SayInfoLine("{0} {1}", i + 1, qr.value);
                     QuickReplies[i++] = qr.value;
                 }
             }
-            
+            else
+            {
+                QuickReplies = null;
+            }
             if (output.Length > 0)
             {
                 LastOutput = output;
             }
-            SayInfoLineIfDebug("Bot actions: {0}", actions.Aggregate((s1, s2) => s1 + " " + s2));
+            if (actions.Length > 0)
+            {
+                SayInfoLineIfDebug("Bot actions: {0}", actions.Aggregate((s1, s2) => s1 + " " + s2));
+            }
+            if (intents.Length > 0)
+            {
+                SayInfoLineIfDebug("Bot intents: {0}", intents.Aggregate((s1, s2) => s1 + " " + s2));
+            }
+            if(!string.IsNullOrEmpty(expressions))
+            {
+                SayInfoLineIfDebug("Bot expressions: {0}.", expressions);
+            }
         }
 
         protected void DispatchBotInput(string input)

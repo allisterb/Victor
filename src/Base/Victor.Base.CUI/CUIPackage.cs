@@ -328,8 +328,7 @@ namespace Victor
                 }
                 else
                 {
-                    SayInfoLine("A menu is not currently active. Try entering {0} to bring up the available menu.", "menu");
-                    return true;
+                    return ParseIntent(Controller.Context.Peek(), time, input);
                 }
             }
             else
