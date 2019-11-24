@@ -963,8 +963,68 @@ namespace Victor
                     Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
-            else
+            else if (!string.IsNullOrEmpty(o.GetConversations))
             {
+                Info("Querying for conversations...");
+                try
+                {
+                    var convos = await c.ConversationstoreConversationsActiveAsync(o.GetConversations, o.Version, 0, 100);
+                    if (o.Json)
+                    {
+                        WriteInfo(EDDIClient.Serialize(convos));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(convos));
+                    }
+                    else
+                    {
+                        foreach (var convo in convos)
+                        {
+                            WriteInfo("Id: {0}, Last interaction: {1},  State: {2}.", convo.ConversationId, convo.LastInteraction.Value, convo.ConversationState.ToString());
+                        }
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not list conversations: {0}", eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving conversations.");
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+
+            }
+            else if (!string.IsNullOrEmpty(o.DeleteConversation))
+            {
+                try
+                {
+                    Info("Delete conversation {0}...", o.DeleteConversation);
+                    await c.ConversationstoreConversationsDeleteAsync(o.DeleteConversation, true);
+                    var code = EDDIClient.LastStatusCode;
+                    if (code == 200 || code == 204)
+                    {
+                        Info("Successfully deleted conversation.");
+                    }
+                    else
+                    {
+                        Error("Did not successfully delete conversation {0}. Status code: {1}.", o.DeleteConversation, code);
+                    }
+
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not delete conversation: {0}", eae.Message);
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error deleting conversation.");
+                    Exit(ExitResult.UNHANDLED_EXCEPTION);
+                }
+
+            }
+            else
+            { 
                 Error("Select the CUI operation and options you want to use.");
                 HelpText help = new HelpText();
                 help.Copyright = string.Empty;
@@ -974,7 +1034,6 @@ namespace Victor
                 Info(help);
             }
         }
-
         static void NLU(NLUOptions o)
         {
             SnipsNLUEngine engine = new SnipsNLUEngine("nlu_engine_beverage");
@@ -1049,40 +1108,6 @@ namespace Victor
             Environment.Exit((int)result);
         }
 
-        static int ExitWithCode(ExitResult result)
-        {
-            return (int)result;
-        }
-
-        static void EnableBeeper()
-        {
-            _signalBeep = new ManualResetEvent(false);
-            _beeperThread = new Thread(() =>
-            {
-                while (true)
-                {
-                    _signalBeep.WaitOne();
-                    System.Console.Beep();
-                    Thread.Sleep(800);
-                }
-            }, 1);
-            _beeperThread.Name = "Beeper";
-            _beeperThread.IsBackground = true;
-            _beeperThread.Start();
-        }
-
-        public static void StartBeeper()
-        {
-            _signalBeep.Set();
-            beeperOn = true;
-        }
-
-        public static void StopBeeper()
-        {
-            _signalBeep.Reset();
-            beeperOn = false;
-        }
-
         static HelpText GetAutoBuiltHelpText(ParserResult<object> result)
         {
             return HelpText.AutoBuild(result, h =>
@@ -1120,11 +1145,6 @@ namespace Victor
         #endregion
 
         #region Fields
-        static Thread _beeperThread;
-
-        static ManualResetEvent _signalBeep;
-
-        public static bool beeperOn;
         #endregion
     }
 }

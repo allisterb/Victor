@@ -38,7 +38,6 @@ namespace Victor
                 MenuHandlers.Add(Prefixed(m), null);
                 MenuIndexes.Add(Prefixed(m), 0);
             }
-            
         }
         public CUIPackage(string name, NLUEngine engine, CUIController controller, params CUIPackage[] subPackages) : this(name, engine, controller, Ct, subPackages) {}
         #endregion
@@ -78,7 +77,6 @@ namespace Victor
 
         #region Methods
 
-
         #region UI
         public void DebugIntent(Intent intent)
         {
@@ -91,9 +89,13 @@ namespace Victor
         }
         protected void SayInfoLine(string template, params object[] args) => Controller.SayInfoLine(template, args);
 
+        protected void SayInfoLineIfDebug(string template, params object[] args) => Controller.SayInfoLineIfDebug(template, args);
+
         protected void SayErrorLine(string template, params object[] args) => Controller.SayErrorLine("Error: " + template, args);
 
         protected void SayWarningLine(string template, params object[] args) => Controller.SayWarningLine("Warning: " + template, args);
+
+        protected void SetPrompt(string prompt) => Controller.SetPrompt(prompt);
         #endregion
 
         #region Context
@@ -114,17 +116,18 @@ namespace Victor
         public void SetMenuContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext("MENU_" + Prefixed(name), intent, action);
         #endregion
 
-        #region User Input
-        public void GetInput(string variableName, Action<Intent> action = null, Intent intent = null)
+        #region Variable Input
+        public void GetVariableInput(string variableName, Action<Intent> action = null, Intent intent = null)
         {
             Controller.SetContext("INPUT_" + Prefixed(variableName), intent, action);
+            Controller.SetPrompt("|*>");
             if (Controller.DebugEnabled)
             {
                 SayInfoLine("Get input for variable {0}.", Prefixed(variableName));
             }
         }
 
-        public bool CanDispatchInput(CUIContext context)
+        public bool CanDispatchVariableInput(CUIContext context)
         {
             if (context.Label.StartsWith("INPUT_"))
             {
@@ -145,6 +148,8 @@ namespace Victor
         public string Suffixed(string name) => name + "_" + Name.ToUpper();
 
         public string GetVar(string name) => Variables[Prefixed(name).ToUpper()];
+
+        public string SetVar(string name, string value) => Variables[Prefixed(name).ToUpper()] = value;
         #endregion
 
         #region Items
@@ -154,11 +159,11 @@ namespace Victor
 
         public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
 
+        public int SetItemsPageSize(string name, int value) => ItemsPageSize[Prefixed(name).ToUpper()] = value;
+
         public int GetItemsCurrentPage(string name) => ItemsCurrentPage[Prefixed(name).ToUpper()];
 
         public Action<int, CUIPackage> GetItemsDescriptionHandler(string name) => ItemsDescriptionHandlers[Prefixed(name).ToUpper()];
-
-        public int SetItemsPageSize(string name, int value) => ItemsPageSize[Prefixed(name).ToUpper()] = value;
 
         public void DescribeItem(string name, int index) => ItemsDescriptionHandlers[Prefixed(name)].Invoke(index, this);
 
@@ -304,10 +309,9 @@ namespace Victor
         #region Virtual and abstract members
         public virtual bool HandleInput(DateTime time, string input)
         {
-            ThrowIfNotInitialized();
-            if (CanDispatchInput(Context.Peek()))
+            if (CanDispatchVariableInput(Context.Peek()))
             {
-                DispatchInput(Context.Peek(), input);
+                DispatchVariableInput(Context.Peek(), input);
                 return true;
             }
             else if (Int32.TryParse(input, out int result))
@@ -336,7 +340,6 @@ namespace Victor
 
         public virtual bool ParseIntent(CUIContext context, DateTime time, string input)
         {
-            ThrowIfNotInitialized();
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {
@@ -365,17 +368,17 @@ namespace Victor
             }
         }
 
-        public virtual void DispatchInput(CUIContext context, string input)
+        public virtual void DispatchVariableInput(CUIContext context, string input)
         {
             string variableName = context.Label.Replace("INPUT_", "");
             Variables[variableName] = input;
             if (Controller.DebugEnabled)
             {
                 SayInfoLine("Variable {0} set to to {1}.", variableName, input);
-                SayInfoLine("Dispatch input {0} to {1}.", input, context.IntentAction.Method.Name);
+                SayInfoLine("Dispatch variable input {0} to {1}.", input, context.IntentAction.Method.Name);
             }
+            Controller.SetDefaultPrompt();
             context.IntentAction.Invoke(context.Intent);
-            
         }
 
         #region Intents

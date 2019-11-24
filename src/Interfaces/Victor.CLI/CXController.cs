@@ -44,22 +44,18 @@ namespace Victor.CLI
         public override void Start()
         {
             ThrowIfNotInitialized();
-            if (!Options.Debug)
-            {
-                Sc.Clear();
-            }
-
             HomePackage.DispatchIntent(null, HomePackage.Welcome);
             ReadLine.HistoryEnabled = true;
-            if (beeperOn) Program.StopBeeper();
+            if (beeperOn) StopBeeper();
+            SetDefaultPrompt();
             Prompt();
         }
 
         public override void Prompt()
         {
             InputEnabled = true;
-            string prompt = Context.Peek().Label.StartsWith("INPUT_") ? "|*>" : "|>";
-            string i =  ReadLine.Read(prompt);
+            //string prompt = Context.Peek().Label.StartsWith("INPUT_") ? "|*>" : "|>";
+            string i =  ReadLine.Read(PromptString);
             HandleInput(DateTime.Now, i);
         }
 
@@ -71,7 +67,7 @@ namespace Victor.CLI
             {
                 if (!ActivePackage.HandleInput(time, input))
                 {
-                    SayInfoLineIfDebugEnabled("Input handled by HOME package.");
+                    SayInfoLineIfDebug("Input handled by HOME package.");
                     if (!HomePackage.HandleInput(time, input))
                     {
                         SayCouldNotUnderstand(input);

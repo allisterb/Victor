@@ -30,6 +30,8 @@ namespace Victor
         
         public Stack<CUIContext> Context { get; } = new Stack<CUIContext>();
         
+        public string PromptString { get; protected set; }
+
         public CUIPackage HomePackage { get; set; }
         
         public CUIPackage ActivePackage { get;  set; }
@@ -81,7 +83,11 @@ namespace Victor
             this.ActivePackage = package;
         }
 
-        public void SayInfoLineIfDebugEnabled(string template, params object[] args)
+        public void SetPrompt(string prompt) => PromptString = prompt;
+
+        public void SetDefaultPrompt() => PromptString = "|>";
+
+        public void SayInfoLineIfDebug(string template, params object[] args)
         {
             if (DebugEnabled)
             {

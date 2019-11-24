@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,11 +24,38 @@ namespace Victor
         #endregion
 
         #region Overriden members
-        public override string[] VariableNames { get; } = {};
+        public override string[] VariableNames { get; } = {"BOT_NAME", "BOT_ID", "CONVERSATION_ID"};
 
         public override string[] MenuNames { get; } = { "AVAILABLE" };
 
         public override string[] ItemNames { get; } = {};
+
+        public override bool ParseIntent(CUIContext context, DateTime time, string input)
+        {
+            if (IsBotsContext)
+            {
+                if (BotCommands.Contains(input.ToLower()))
+                {
+                    var cmd = input.ToLower();
+                    switch (cmd)
+                    {
+                        case "leave":
+                            DispatchIntent(null, Menu);
+                            break;
+                        default:
+                            SayErrorLine($"No handler for command {cmd}.");
+                            break;
+                    }
+                    return true;
+                }
+
+                return true;
+            }
+            else
+            {
+                return base.ParseIntent(context, time, input);
+            }
+        }
 
         public override void Menu(Intent intent)
         {
@@ -49,25 +77,39 @@ namespace Victor
         {
             throw new NotImplementedException();
         }
+
+        
         #endregion
 
         #region Properties
         public EDDIClient Client { get; }
-        
+
+        public string[] BotCommands = { "leave" };
         public ICollection<DocumentDescriptor> BotDescriptors { get; }
         #endregion
 
         #region Methods
         protected void GetBotMenuItem(int i)
         {
-            switch (i - 1)
-            {
-                default:
-                    throw new IndexOutOfRangeException();
-            }
+            var bot = BotDescriptors.ElementAt(i - 1);
+            var bid = bot.ResourceId;
+            var cid = Client.BotsPostAsync(Environment8.Unrestricted, bid, null, null).Result;
+            SayInfoLineIfDebug("Started conversation with bot {0) with id {1}.", bid, cid);
+            SetVar("BOT_NAME", bot.Name);
+            SetVar("BOT_ID", bid);
+            SetVar("CONVERSATION_ID", cid);
+            Controller.SetContext($"BOTS_{bid}_{cid}");
+            var convo = Client.ConversationstoreConversationsSimpleAsync(cid, false, true, null).Result;
+            
+            SetPrompt("|$>");
         }
 
-        
+        protected void DispatchBotInput(string botId, string conversationId)
+        {
+            var bid = GetVar("BOT_ID");
+            var cid = GetVar("CONVERSATION_ID");
+        }
+        protected bool IsBotsContext => CurrentContext.StartsWith("BOTS_");
         #endregion
 
     }

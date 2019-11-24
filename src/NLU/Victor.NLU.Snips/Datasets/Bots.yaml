@@ -1,0 +1,31 @@
+﻿# help intent
+---
+type: intent
+name: help
+slots:
+  - name: bot
+    entity: bot
+utterances:
+  - help bots
+  - help with [bot](news) bot
+  - help with bot
+  - help with [bot](loan application)
+  - What are bots
+  - What is a bot?
+  - Tell me about bots
+  - What's the [bot](loan application) bot
+  - How do I use the [bot](loan application) bot
+  - How does the [bot](news) bot work?
+  - What is the [bot](news) bot?
+
+# bot entity
+---
+type: entity
+name: bot
+automatically_extensible: no
+use_synonyms: yes
+values:
+- news
+- email
+- [loan application, apply for a loan, apply for loan]
+- calendar

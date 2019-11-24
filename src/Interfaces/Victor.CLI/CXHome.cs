@@ -402,7 +402,6 @@ namespace Victor.CLI
                 }
                 
             }
-           
             Controller.ActivePackage = SubPackages.Single(p => p.Name == "Bots"); 
 
             if (CurrentContext.StartsWith("MENU_"))

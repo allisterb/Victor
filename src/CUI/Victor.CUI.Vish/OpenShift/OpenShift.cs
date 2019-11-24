@@ -158,7 +158,7 @@ namespace Victor
             if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
                 SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", Prefixed("PROJECT"));
-                GetInput("PROJECT", Pods, intent);
+                GetVariableInput("PROJECT", Pods, intent);
                 return;
             }
             else
@@ -184,7 +184,7 @@ namespace Victor
             if (string.IsNullOrEmpty(GetVar("PROJECT")))
             {
                 SayWarningLine("The {0} variable is not set. Enter the name of the OpenShift project.", Prefixed("PROJECT"));
-                GetInput("PROJECT", Builds, intent);
+                GetVariableInput("PROJECT", Builds, intent);
                 return;
             }
             else

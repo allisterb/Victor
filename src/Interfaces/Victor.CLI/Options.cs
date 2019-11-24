@@ -90,6 +90,12 @@ namespace Victor
         [Option("get-http-call", Required = false, HelpText = "Get the HTTP call with the specified id.")]
         public string GetHttpCall { get; set; }
 
+        [Option("get-convo", Required = false, HelpText = "Get the conversation with the specified id.")]
+        public string GetConversation { get; set; }
+
+        [Option("get-convos", Required = false, HelpText = "List conversations for the specified bot id.")]
+        public string GetConversations { get; set; }
+
         [Option("create-dictionary", Required = false, HelpText = "Create a dictionary from the specified input.")]
         public bool CreateDictionary { get; set; }
 
@@ -120,11 +126,11 @@ namespace Victor
         [Option("start-convo", Required = false, HelpText = "Start a conversation with a bot.")]
         public string StartConversation { get; set; }
 
-        [Option("get-convo", Required = false, HelpText = "Get the conversation with the specified id.")]
-        public string GetConversation { get; set; }
-
         [Option('t', "talk", Required = false, HelpText = "Respond to the conversation with the specified bot id:convo id .")]
         public string Talk { get; set; }
+
+        [Option("delete-convo", Required = false, HelpText = "Delete a conversation with the specified if.")]
+        public string DeleteConversation { get; set; }
 
     }
 
