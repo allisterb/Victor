@@ -91,6 +91,12 @@ namespace Victor
 
         public string[] BotCommands = { "leave" };
         public ICollection<DocumentDescriptor> BotDescriptors { get; }
+        
+        public string[] LastOutput { get; set; }
+
+        public Dictionary<string, IDictionary<string, object>> ConversationStart { get; set; } = new Dictionary<string, IDictionary<string, object>>();
+        
+        public string[] QuickReplies { get; set; }
         #endregion
 
         #region Methods
@@ -98,26 +104,52 @@ namespace Victor
         {
             var bot = BotDescriptors.ElementAt(i - 1);
             var bid = bot.ResourceId;
-            var cid = Client.BotsPostAsync(Environment8.Unrestricted, bid, null, null).Result;
+            var cid = Client.BotsPostAsync(Environment8.Test, bid, null, null).Result;
             SayInfoLineIfDebug("Started conversation with bot {0} with id {1}.", bid, cid);
             SetVar("BOT_NAME", bot.Name);
             SetVar("BOT_ID", bid);
             SetVar("CONVERSATION_ID", cid);
             Controller.SetContext($"BOTS_{bid}_{cid}");
-            GetBotOutput();
+            GetBotOutputs();
             SetPrompt("|$>");
         }
 
-        protected void GetBotOutput()
+        protected void GetBotOutputs()
         {
-            //var qa = (JArray)outputs["quickReplies"];
             var bid = GetVar("BOT_ID");
             var cid = GetVar("CONVERSATION_ID");
             var convo = Client.ConversationstoreConversationsSimpleAsync(cid, false, true, null).Result;
-            var outputs = convo.ConversationOutputs.First();
-            var output = ((JArray)(outputs["output"])).ToObject<string[]>();
-            var actions = ((JArray)(outputs["actions"])).ToObject<string[]>();
-            SayInfoLine(output.Aggregate((s1, s2) => s1 + " " + s2));
+            if (!ConversationStart.ContainsKey(cid))
+            {
+                ConversationStart[cid] = convo.ConversationOutputs.First();
+            }
+            var outputs = convo.ConversationOutputs.Last();
+            var quickReplies = outputs.ContainsKey("quickReplies") ? (JArray) outputs["quickReplies"] : null;
+            var input = outputs.ContainsKey("input") ? (string)(outputs["input"]) : "";
+            var expressions = outputs.ContainsKey("expressions") ? (string)(outputs["expressions"]) : "";
+            var intents = outputs.ContainsKey("intents") ? ((JArray)(outputs["intents"])).ToObject<string[]>() : Array.Empty<string>();
+            var output = outputs.ContainsKey("output") ? ((JArray)(outputs["output"])).ToObject<string[]>() : Array.Empty<string>();
+            var actions = outputs.ContainsKey("actions") ? ((JArray)(outputs["actions"])).ToObject<string[]>() : Array.Empty<string>();
+
+            if (output.Length > 0)
+            {
+                SayInfoLine(output.Aggregate((s1, s2) => s1 + " " + s2));
+            }
+            if (quickReplies != null)
+            {
+                QuickReplies = new string[quickReplies.Count];
+                int i = 0;
+                foreach(dynamic qr in quickReplies)
+                {
+                    SayInfoLine("{0} {1}", i, qr.value);
+                    QuickReplies[i++] = qr.value;
+                }
+            }
+            
+            if (output.Length > 0)
+            {
+                LastOutput = output;
+            }
             SayInfoLineIfDebug("Bot actions: {0}", actions.Aggregate((s1, s2) => s1 + " " + s2));
         }
 
@@ -125,7 +157,7 @@ namespace Victor
         {
             var bid = GetVar("BOT_ID");
             var cid = GetVar("CONVERSATION_ID");
-            Client.BotsPostAsync(Environment7.Unrestricted, bid, cid, false, true, null, body: new InputData() { Input = input });
+            Client.BotsPostAsync(Environment7.Test, bid, cid, false, true, null, body: new InputData() { Input = input }).Wait();
             var status = EDDIClient.LastStatusCode;
             if (status != 200)
             {
@@ -133,7 +165,7 @@ namespace Victor
             }
             else
             {
-                GetBotOutput();
+                GetBotOutputs();
             }
             SetPrompt("|$>");
         }

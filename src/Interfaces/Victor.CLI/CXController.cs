@@ -122,7 +122,7 @@ namespace Victor.CLI
         #endregion
 
         #region Properties
-        public CXOptions Options { get; }
+        public static CXOptions Options { get; set; }
 
         public JuliusSession JuliusSession { get; protected set; }
         #endregion
@@ -130,6 +130,7 @@ namespace Victor.CLI
         #region Methods
         internal static void EnableBeeper()
         {
+            if (Options.NoBeeper) return;
             _signalBeep = new ManualResetEvent(false);
             _beeperThread = new Thread(() =>
             {
@@ -146,12 +147,14 @@ namespace Victor.CLI
         }
         internal static void _StartBeeper()
         {
+            if (Options.NoBeeper) return;
             _signalBeep.Set();
             beeperOn = true;
         }
 
         internal static void _StopBeeper()
         {
+            if (Options.NoBeeper) return;
             _signalBeep.Reset();
             beeperOn = false;
         }

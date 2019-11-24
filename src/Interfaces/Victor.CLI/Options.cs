@@ -137,6 +137,7 @@ namespace Victor
     [Verb("cx", HelpText = "Launch the Victor CX auditory CUI.")]
     public class CXOptions : Options
     {
-
+        [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
+        public bool NoBeeper { get; set; }
     }
 }

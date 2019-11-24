@@ -139,6 +139,7 @@ namespace Victor
             })
             .WithParsed<CXOptions>(o =>
             {
+                CXController.Options = o;
                 new CXController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
