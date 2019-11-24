@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json.Linq;
 namespace Victor
 {
     public class Bots : CUIPackage
@@ -40,6 +41,7 @@ namespace Victor
                     switch (cmd)
                     {
                         case "leave":
+                            Controller.SetDefaultPrompt();
                             DispatchIntent(null, Menu);
                             break;
                         default:
@@ -48,7 +50,10 @@ namespace Victor
                     }
                     return true;
                 }
-
+                else
+                {
+                    DispatchBotInput(input);
+                }
                 return true;
             }
             else
@@ -94,20 +99,43 @@ namespace Victor
             var bot = BotDescriptors.ElementAt(i - 1);
             var bid = bot.ResourceId;
             var cid = Client.BotsPostAsync(Environment8.Unrestricted, bid, null, null).Result;
-            SayInfoLineIfDebug("Started conversation with bot {0) with id {1}.", bid, cid);
+            SayInfoLineIfDebug("Started conversation with bot {0} with id {1}.", bid, cid);
             SetVar("BOT_NAME", bot.Name);
             SetVar("BOT_ID", bid);
             SetVar("CONVERSATION_ID", cid);
             Controller.SetContext($"BOTS_{bid}_{cid}");
-            var convo = Client.ConversationstoreConversationsSimpleAsync(cid, false, true, null).Result;
-            
+            GetBotOutput();
             SetPrompt("|$>");
         }
 
-        protected void DispatchBotInput(string botId, string conversationId)
+        protected void GetBotOutput()
+        {
+            //var qa = (JArray)outputs["quickReplies"];
+            var bid = GetVar("BOT_ID");
+            var cid = GetVar("CONVERSATION_ID");
+            var convo = Client.ConversationstoreConversationsSimpleAsync(cid, false, true, null).Result;
+            var outputs = convo.ConversationOutputs.First();
+            var output = ((JArray)(outputs["output"])).ToObject<string[]>();
+            var actions = ((JArray)(outputs["actions"])).ToObject<string[]>();
+            SayInfoLine(output.Aggregate((s1, s2) => s1 + " " + s2));
+            SayInfoLineIfDebug("Bot actions: {0}", actions.Aggregate((s1, s2) => s1 + " " + s2));
+        }
+
+        protected void DispatchBotInput(string input)
         {
             var bid = GetVar("BOT_ID");
             var cid = GetVar("CONVERSATION_ID");
+            Client.BotsPostAsync(Environment7.Unrestricted, bid, cid, false, true, null, body: new InputData() { Input = input });
+            var status = EDDIClient.LastStatusCode;
+            if (status != 200)
+            {
+                SayErrorLine("E.D.D.I server returned code {0}", status);
+            }
+            else
+            {
+                GetBotOutput();
+            }
+            SetPrompt("|$>");
         }
         protected bool IsBotsContext => CurrentContext.StartsWith("BOTS_");
         #endregion
