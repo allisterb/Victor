@@ -374,6 +374,36 @@ namespace Victor
                     Exit(ExitResult.UNHANDLED_EXCEPTION);
                 }
             }
+            else if (!string.IsNullOrEmpty(o.GetDescriptor))
+            {
+                Info("Querying for descriptor {0}...", o.GetDescriptor);
+                try
+                {
+                    var desc = await c.DescriptorstoreDescriptorsGetAsync(o.GetDescriptor, o.Version);
+                    if (o.Json)
+                    {
+                        WriteInfo(EDDIClient.Serialize(desc));
+                        WriteToFileIfRequired(o, EDDIClient.Serialize(desc));
+                    }
+                    else
+                    {
+
+                        WriteInfo("Resource: {0}\nId: {1}\nName: {2}\nDescription: {3}\nCreated on: {4}\nLast modified on: {5}\n",
+                            desc.Resource, desc.ResourceId, desc.Name, desc.Description, desc.CreatedOn, desc.LastModifiedOn);
+
+                    }
+                }
+                catch (EDDIApiException eae)
+                {
+                    Error("Could not get descriptor {0}: {1}.", o.GetDescriptor, eae.Message);
+                    Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+                }
+                catch (Exception e)
+                {
+                    Error(e, "Unknown error retrieving descriptor {0}.", o.GetDescriptor);
+                    Exit(ExitResult.UNKNOWN_ERROR);
+                }
+            }
             else if (o.GetDictionaries)
             {
                 Info("Querying for dictionaries...");
@@ -799,9 +829,25 @@ namespace Victor
                         Info("Renamed {0} to {1}.", f.FullName, name);
                     }
                 }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdateDescriptor))
+            {
+                Info("Updating descriptor {0}...", o.UpdateDescriptor);
+                await c.DescriptorstoreDescriptorsPatchAsync(o.UpdateDescriptor, o.Version,
+                    new PatchInstructionDocumentDescriptor()
+                    {
+                        Operation = PatchInstructionDocumentDescriptorOperation.SET,
+                        Document = ReadFromFileIfRequired<DocumentDescriptor>(o)
+                    });
+                int s = EDDIClient.LastStatusCode;
+                if (s == 204)
+                {
+                    Info("Updated descriptor {0}.", o.UpdateDescriptor);
+                    
+                }
                 else
                 {
-                    Error("Did not update package. HTTP status code {0}.", s);
+                    Error("Did not update descriptor. HTTP status code {0}.", s);
                 }
             }
             else if (!string.IsNullOrEmpty(o.UpdateBot))
@@ -1025,7 +1071,7 @@ namespace Victor
 
             }
             else
-            { 
+            {
                 Error("Select the CUI operation and options you want to use.");
                 HelpText help = new HelpText();
                 help.Copyright = string.Empty;

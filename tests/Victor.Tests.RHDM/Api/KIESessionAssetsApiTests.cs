@@ -78,8 +78,8 @@ namespace Victor.Tests.RHDM
         {
             string body = File.ReadAllText("loan-demo.example.json");
             Assert.False(string.IsNullOrEmpty(body));
-            var r = instance.ExecuteContainerRules("loan-application_1.1.0", body);
-            
+            var r = instance.ExecuteContainerRulesRestResponse("loan-application_1.1.0", body);
+            Assert.NotNull(r.Content);
             // TODO uncomment below to test the method and replace null with proper value
             //string containerId = null;
             //string body = null;

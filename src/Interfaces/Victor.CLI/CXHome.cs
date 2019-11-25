@@ -97,9 +97,9 @@ namespace Victor.CLI
         {
             SetMenuContext("PACKAGES");
             SayInfoLine("Select a package to use.");
-            SayInfoLine("1 {0}", "Vish");
-            SayInfoLine("2 {0}", "Services");
-            SayInfoLine("3 {0}", "Bots");
+            SayInfoLine("1. {0}", "Vish");
+            SayInfoLine("2. {0}", "Services");
+            SayInfoLine("3. {0}", "Bots");
         }
 
         public override void Help(Intent intent)
@@ -169,7 +169,7 @@ namespace Victor.CLI
                         case "services":
                             SayInfoLine("Services let you access services like news and product information that do not require much interactivity.");
                             break;
-                        case "bots":
+                        case "bot":
                             SayInfoLine("Bots are conversational agents that help you with tasks like filling out complex forms or completing complex multi-step processes and workflows that require a lot of interactivity.");
                             SayInfoLine("You can administer Victor CX bots by running {0} from the command-line.", "victor cui");
                             break;

@@ -6,7 +6,7 @@
         "object": {
           "com.redhat.demos.dm.loan.model.Applicant": {
             "creditScore": "$CREDIT_SCORE",
-            "name": "Jim Whitehurst"
+            "name": "$NAME"
           }
         },
         "out-identifier": "applicant"

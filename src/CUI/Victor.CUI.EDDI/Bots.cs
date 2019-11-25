@@ -73,7 +73,7 @@ namespace Victor
             int i = 0;
             foreach(var b in BotDescriptors)
             {
-                SayInfoLine("{0} {1}", ++i, b.Name);
+                SayInfoLine("{0}. {1}", ++i, b.Name);
             }
         }
 
@@ -114,6 +114,10 @@ namespace Victor
             SetVar("BOT_ID", bid);
             SetVar("CONVERSATION_ID", cid);
             Controller.SetContext($"BOTS_{bid}_{cid}");
+            if (!string.IsNullOrEmpty(bot.Description))
+            {
+                SayInfoLine(bot.Description);
+            }
             GetBotOutputs();
             SetPrompt("|$>");
         }
@@ -145,7 +149,7 @@ namespace Victor
                 int i = 0;
                 foreach(dynamic qr in quickReplies)
                 {
-                    SayInfoLine("{0} {1}", i + 1, qr.value);
+                    SayInfoLine("{0}. {1}", i + 1, qr.value);
                     QuickReplies[i++] = qr.value;
                 }
             }

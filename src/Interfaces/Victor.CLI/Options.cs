@@ -117,6 +117,12 @@ namespace Victor
         [Option("update-bot", Required = false, HelpText = "Update a bot with the specified id from the specified input.")]
         public string UpdateBot { get; set; }
 
+        [Option("get-descriptor", Required = false, HelpText = "Get the descriptor of the bot with the specified id.")]
+        public string GetDescriptor { get; set; }
+
+        [Option("update-descriptor", Required = false, HelpText = "Update a descriptor with the specified id from the specified input.")]
+        public string UpdateDescriptor { get; set; }
+
         [Option("deploy-bot", Required = false, HelpText = "Deploy a bot with the specified id to the unrestricted environment.")]
         public string DeployBot { get; set; }
 

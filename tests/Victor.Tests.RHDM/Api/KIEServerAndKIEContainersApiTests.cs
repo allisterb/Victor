@@ -196,7 +196,7 @@ namespace Victor.Tests.RHDM
         {
             // TODO uncomment below to test the method and replace null with proper value
             //bool? report = null;
-            //var response = instance.Healthcheck(report);
+            var response = instance.Healthcheck(true);
             Assert.IsInstanceOf<List<KieMessage>> (response, "response is List<KieMessage>");
         }
         
