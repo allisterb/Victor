@@ -105,6 +105,12 @@ namespace Victor
         [Option("create-output", Required = false, HelpText = "Create an output set from the specified input.")]
         public bool CreateOutput { get; set; }
 
+        [Option("update-output", Required = false, HelpText = "Update an output set with the specified id from the specified input.")]
+        public string UpdateOutput { get; set; }
+
+        [Option("update-behavior", Required = false, HelpText = "Update a behavior set with the specified id from the specified input.")]
+        public string UpdateBehavior { get; set; }
+
         [Option("create-package", Required = false, HelpText = "Create a package from the specified input.")]
         public bool CreatePackage { get; set; }
 

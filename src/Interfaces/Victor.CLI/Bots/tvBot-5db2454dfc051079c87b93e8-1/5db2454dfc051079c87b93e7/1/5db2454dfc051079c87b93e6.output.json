@@ -1,0 +1,133 @@
+{
+  "outputSet" : [ {
+    "action" : "global_menu",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "Hi. Welcome to BingeBot! Would you like to ... " ]
+    } ],
+    "quickReplies" : [ {
+      "value" : "Talk TV!",
+      "expressions" : "trigger(tv_menu)"
+    }, {
+      "value" : "Chat about Movies!",
+      "expressions" : "trigger(movie_menu)"
+    } ]
+  }, {
+    "action" : "greet",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "Hi there! Nice to meet up! :-)", "Hey you!" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "moviePopular",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "People love [[${memory.current.httpCalls.popularMovies.results[0].title}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "Oh, and I hear [[${memory.current.httpCalls.popularMovies.results[1].title}]] is also great!" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "And I personally like [[${memory.current.httpCalls.popularMovies.results[2].title}]]" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "movie_search_prompt",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "What movie are you looking for?", "What movie are you interested in?" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "open_movie_menu",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "What would you like to know?" ]
+    } ],
+    "quickReplies" : [ {
+      "value" : "What movies are popular?",
+      "expressions" : "trigger(popular_movies)"
+    }, {
+      "value" : "Search by movie title!",
+      "expressions" : "trigger(movie_title)"
+    } ]
+  }, {
+    "action" : "open_tv_menu",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "What would you like to know?" ]
+    } ],
+    "quickReplies" : [ {
+      "value" : "What shows are popular?",
+      "expressions" : "trigger(popular_shows)"
+    }, {
+      "value" : "Search by show title!",
+      "expressions" : "trigger(show_title)"
+    } ]
+  }, {
+    "action" : "say_goodbye",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "See you soon!", "See you later!" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "searchMovies",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "TITLE: [[${memory.current.httpCalls.searchMovies.results[0].title}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "RATING: [[${memory.current.httpCalls.searchMovies.results[0].vote_average}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "DESCRIPTION: [[${memory.current.httpCalls.searchMovies.results[0].overview}]]" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "tvPopular",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "I've been binging [[${memory.current.httpCalls.popularShows.results[0].name}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "My best friends are watching [[${memory.current.httpCalls.popularShows.results[1].name}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "But... [[${memory.current.httpCalls.popularShows.results[2].name}]] is... LIT!!" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "tvSearch",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "TITLE: [[${memory.current.httpCalls.popularShows.results[0].name}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "RATING: [[${memory.current.httpCalls.popularShows.results[0].vote_average}]]" ]
+    }, {
+      "type" : "text",
+      "valueAlternatives" : [ "DESCRIPTION: [[${memory.current.httpCalls.popularShows.results[0].overview}]]" ]
+    } ],
+    "quickReplies" : [ ]
+  }, {
+    "action" : "tv_search_prompt",
+    "timesOccurred" : 0,
+    "outputs" : [ {
+      "type" : "text",
+      "valueAlternatives" : [ "What tv show are you looking for?", "What show are you interested in?" ]
+    } ],
+    "quickReplies" : [ ]
+  } ]
+}

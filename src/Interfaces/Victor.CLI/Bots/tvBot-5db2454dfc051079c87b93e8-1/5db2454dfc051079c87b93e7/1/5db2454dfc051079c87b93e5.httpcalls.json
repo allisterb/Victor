@@ -1,0 +1,22 @@
+{
+  "targetServerUrl" : "https://api.themoviedb.org/3/search/tv",
+  "httpCalls" : [ {
+    "name" : "popularShows",
+    "actions" : [ "tvSearch" ],
+    "saveResponse" : true,
+    "responseObjectName" : "popularShows",
+    "fireAndForget" : false,
+    "isBatchCalls" : false,
+    "request" : {
+      "path" : "",
+      "headers" : { },
+      "queryParams" : {
+        "api_key" : "183fd16470712b9f4ec514fd00fbf8e7",
+        "query" : "[[${memory.current.input}]]"
+      },
+      "method" : "get",
+      "contentType" : "",
+      "body" : ""
+    }
+  } ]
+}

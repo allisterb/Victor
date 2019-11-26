@@ -1,0 +1,88 @@
+{
+  "behaviorGroups" : [ {
+    "name" : "Default",
+    "executionStrategy" : "executeAll",
+    "behaviorRules" : [ {
+      "name" : "Show Global Menu",
+      "actions" : [ "global_menu" ],
+      "conditions" : [ {
+        "type" : "negation",
+        "configs" : { },
+        "conditions" : [ {
+          "type" : "inputmatcher",
+          "configs" : {
+            "expressions" : "*",
+            "occurrence" : "currentStep"
+          },
+          "conditions" : [ ]
+        } ]
+      }, {
+        "type" : "negation",
+        "configs" : { },
+        "conditions" : [ {
+          "type" : "contextmatcher",
+          "configs" : {
+            "contextKey" : "onboardingOfUser",
+            "contextType" : "string",
+            "string" : "true"
+          },
+          "conditions" : [ ]
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "Smalltalk",
+    "behaviorRules": [
+      {
+        "name": "Greeting",
+        "actions": [ "greet" ],
+        "conditions": [
+          {
+            "type": "inputmatcher",
+            "configs": {
+              "expressions": "greeting(*)",
+              "occurrence": "currentStep"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Goodbye",
+        "actions": [ "say_goodbye" ],
+        "conditions": [
+          {
+            "type": "inputmatcher",
+            "configs": {
+              "expressions": "goodbye(*)",
+              "occurrence": "currentStep"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AccountNoPrompt",
+        "actions": [ "account_no_prompt" ],
+        "conditions": [
+          {
+            "type": "inputmatcher",
+            "configs": {
+              "expressions": "trigger(account_balance)"
+            }
+          }
+        ]
+      },
+      {
+        "name": "LoanAmountPrompt",
+        "actions": [ "loan_amount_prompt" ],
+        "conditions": [
+          {
+            "type": "inputmatcher",
+            "configs": {
+              "expressions": "trigger(loan)"
+            }
+          }
+        ]
+      }
+    ]
+  } ]
+}

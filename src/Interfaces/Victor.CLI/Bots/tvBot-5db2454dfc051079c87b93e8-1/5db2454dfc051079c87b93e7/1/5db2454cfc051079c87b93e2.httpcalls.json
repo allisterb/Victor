@@ -1,0 +1,22 @@
+{
+  "targetServerUrl" : "https://api.themoviedb.org/3/search/movie",
+  "httpCalls" : [ {
+    "name" : "searchMovies",
+    "actions" : [ "searchMovies" ],
+    "saveResponse" : true,
+    "responseObjectName" : "searchMovies",
+    "fireAndForget" : false,
+    "isBatchCalls" : false,
+    "request" : {
+      "path" : "",
+      "headers" : { },
+      "queryParams" : {
+        "api_key" : "d9e0c0dd335467e0c9174246cb470816",
+        "query" : "[[${memory.current.input}]]"
+      },
+      "method" : "get",
+      "contentType" : "",
+      "body" : ""
+    }
+  } ]
+}

@@ -725,7 +725,56 @@ namespace Victor
                     Error("Did not create output configuration set. HTTP status code {0}.", s);
                 }
             }
-
+            else if (!string.IsNullOrEmpty(o.UpdateOutput))
+            {
+                Info("Updating output set {0}...", o.UpdateOutput);
+                await c.OutputstoreOutputsetsPatchAsync(o.UpdateOutput, o.Version,
+                    new PatchInstructionOutputConfigurationSet[]
+                    {
+                    new PatchInstructionOutputConfigurationSet()
+                    {
+                        Operation = PatchInstructionOutputConfigurationSetOperation.SET,
+                        Document = ReadFromFileIfRequired<OutputConfigurationSet>(o)
+                    }
+                    });
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Updated output set at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "output." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdateBehavior))
+            {
+                Info("Updating behavior set {0}...", o.UpdateBehavior);
+                await c.BehaviorstoreBehaviorsetsPutAsync(o.UpdateBehavior, o.Version, ReadFromFileIfRequired<BehaviorConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Updated behavior set at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "behavior." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
+                }
+            }
             else if (o.CreatePackage)
             {
                 Info("Creating package...");
@@ -877,13 +926,13 @@ namespace Victor
             }
             else if (!string.IsNullOrEmpty(o.DeployBot))
             {
-                Info("Deploying bot {0}...", o.DeployBot);
-                await c.AdministrationDeployAsync(EDDIEnvironment.Unrestricted, o.DeployBot, o.Version, true);
+                Info("Deploying bot {0} to test environment...", o.DeployBot);
+                await c.AdministrationDeployAsync(EDDIEnvironment.Test, o.DeployBot, o.Version, true);
                 int s = EDDIClient.LastStatusCode;
                 if (s == 202)
                 {
                     var url = Config("CUI_EDDI_SERVER_URL") +
-                        "/administration/unrestricted/deploymentstatus/" + o.DeployBot + "?version=" + o.Version.ToString();
+                        "/administration/test/deploymentstatus/" + o.DeployBot + "?version=" + o.Version.ToString();
                     Info("Deployed bot. Deployment status at {0}", url);
                     Info("Waiting for 5 seconds while bot deploys.");
                     Thread.Sleep(5 * 1000);
@@ -1131,9 +1180,13 @@ namespace Victor
                 Info("Using {0} as input.", o.File);
                 return EDDIClient.Deserialize<T>(File.ReadAllText(o.File)); 
             }
-            else
+            else if (string.IsNullOrEmpty(o.Input))
             {
-                return EDDIClient.Deserialize<T>(File.ReadAllText(o.Input));
+                Error("No file or input specified.");
+                Exit(ExitResult.NOT_FOUND_OR_SERVER_ERROR);
+            }
+            {
+                return EDDIClient.Deserialize<T>(o.Input);
             }
         }
             

@@ -1,0 +1,74 @@
+{
+  "words" : [ {
+    "word" : "popular",
+    "expressions" : "trigger(popular_show)",
+    "frequency" : 0
+  }, {
+    "word" : "Hello",
+    "expressions" : "greeting(hello)",
+    "frequency" : 0
+  }, {
+    "word" : "Goodbye",
+    "expressions" : "goodbye(bye)",
+    "frequency" : 0
+  }, {
+    "word" : "bye",
+    "expressions" : "goodbye(bye)",
+    "frequency" : 0
+  }, {
+    "word" : "tv",
+    "expressions" : "trigger(tv_menu)",
+    "frequency" : 0
+  }, {
+    "word" : "show",
+    "expressions" : "trigger(tv_menu)",
+    "frequency" : 0
+  }, {
+    "word" : "shows",
+    "expressions" : "trigger(tv_menu)",
+    "frequency" : 0
+  }, {
+    "word" : "movie",
+    "expressions" : "trigger(movie_menu)",
+    "frequency" : 0
+  }, {
+    "word" : "movies",
+    "expressions" : "trigger(movie_menu)",
+    "frequency" : 0
+  } ],
+  "regExs" : [ ],
+  "phrases" : [ {
+    "phrase" : "what are popular shows",
+    "expressions" : "trigger(popular_show)"
+  }, {
+    "phrase" : "what is a popular show",
+    "expressions" : "trigger(popular_show)"
+  }, {
+    "phrase" : "Good morning",
+    "expressions" : "greeting(good_morning)"
+  }, {
+    "phrase" : "See ya",
+    "expressions" : "goodbye(bye)"
+  }, {
+    "phrase" : "Talk TV!",
+    "expressions" : "trigger(tv_menu)"
+  }, {
+    "phrase" : "Chat about Movies!",
+    "expressions" : "trigger(movie_menu)"
+  }, {
+    "phrase" : "tv shows",
+    "expressions" : "trigger(tv_menu)"
+  }, {
+    "phrase" : "Search by show title!",
+    "expressions" : "trigger(show_title)"
+  }, {
+    "phrase" : "Search by movie title!",
+    "expressions" : "trigger(movie_title)"
+  }, {
+    "phrase" : "What shows are popular?",
+    "expressions" : "trigger(tvPopular)"
+  }, {
+    "phrase" : "What movies are popular?",
+    "expressions" : "trigger(moviePopular)"
+  } ]
+}
