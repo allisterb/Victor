@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +23,7 @@ namespace Victor.Server.WebAPI
         protected KIEServerAndKIEContainersApi CApi { get; }
         
         protected KIESessionAssetsApi SApi { get; }
+        
         public KIEServerController(ILogger<KIEServerController> logger, KIEServerAndKIEContainersApi cApi, KIESessionAssetsApi sApi)
         {
             Logger = logger;
@@ -30,9 +32,21 @@ namespace Victor.Server.WebAPI
         }
 
         // GET api/fruits
-        [HttpGet]
-        public async Task<ActionResult<List<HealthCheck>>> Get() => await CApi.HealthcheckAsync(true);
+        [HttpGet("health")]
+        public async Task<ActionResult<List<HealthCheck>>> Health() => await CApi.HealthcheckAsync(true);
         
+        [HttpGet("loan")]
+        public async Task<ContentResult> ApproveLoan(int score, int amount, int duration, double rate)
+        {
+            string body = System.IO.File.ReadAllText("loan-demo.json")
+                .Replace("$CREDIT_SCORE", score.ToString())
+                .Replace("$AMOUNT", amount.ToString())
+                .Replace("$DURATION", duration.ToString())
+                .Replace("$INTEREST_RATE", rate.ToString());
+
+            var r = SApi.ExecuteContainerRulesRestResponse("loan-application_1.1.0", body);
+            return Content(r.Content);
+        }
         /*
         // GET api/fruits/5
         [HttpGet("{id}")]
