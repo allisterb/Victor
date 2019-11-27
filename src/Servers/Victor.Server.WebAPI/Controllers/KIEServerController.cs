@@ -46,7 +46,7 @@ namespace Victor.Server.WebAPI
 
             var r = SApi.ExecuteContainerRulesRestResponse("loan-application_1.1.0", body);
             //var l = LoanApplication.FromJson(r.Content);
-            return Content(r.Content.Replace("com.redhat.demos.dm.loan.model.", ""));
+            return Content(r.Content.Replace("com.redhat.demos.dm.loan.model.", "").Replace("org.drools.core.common.", ""));
         }
         /*
         // GET api/fruits/5
