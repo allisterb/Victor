@@ -54,6 +54,17 @@
       "quickReplies": []
     },
     {
+      "action": "loan_duration_prompt",
+      "timesOccurred": 0,
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [ "How many years would you like to pay the loan back?", "How long would you like the loan for?" ]
+        }
+      ],
+      "quickReplies": []
+    },
+    {
       "action": "accountBalanceOutput",
       "timesOccurred": 0,
       "outputs": [
@@ -78,7 +89,7 @@
       "outputs": [
         {
           "type": "text",
-          "valueAlternatives": [ "" ]
+          "valueAlternatives": [ "Loan approved" ]
         },
         {
           "type": "text",

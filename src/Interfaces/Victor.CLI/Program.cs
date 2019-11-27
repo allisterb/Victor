@@ -215,7 +215,8 @@ namespace Victor
                     {
                         foreach (var d in descriptors)
                         {
-                            WriteInfo("{0} {1} {2} Created: {3} Modified: {4}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn);
+                            
+                            WriteInfo("{0} {1} {2} Created: {3} Modified: {4} Version: {5}.", d.ResourceId, d.Name, d.Description, d.CreatedOn, d.LastModifiedOn, d.Resource.Query.Split('=').Last());
                         }
                     }
                 }
@@ -245,7 +246,7 @@ namespace Victor
                     {
                         foreach (var p in bot.Packages)
                         {
-                            WriteInfo("Package: {0}", p.Segments.Last());
+                            WriteInfo("Package: {0}, Version: {1}", p.Segments.Last(), p.Query.Split('=').Last());
                         }
 
                         if (bot.Channels != null)
@@ -753,6 +754,10 @@ namespace Victor
                         Info("Renamed {0} to {1}.", f.FullName, name);
                     }
                 }
+                else
+                {
+                    Error("Did not update output configuration set. HTTP status code {0}.", s);
+                }
             }
             else if (!string.IsNullOrEmpty(o.UpdateBehavior))
             {
@@ -1177,7 +1182,7 @@ namespace Victor
         {
             if (!string.IsNullOrEmpty(o.File))
             {
-                Info("Using {0} as input.", o.File);
+                Info("Using {0} as input file.", o.File);
                 return EDDIClient.Deserialize<T>(File.ReadAllText(o.File)); 
             }
             else if (string.IsNullOrEmpty(o.Input))

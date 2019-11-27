@@ -60,7 +60,7 @@
         ]
       },
       {
-        "name": "AccountNoPrompt",
+        "name": "AccountDetailsPrompt",
         "actions": [ "account_no_prompt" ],
         "conditions": [
           {
@@ -72,8 +72,8 @@
         ]
       },
       {
-        "name": "LoanAmountPrompt",
-        "actions": [ "loan_amount_prompt" ],
+        "name": "LoanDetailsPrompt",
+        "actions": [ "loan_amount_prompt", "loan_duration_prompt" ],
         "conditions": [
           {
             "type": "inputmatcher",
