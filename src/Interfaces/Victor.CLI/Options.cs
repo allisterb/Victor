@@ -105,6 +105,9 @@ namespace Victor
         [Option("create-output", Required = false, HelpText = "Create an output set from the specified input.")]
         public bool CreateOutput { get; set; }
 
+        [Option("create-http-call", Required = false, HelpText = "Create an HTTP call from the specified input.")]
+        public bool CreateHttp { get; set; }
+
         [Option("update-output", Required = false, HelpText = "Update an output set with the specified id from the specified input.")]
         public string UpdateOutput { get; set; }
 
@@ -116,6 +119,9 @@ namespace Victor
 
         [Option("update-package", Required = false, HelpText = "Update a package with the specified id from the specified input.")]
         public string UpdatePackage { get; set; }
+
+        [Option("update-http-call", Required = false, HelpText = "Update a HTTP call with the specified id from the specified input.")]
+        public string UpdateHttpCall { get; set; }
 
         [Option("create-bot", Required = false, HelpText = "Create a bot from the specified input.")]
         public bool CreateBot { get; set; }

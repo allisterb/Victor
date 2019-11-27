@@ -45,7 +45,8 @@ namespace Victor.Server.WebAPI
                 .Replace("$INTEREST_RATE", rate.ToString());
 
             var r = SApi.ExecuteContainerRulesRestResponse("loan-application_1.1.0", body);
-            return Content(r.Content);
+            //var l = LoanApplication.FromJson(r.Content);
+            return Content(r.Content.Replace("com.redhat.demos.dm.loan.model.", ""));
         }
         /*
         // GET api/fruits/5

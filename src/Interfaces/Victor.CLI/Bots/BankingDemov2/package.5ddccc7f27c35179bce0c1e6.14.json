@@ -36,7 +36,14 @@
       "type": "eddi://ai.labs.behavior",
       "extensions": {},
       "config": {
-        "uri": "eddi://ai.labs.behavior/behaviorstore/behaviorsets/5ddcc26f27c35179bce0c1e5?version=8"
+        "uri": "eddi://ai.labs.behavior/behaviorstore/behaviorsets/5ddcc26f27c35179bce0c1e5?version=9"
+      }
+    },
+    {
+      "type": "eddi://ai.labs.httpcalls",
+      "extensions": {},
+      "config": {
+        "uri": "eddi://ai.labs.httpcalls/httpcallsstore/httpcalls/5dde960827c35179bce0c1fd?version=2"
       }
     },
     {
@@ -63,7 +70,7 @@
       "config": {
         "setOnActions": [
           {
-            "actions": "loan_approval",
+            "actions": "loan_approval_http",
             "setProperties": [
               {
                 "name": "duration",
@@ -79,7 +86,7 @@
       "type": "eddi://ai.labs.output",
       "extensions": {},
       "config": {
-        "uri": "eddi://ai.labs.output/outputstore/outputsets/5ddca76527c35179bce0c1e4?version=3"
+        "uri": "eddi://ai.labs.output/outputstore/outputsets/5ddca76527c35179bce0c1e4?version=6"
       }
     },
     {

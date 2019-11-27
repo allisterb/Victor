@@ -1,0 +1,36 @@
+{
+  "targetServerUrl": "http://victor-webapi-evals25-shared-7daa.apps.hackathon.rhmi.io/api/kie_server/loan",
+  "httpCalls": [
+    {
+      "name": "loanApprovalHTTP",
+      "actions": [ "loan_approval_http" ],
+      "saveResponse": true,
+      "responseObjectName": "approval",
+      "fireAndForget": false,
+      "isBatchCalls": false,
+      "request": {
+        "path": "",
+        "headers": {},
+        "queryParams": {
+          "amount": "[[${properties.amount}]]",
+          "duration": "[[${memory.current.input}]]",
+          "rate": 2.0,
+          "score": 230
+        },
+        "method": "get",
+        "contentType": "",
+        "body": ""
+      },
+      "postResponse": {
+        "propertyInstructions": [
+          {
+            "name": "approval",
+            "scope": "step",
+            "fromObjectPath": "loanApprovalHTTP",
+            "override": true
+          }
+        ]
+      }
+    }
+  ]
+}

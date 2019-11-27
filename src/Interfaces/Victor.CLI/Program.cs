@@ -726,6 +726,31 @@ namespace Victor
                     Error("Did not create output configuration set. HTTP status code {0}.", s);
                 }
             }
+            else if (o.CreateHttp)
+            {
+                Info("Creating HTTP call...");
+                await c.HttpcallsstoreHttpcallsPostAsync(ReadFromFileIfRequired<HttpCallsConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 201)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Created HTTP call at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "output." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
+                }
+                else
+                {
+                    Error("Did not create HTTP call. HTTP status code {0}.", s);
+                }
+            }
             else if (!string.IsNullOrEmpty(o.UpdateOutput))
             {
                 Info("Updating output set {0}...", o.UpdateOutput);
@@ -778,6 +803,32 @@ namespace Victor
                         File.Move(f.FullName, name);
                         Info("Renamed {0} to {1}.", f.FullName, name);
                     }
+                }
+            }
+            else if (!string.IsNullOrEmpty(o.UpdateHttpCall))
+            {
+                Info("Updating HTTP call {0}...", o.UpdateHttpCall);
+                await c.HttpcallsstoreHttpcallsPutAsync(o.UpdateHttpCall, o.Version,
+                    ReadFromFileIfRequired<HttpCallsConfiguration>(o));
+                int s = EDDIClient.LastStatusCode;
+                if (s == 200)
+                {
+                    string l = EDDIClient.GetLastResponseHeader("Location").First();
+                    Info("Updated HTTP call at {0}.", l);
+                    if (!string.IsNullOrEmpty(o.File))
+                    {
+                        var u = new Uri(l);
+                        var id = u.Segments.Last();
+                        var v = u.Query.Split('=').Last();
+                        var f = new FileInfo(o.File);
+                        var name = Path.Combine(f.Directory.FullName, "http." + id + "." + v + ".json");
+                        File.Move(f.FullName, name);
+                        Info("Renamed {0} to {1}.", f.FullName, name);
+                    }
+                }
+                else
+                {
+                    Error("Did not update HTTP call. HTTP status code {0}.", s);
                 }
             }
             else if (o.CreatePackage)

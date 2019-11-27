@@ -98,12 +98,25 @@
       },
       {
         "name": "LoanApproval",
-        "actions": [ "loan_approval" ],
+        "actions": [ "loan_approval_http" ],
         "conditions": [
           {
             "type": "actionmatcher",
             "configs": {
               "actions": "loan_duration_prompt",
+              "occurrence": "lastStep"
+            }
+          }
+        ]
+      },
+      {
+        "name": "LoanApprovalEnd",
+        "actions": [ "loan_approval_end", "CONVERSATION_END" ],
+        "conditions": [
+          {
+            "type": "actionmatcher",
+            "configs": {
+              "actions": "loan_approval_http",
               "occurrence": "lastStep"
             }
           }
