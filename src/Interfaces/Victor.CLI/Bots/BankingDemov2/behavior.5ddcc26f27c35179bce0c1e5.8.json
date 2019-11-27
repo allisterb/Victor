@@ -72,13 +72,39 @@
         ]
       },
       {
-        "name": "LoanDetailsPrompt",
-        "actions": [ "loan_amount_prompt", "loan_duration_prompt" ],
+        "name": "LoanAmountPrompt",
+        "actions": [ "loan_amount_prompt" ],
         "conditions": [
           {
             "type": "inputmatcher",
             "configs": {
               "expressions": "trigger(loan)"
+            }
+          }
+        ]
+      },
+      {
+        "name": "LoanDurationPrompt",
+        "actions": [ "loan_duration_prompt" ],
+        "conditions": [
+          {
+            "type": "actionmatcher",
+            "configs": {
+              "actions": "loan_amount_prompt",
+              "occurrence": "lastStep"
+            }
+          }
+        ]
+      },
+      {
+        "name": "LoanApproval",
+        "actions": [ "loan_approval" ],
+        "conditions": [
+          {
+            "type": "actionmatcher",
+            "configs": {
+              "actions": "loan_duration_prompt",
+              "occurrence": "lastStep"
             }
           }
         ]
