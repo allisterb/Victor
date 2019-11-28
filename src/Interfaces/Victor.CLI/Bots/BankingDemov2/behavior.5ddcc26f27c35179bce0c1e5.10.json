@@ -98,7 +98,7 @@
       },
       {
         "name": "LoanApproval",
-        "actions": [ "loan_approval_http" ],
+        "actions": [ "loan_approval_http", "CONVERSATION_END" ],
         "conditions": [
           {
             "type": "actionmatcher",

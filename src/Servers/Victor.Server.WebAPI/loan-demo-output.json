@@ -1,0 +1,74 @@
+﻿{
+  "type": "SUCCESS",
+  "msg": "Container loan-application_1.1.0 successfully called.",
+  "result": {
+    "execution-results": {
+      "results": [
+        {
+          "value": {
+            "com.redhat.demos.dm.loan.model.Loan": {
+              "amount": 25000,
+              "duration": 2,
+              "interestRate": 2.0,
+              "approved": false,
+              "reason": "Your credit score is too low for a loan."
+            }
+          },
+          "key": "loan"
+        },
+        {
+          "value": [
+            {
+              "com.redhat.demos.dm.loan.model.Applicant": {
+                "name": "NAME",
+                "creditScore": 30
+              }
+            },
+            {
+              "com.redhat.demos.dm.loan.model.Loan": {
+                "amount": 25000,
+                "duration": 2,
+                "interestRate": 2.0,
+                "approved": false,
+                "reason": "Your credit score is too low for a loan."
+              }
+            },
+            {
+              "com.redhat.demos.dm.loan.model.Recommendation": {
+                "text": "Please add an extra guarantee and apply again"
+              }
+            }
+          ],
+          "key": "objects"
+        },
+        {
+          "value": {
+            "com.redhat.demos.dm.loan.model.Applicant": {
+              "name": "NAME",
+              "creditScore": 30
+            }
+          },
+          "key": "applicant"
+        }
+      ],
+      "facts": [
+        {
+          "value": {
+            "org.drools.core.common.DefaultFactHandle": {
+              "external-form": "0:2:600722902:600722902:2:DEFAULT:NON_TRAIT:com.redhat.demos.dm.loan.model.Loan"
+            }
+          },
+          "key": "loan"
+        },
+        {
+          "value": {
+            "org.drools.core.common.DefaultFactHandle": {
+              "external-form": "0:1:1828119228:1828119228:1:DEFAULT:NON_TRAIT:com.redhat.demos.dm.loan.model.Applicant"
+            }
+          },
+          "key": "applicant"
+        }
+      ]
+    }
+  }
+}

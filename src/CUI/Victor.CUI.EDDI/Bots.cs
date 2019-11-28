@@ -138,6 +138,7 @@ namespace Victor
             var intents = outputs.ContainsKey("intents") ? ((JArray)(outputs["intents"])).ToObject<string[]>() : Array.Empty<string>();
             var output = outputs.ContainsKey("output") ? ((JArray)(outputs["output"])).ToObject<string[]>() : Array.Empty<string>();
             var actions = outputs.ContainsKey("actions") ? ((JArray)(outputs["actions"])).ToObject<string[]>() : Array.Empty<string>();
+            var httpCalls = outputs.ContainsKey("httpCalls") ? ((JObject)(outputs["httpCalls"])) : null;
 
             if (output.Length > 0)
             {
@@ -172,6 +173,10 @@ namespace Victor
             if(!string.IsNullOrEmpty(expressions))
             {
                 SayInfoLineIfDebug("Bot expressions: {0}.", expressions);
+            }
+            if (httpCalls != null)
+            {
+                SayInfoLineIfDebug("HTTP calls {0}", httpCalls.ToString());
             }
         }
 

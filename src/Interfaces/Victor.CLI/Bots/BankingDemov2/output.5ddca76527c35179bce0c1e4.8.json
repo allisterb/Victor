@@ -59,7 +59,7 @@
       "outputs": [
         {
           "type": "text",
-          "valueAlternatives": [ "How many years would you like to pay the loan back?", "How long would you like the loan for?" ]
+          "valueAlternatives": [ "How many months would you like to pay the loan back?", "How long would you like the loan for?" ]
         }
       ],
       "quickReplies": []
@@ -84,12 +84,12 @@
       "quickReplies": []
     },
     {
-      "action": "loan_approval_end",
+      "action": "loan_approval_http",
       "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
-          "valueAlternatives": [ "Approved [[${memory.current.httpCalls.loan_approval_http.result.execution-results.results.value.Loan.approved}]]" ]
+          "valueAlternatives": [ "Approved: [[${memory.current.httpCalls.loan_approval_http.msg}]]" ]
         }
       ],
       "quickReplies": []
