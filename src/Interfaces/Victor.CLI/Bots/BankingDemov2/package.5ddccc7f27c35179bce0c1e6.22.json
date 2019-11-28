@@ -86,7 +86,7 @@
       "type": "eddi://ai.labs.output",
       "extensions": {},
       "config": {
-        "uri": "eddi://ai.labs.output/outputstore/outputsets/5ddca76527c35179bce0c1e4?version=8"
+        "uri": "eddi://ai.labs.output/outputstore/outputsets/5ddca76527c35179bce0c1e4?version=12"
       }
     },
     {

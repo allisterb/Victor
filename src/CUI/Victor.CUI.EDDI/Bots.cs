@@ -142,7 +142,10 @@ namespace Victor
 
             if (output.Length > 0)
             {
-                SayInfoLine(output.Aggregate((s1, s2) => s1 + " " + s2));
+                foreach(var o in output)
+                {
+                    SayInfoLine(o);
+                }
             }
             if (quickReplies != null)
             {

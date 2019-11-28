@@ -1,17 +1,17 @@
 ﻿{
   "type": "SUCCESS",
-  "msg": "Container loan-application_1.1.0 successfully called.",
+  "msg": "Container loan_application_1.1.0 successfully called.",
   "result": {
-    "execution-results": {
+    "execution_results": {
       "results": [
         {
           "value": {
-            "com.redhat.demos.dm.loan.model.Loan": {
+            "Loan": {
               "amount": 25000,
-              "duration": 2,
+              "duration": 4,
               "interestRate": 2.0,
               "approved": false,
-              "reason": "Your credit score is too low for a loan."
+              "reason": null
             }
           },
           "key": "loan"
@@ -19,23 +19,23 @@
         {
           "value": [
             {
-              "com.redhat.demos.dm.loan.model.Applicant": {
+              "Applicant": {
                 "name": "NAME",
-                "creditScore": 30
+                "creditScore": 300
               }
             },
             {
-              "com.redhat.demos.dm.loan.model.Loan": {
+              "Loan": {
                 "amount": 25000,
-                "duration": 2,
+                "duration": 4,
                 "interestRate": 2.0,
                 "approved": false,
-                "reason": "Your credit score is too low for a loan."
+                "reason": null
               }
             },
             {
-              "com.redhat.demos.dm.loan.model.Recommendation": {
-                "text": "Please add an extra guarantee and apply again"
+              "Recommendation": {
+                "text": "With current credit score you can apply for a loan under 4000 or try to add an extra guarantee"
               }
             }
           ],
@@ -43,9 +43,9 @@
         },
         {
           "value": {
-            "com.redhat.demos.dm.loan.model.Applicant": {
+            "Applicant": {
               "name": "NAME",
-              "creditScore": 30
+              "creditScore": 300
             }
           },
           "key": "applicant"
@@ -54,16 +54,16 @@
       "facts": [
         {
           "value": {
-            "org.drools.core.common.DefaultFactHandle": {
-              "external-form": "0:2:600722902:600722902:2:DEFAULT:NON_TRAIT:com.redhat.demos.dm.loan.model.Loan"
+            "DefaultFactHandle": {
+              "external_form": "0:2:1923631862:1923631862:2:DEFAULT:NON_TRAIT:Loan"
             }
           },
           "key": "loan"
         },
         {
           "value": {
-            "org.drools.core.common.DefaultFactHandle": {
-              "external-form": "0:1:1828119228:1828119228:1:DEFAULT:NON_TRAIT:com.redhat.demos.dm.loan.model.Applicant"
+            "DefaultFactHandle": {
+              "external_form": "0:1:2101198129:2101198129:1:DEFAULT:NON_TRAIT:Applicant"
             }
           },
           "key": "applicant"

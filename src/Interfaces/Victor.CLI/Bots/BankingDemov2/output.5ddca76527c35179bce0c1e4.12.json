@@ -89,8 +89,17 @@
       "outputs": [
         {
           "type": "text",
-          "valueAlternatives": [ "Approved: [[${memory.current.httpCalls.loan_approval_http.msg}]]" ]
+          "valueAlternatives": [ "Approved: [[${memory.current.httpCalls.loan_approval_http.result.execution_results.results[0].value.Loan.approved}]]" ]
+        },
+        {
+          "type": "text",
+          "valueAlternatives": [ "Reason: [[${memory.current.httpCalls.loan_approval_http.result.execution_results.results[0].value.Loan.reason}]]" ]
+        },
+        {
+          "type": "text",
+          "valueAlternatives": [ "Recommendation: [[${memory.current.httpCalls.loan_approval_http.result.execution_results.results[1].value[2].Recommendation.text}]]" ]
         }
+
       ],
       "quickReplies": []
     }
