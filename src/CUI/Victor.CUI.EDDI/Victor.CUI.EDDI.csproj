@@ -17,8 +17,4 @@
     <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BotPackages\" />
-  </ItemGroup>
-
 </Project>
