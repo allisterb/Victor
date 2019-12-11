@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+cd bin/Debug/netcoreapp3.1/
+dotnet "Victor.CLI.dll" "$@"
+cd ../..

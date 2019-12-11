@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp2.1;net461</TargetFrameworks>
     <RootNamespace>Victor</RootNamespace>
