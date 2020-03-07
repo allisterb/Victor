@@ -1,0 +1,98 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: eddi
+  namespace: evals25-shared-7daa
+  selfLink: >-
+    /apis/apps.openshift.io/v1/namespaces/evals25-shared-7daa/deploymentconfigs/eddi
+  uid: 73788d66-f5fa-11e9-813c-0a635a9e0dde
+  resourceVersion: '41951703'
+  generation: 3
+  creationTimestamp: '2019-10-24T01:06:03Z'
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    name: eddi
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: eddi
+    spec:
+      containers:
+        - resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          name: eddi
+          livenessProbe:
+            tcpSocket:
+              port: 7070
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: EDDI_ENV
+              value: development
+            - name: EDDI_JAVA_ENV_MONGODBUSER
+              value: mongodb.username=eddi
+            - name: EDDI_JAVA_ENV_MONGODBPASSWORD
+              value: mongodb.password=eddi
+            - name: EDDI_JAVA_ENV_MONGODBHOSTS
+              value: mongodb.hosts=172.30.82.44
+          securityContext:
+            capabilities: {}
+            privileged: false
+          ports:
+            - containerPort: 7070
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          terminationMessagePolicy: File
+          image: registry.connect.redhat.com/labsai/eddi
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      imagePullSecrets:
+        - name: redhat-connect
+      schedulerName: default-scheduler
+status:
+  observedGeneration: 3
+  details:
+    message: config change
+    causes:
+      - type: ConfigChange
+  availableReplicas: 1
+  unavailableReplicas: 0
+  latestVersion: 2
+  updatedReplicas: 1
+  conditions:
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2019-10-24T01:10:21Z'
+      lastTransitionTime: '2019-10-24T01:10:18Z'
+      reason: NewReplicationControllerAvailable
+      message: replication controller "eddi-2" successfully rolled out
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2019-10-26T22:05:05Z'
+      lastTransitionTime: '2019-10-26T22:05:05Z'
+      message: Deployment config has minimum availability.
+  replicas: 1
+  readyReplicas: 1

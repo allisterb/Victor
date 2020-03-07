@@ -57,7 +57,7 @@ namespace Victor
             {
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions, CXOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions, CXOptions, SMOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -77,7 +77,7 @@ namespace Victor
                     }
                     else
                     {
-                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
+                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
@@ -85,13 +85,13 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
                     HelpRequestedError error = (HelpRequestedError)errors.First(e => e.Tag == ErrorType.HelpRequestedError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -105,7 +105,7 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.UnknownOptionError))
                 {
                     UnknownOptionError error = (UnknownOptionError)errors.First(e => e.Tag == ErrorType.UnknownOptionError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
                     Error("Unknown option: {error}.", error.Token);
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -113,7 +113,7 @@ namespace Victor
                 else
                 {
                     Error("An error occurred parsing the program options: {errors}.", errors);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -141,6 +141,12 @@ namespace Victor
             {
                 CXController.Options = o;
                 new CXController(o).Start();
+                Exit(ExitResult.SUCCESS);
+            })
+            .WithParsed<SMOptions>(o =>
+            {
+                SMController.Options = o;
+                new SMController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
 

@@ -158,4 +158,11 @@ namespace Victor
         [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
         public bool NoBeeper { get; set; }
     }
+
+    [Verb("sm", HelpText = "Launch the Victor SM auditory CUI.")]
+    public class SMOptions : Options
+    {
+        [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
+        public bool NoBeeper { get; set; }
+    }
 }

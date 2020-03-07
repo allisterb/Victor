@@ -34,6 +34,7 @@
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />
     <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
+    <ProjectReference Include="..\..\TTS\Victor.TTS.WindowsSpeech\Victor.TTS.WindowsSpeech.csproj" />
   </ItemGroup>
 
 </Project>
