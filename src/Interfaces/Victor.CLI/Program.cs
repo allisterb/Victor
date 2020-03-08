@@ -34,7 +34,7 @@ namespace Victor
         static void Main(string[] args)
         {
             Args = args;
-            if (Args.Contains("cx"))
+            if (Args.Contains("cx") || Args.Contains("sm"))
             {
                 SetLogger(new SerilogLogger(console: false, debug: true));
             }
@@ -49,7 +49,7 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
-            if (!args.Contains("cx"))
+            if (!args.Contains("cx") && !args.Contains("sm"))
             {
                 PrintLogo();
             }

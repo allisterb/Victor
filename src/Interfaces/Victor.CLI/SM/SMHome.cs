@@ -9,7 +9,7 @@ namespace Victor.CLI
     public class SMHome : CUIPackage
     {
         #region Constructors
-        public SMHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "home")), controller)
+        public SMHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "sm", "home")), controller)
         {
             MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
             MenuIndexes[Prefixed("PACKAGES")] = 3;

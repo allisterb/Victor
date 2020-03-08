@@ -1,0 +1,260 @@
+﻿# help intent
+---
+type: intent
+name: help
+slots:
+  - name: feature
+    entity: feature
+  - name: package
+    entity: package
+  - name: function
+    entity: function
+utterances:
+  - help
+  - help [function](debug)
+  - help [feature](packages)
+  - help on [function](menu)
+  - help me on [feature](packages)
+  - How do I use this
+  - How do I [package](apply for a loan)
+  - Can I [package](send email)
+  - How do I [function](end this)
+  - How can I [function](exit the program)
+  - How do I use [package](vish)
+  - How does the [package](calendar) work
+  - I want to [function](exit) the program
+  - help [package](vish)
+  - help on [package](github)
+  - help me on [feature](packages)
+  - help me with [feature](packages)
+  - How do I use [feature](this)
+  - What does [feature](this) do
+  - How do I [package](apply for a loan)
+  - Can I [package](send email)
+  - How do I [feature](end this)
+  - How can I [feature](exit) the program
+  - How do I use [package](email)
+  - What's [feature](this)
+  - What does this do
+  - What is [feature](this)
+  - What is [feature](nlu)
+  - Tell me about [feature](this)
+  - Talk about [feature](nlu) 
+  - What's [feature](this)
+  - What is [feature](this)
+  - What is [feature](nlu)
+  - Tell me about [feature](this)
+  - Talk about [feature](nlu)
+  - How does the [package](calendar) work
+
+# menu intent
+---
+type: intent
+name: menu
+utterances:
+    - menu
+    - show menu
+    - go to menu
+    - packages
+    - show packages
+    - go to packages
+    - get packages
+
+# page intent
+---
+type: intent
+name: page
+slots:
+  - name: no
+    entity: snips/number
+utterances:
+    - next page
+    - np
+    - pp
+    - previous page
+    - goto next page
+    - go to next page
+    - goto previous page
+    - page [no](7)
+    - page [no](22)
+    - show page [no](3)
+    - display page [no](thirty two)
+    - goto page [no](5)
+    - go to page [no](20)
+    - p [no](10)
+    - p [no](three)
+    - go to [no](15)
+    - goto [no](fifteen)
+    - goto page [no](16)
+
+# hello intent
+---
+type: intent
+name: hello
+utterances:
+  - Hello
+  - What's up?
+  - How's it going?
+  - Hey Victor
+  - Hi
+  - How are you
+  - Sup
+  - Yo
+  - Hi there
+  - Bro
+  - Dude what's happening
+  - Hello my name is [person](John)
+  - Hello Victor my name's [person](John)
+  - Hi Victor my name is [person](Mary)
+  - Hi I'm [person](Ellen)
+  - My name is [person](John)
+  - My name is [person](Henry)
+  - I am [person](David)
+  - I'm [person](Mary)
+  - name's [person](Ellen)
+
+# exit intent
+---
+type: intent
+name: exit
+utterances:
+  - exit
+  - bye
+  - l8r dude
+  - let me out
+  - goodbye
+  - quit
+  - stop
+  - shutdown
+  - close
+  - end
+  - I want to quit
+  - I want to leave
+  - I want to go
+  - I'm leaving
+  - bye bye
+  
+# enable intent
+---
+type: intent
+name: enable
+slots:
+  - name: function
+    entity: function
+utterances:
+  - enable [function](debug)
+  - enable [function](debug) now
+  - turn on [function](debug)
+  - turn on [function](asr)
+  - enable [function](asr)
+  - turn [function](asr) on
+  - turn [function](debug) on
+  - turn [function](asr) on please
+  - enable [function](debug) now
+  - I want [function](asr) on now
+  - I want to turn on [function](debug) now
+  - I want to enable [function](debug)
+  - Please turn on [function](debug) now
+  - Please [function](debug) now
+
+# disable intent
+---
+type: intent
+name: disable
+slots:
+  - name: function
+    entity: function
+utterances:
+  - disable [function](debug)
+  - disable [function](debug) now
+  - turn off [function](debug)
+  - turn off [function](asr)
+  - off [function](debug)
+  - disable [function](asr)
+  - turn [feature](asr) off
+  - turn [function](debug) off
+  - turn [function](asr) off please
+  - disable [function](debug) now
+  - I want [function](asr) off now
+  - I don't want [function](asr) now
+  - I want to turn off [function](debug) now
+  - I want to disable [function](asr)
+  - Please disable [function](debug) now 
+  - Please turn off [function](debug) now
+
+# back intent
+---
+type: intent
+name: back
+utterances:
+    - back
+    - go back
+    - I want to go back
+    - please go back
+
+# home intent
+---
+type: intent
+name: home
+utterances:
+    - home
+    - go home
+    - I want to go home
+    - please go back
+
+# feature entity
+---
+type: entity
+name: feature
+automatically_extensible: no
+values:
+- [package, packages]
+- [menu, menus]
+- [nlu, nlp]
+- [asr, automatic speech recognition]
+
+# function entity
+---
+type: entity
+name: function
+automatically_extensible: no
+use_synonyms: yes
+values:
+- this
+- [exit, end, end the program, end this]
+- debug
+- asr
+- nlu
+
+# package entity
+---
+type: entity
+name: package
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [vish, visual interactive shell]
+- [service, services, email, send email, send an email, send emails, redhat news, red hat news, redhat products, red hat product, github]
+- [bot, bots, banking, loan, apply for loan, get a loan]
+- [openshift, open shift, red hat open shift, redhat openshift]
+
+# person entity
+---
+type: entity
+name: person
+automatically_extensible: yes
+values:
+- John
+- Allister
+- Marge
+- Michael
+- Marvin 
+- David
+- Luis
+- Joe
+- Harry
+- Shelly
+- Carrie
+- Sean 
+- Tim 
+- Hubert
