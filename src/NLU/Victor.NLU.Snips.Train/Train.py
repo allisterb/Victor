@@ -23,11 +23,12 @@ def train_model(_input, name, sub=""):
     
     engine_path = os.path.join("..", "Victor.NLU.Snips", "Engines", sub, name)
     if os.path.isdir(engine_path): 
+        print("Overwriting existing engine directory {0}.".format(engine_path))
         shutil.rmtree(engine_path)
         
     with io.open(output) as f:
         dataset = json.load(f)
     engine.fit(dataset)
-    engine.persist(engine_path) #os.path.join(os.path.dirname(input), "..", "Engines", sub, name))
+    engine.persist(engine_path)
 
     

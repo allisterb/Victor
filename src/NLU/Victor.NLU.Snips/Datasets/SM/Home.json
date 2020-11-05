@@ -73,42 +73,43 @@
       "data": [
         {
           "synonyms": [
-            "visual interactive shell"
+            "medications",
+            "medication tracker",
+            "track medications",
+            "track meds"
           ],
-          "value": "vish"
+          "value": "meds"
         },
         {
           "synonyms": [
-            "services",
-            "email",
-            "send email",
-            "send an email",
-            "send emails",
-            "redhat news",
-            "red hat news",
-            "redhat products",
-            "red hat product",
-            "github"
+            "symptom tracker",
+            "track symptoms",
+            "track anxiety",
+            "measure symptoms"
           ],
-          "value": "service"
+          "value": "symptoms"
         },
         {
           "synonyms": [
-            "bots",
-            "banking",
-            "loan",
-            "apply for loan",
-            "get a loan"
+            "activities",
+            "track activity",
+            "track activities"
           ],
-          "value": "bot"
+          "value": "activity"
         },
         {
           "synonyms": [
-            "open shift",
-            "red hat open shift",
-            "redhat openshift"
+            "evaluate condition",
+            "evaluate my condition",
+            "how am I doing"
           ],
-          "value": "openshift"
+          "value": "evaluate"
+        },
+        {
+          "synonyms": [
+            "information"
+          ],
+          "value": "knowledge"
         }
       ],
       "matching_strictness": 1.0,
@@ -119,15 +120,31 @@
       "data": [
         {
           "synonyms": [],
-          "value": "John"
-        },
-        {
-          "synonyms": [],
           "value": "Allister"
         },
         {
           "synonyms": [],
-          "value": "Marge"
+          "value": "Margaret"
+        },
+        {
+          "synonyms": [],
+          "value": "Casswina"
+        },
+        {
+          "synonyms": [],
+          "value": "Cassie"
+        },
+        {
+          "synonyms": [],
+          "value": "Ian"
+        },
+        {
+          "synonyms": [],
+          "value": "Ellen"
+        },
+        {
+          "synonyms": [],
+          "value": "John"
         },
         {
           "synonyms": [],
@@ -832,7 +849,7 @@
             {
               "entity": "person",
               "slot_name": "person",
-              "text": "John"
+              "text": "Allister"
             }
           ]
         },
@@ -844,7 +861,7 @@
             {
               "entity": "person",
               "slot_name": "person",
-              "text": "John"
+              "text": "Casswina"
             }
           ]
         },
@@ -856,7 +873,7 @@
             {
               "entity": "person",
               "slot_name": "person",
-              "text": "Mary"
+              "text": "Margaret"
             }
           ]
         },
@@ -880,7 +897,7 @@
             {
               "entity": "person",
               "slot_name": "person",
-              "text": "John"
+              "text": "Ian"
             }
           ]
         },
@@ -1006,7 +1023,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "apply for a loan"
+              "text": "track meds"
             }
           ]
         },
@@ -1018,7 +1035,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "send email"
+              "text": "track symptoms"
             }
           ]
         },
@@ -1054,7 +1071,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "vish"
+              "text": "activities"
             }
           ]
         },
@@ -1066,7 +1083,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "calendar"
+              "text": "symptoms"
             },
             {
               "text": " work"
@@ -1096,7 +1113,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "vish"
+              "text": "medications"
             }
           ]
         },
@@ -1108,7 +1125,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "github"
+              "text": "symptoms"
             }
           ]
         },
@@ -1171,7 +1188,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "apply for a loan"
+              "text": "track activity"
             }
           ]
         },
@@ -1183,7 +1200,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "send email"
+              "text": "evaluate my condition"
             }
           ]
         },
@@ -1222,7 +1239,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "email"
+              "text": "activity tracker"
             }
           ]
         },
@@ -1361,7 +1378,7 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "calendar"
+              "text": "medication tracker"
             },
             {
               "text": " work"

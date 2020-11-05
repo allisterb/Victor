@@ -10,3 +10,6 @@
 [submodule "ext/PortAudio.Net"]
 	path = ext/PortAudio.Net
 	url = https://github.com/allisterb/PortAudio.Net.git
+[submodule "ext/canopy"]
+	path = ext/canopy
+	url = https://github.com/allisterb/canopy.git

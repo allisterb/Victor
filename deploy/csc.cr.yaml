@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: CatalogSourceConfig
+metadata:
+  name: eddi-operator
+  namespace: victor
+spec:
+  targetNamespace: openshift-operators 
+  packages: eddi-operator-certified-rhmp

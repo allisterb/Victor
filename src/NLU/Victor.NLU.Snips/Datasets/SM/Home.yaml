@@ -16,24 +16,24 @@ utterances:
   - help on [function](menu)
   - help me on [feature](packages)
   - How do I use this
-  - How do I [package](apply for a loan)
-  - Can I [package](send email)
+  - How do I [package](track meds)
+  - Can I [package](track symptoms)
   - How do I [function](end this)
   - How can I [function](exit the program)
-  - How do I use [package](vish)
-  - How does the [package](calendar) work
+  - How do I use [package](activities)
+  - How does the [package](symptoms) work
   - I want to [function](exit) the program
-  - help [package](vish)
-  - help on [package](github)
+  - help [package](medications)
+  - help on [package](symptoms)
   - help me on [feature](packages)
   - help me with [feature](packages)
   - How do I use [feature](this)
   - What does [feature](this) do
-  - How do I [package](apply for a loan)
-  - Can I [package](send email)
+  - How do I [package](track activity)
+  - Can I [package](evaluate my condition)
   - How do I [feature](end this)
   - How can I [feature](exit) the program
-  - How do I use [package](email)
+  - How do I use [package](activity tracker)
   - What's [feature](this)
   - What does this do
   - What is [feature](this)
@@ -45,7 +45,7 @@ utterances:
   - What is [feature](nlu)
   - Tell me about [feature](this)
   - Talk about [feature](nlu)
-  - How does the [package](calendar) work
+  - How does the [package](medication tracker) work
 
 # menu intent
 ---
@@ -103,11 +103,11 @@ utterances:
   - Hi there
   - Bro
   - Dude what's happening
-  - Hello my name is [person](John)
-  - Hello Victor my name's [person](John)
-  - Hi Victor my name is [person](Mary)
+  - Hello my name is [person](Allister)
+  - Hello Victor my name's [person](Casswina)
+  - Hi Victor my name is [person](Margaret)
   - Hi I'm [person](Ellen)
-  - My name is [person](John)
+  - My name is [person](Ian)
   - My name is [person](Henry)
   - I am [person](David)
   - I'm [person](Mary)
@@ -233,20 +233,24 @@ name: package
 automatically_extensible: no
 use_synonyms: yes
 values:
-- [vish, visual interactive shell]
-- [service, services, email, send email, send an email, send emails, redhat news, red hat news, redhat products, red hat product, github]
-- [bot, bots, banking, loan, apply for loan, get a loan]
-- [openshift, open shift, red hat open shift, redhat openshift]
-
+- [meds, medications, medication tracker, track medications, track meds]
+- [symptoms, symptom tracker, track symptoms, track anxiety, measure symptoms]
+- [activity, activities, track activity, track activities]
+- [evaluate, evaluate condition, evaluate my condition, how am I doing]
+- [knowledge, information]
 # person entity
 ---
 type: entity
 name: person
 automatically_extensible: yes
 values:
-- John
 - Allister
-- Marge
+- Margaret
+- Casswina
+- Cassie
+- Ian
+- Ellen
+- John
 - Michael
 - Marvin 
 - David

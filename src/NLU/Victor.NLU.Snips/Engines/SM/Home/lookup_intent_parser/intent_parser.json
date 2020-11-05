@@ -20,8 +20,8 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "function",
-          "feature"
+          "feature",
+          "function"
         ]
       },
       "intent_group": [
@@ -54,9 +54,9 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "function",
           "feature",
-          "package"
+          "package",
+          "function"
         ]
       },
       "intent_group": [

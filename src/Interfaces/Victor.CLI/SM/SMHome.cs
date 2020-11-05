@@ -97,9 +97,11 @@ namespace Victor.CLI
         {
             SetMenuContext("PACKAGES");
             SayInfoLine("Select a package to use.");
-            SayInfoLine("1. {0}", "Vish");
-            SayInfoLine("2. {0}", "Services");
-            SayInfoLine("3. {0}", "Bots");
+            SayInfoLine("1. {0}", "Medications");
+            SayInfoLine("2. {0}", "Symptoms");
+            SayInfoLine("3. {0}", "Activities");
+            SayInfoLine("4. {0}", "Evaluations");
+            SayInfoLine("5. {0}", "Knowledge");
         }
 
         public override void Help(Intent intent)
@@ -110,12 +112,12 @@ namespace Victor.CLI
                 switch (context)
                 {
                     case "WELCOME_HOME":
-                        SayInfoLine("Welcome to Victor CX.");
-                        SayInfoLine("Victor CX tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
+                        SayInfoLine("Welcome to Victor SM.");
+                        SayInfoLine("Victor SM tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
                         SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
                         break;
                     case "MENU_HOME_PACKAGES":
-                        SayInfoLine("Enter the number associated with the Victor CX package category you want to select.");
+                        SayInfoLine("Enter the number associated with the Victor SM package category you want to select.");
                         break;
                     default:
                         SayErrorLine("Unknown HOME context: {0}.", context);
@@ -135,12 +137,12 @@ namespace Victor.CLI
                             Help(null);
                             break;
                         case "nlu":
-                            SayInfoLine("Victor CX uses natural language understanding to understand a user's intent and the entities that are part of that intent.");
+                            SayInfoLine("Victor SM uses natural language understanding to understand a user's intent and the entities that are part of that intent.");
                             SayInfoLine("A user does not have to enter an exact phrase or the exact command syntax but can express their intent using natural language and different phrases and synonymns.");
                             SayInfoLine("You can enable debug mode by entering {0} or {1}. For each user input this will print information about the intent and entities extracted by the NLU engine.", "enable debug", "debug on");
                             break;
                         case "asr":
-                            SayInfoLine("Victor CX can use automatic speech recognition as an input method instead of or in addition to a keyboard or character input device.");
+                            SayInfoLine("Victor SM can use automatic speech recognition as an input method instead of or in addition to a keyboard or character input device.");
                             SayInfoLine("To enable ASR say {0} or {1}.", "asr on", "enable asr");
                             SayInfoLine("ASR quality may vary depending on your mic and environment. To test how ASR works with your hardware and environment run {0} from a command line.", "victor asr");
                             break;
@@ -185,7 +187,7 @@ namespace Victor.CLI
         {
             if (intent == null || intent.Entities.Length == 0)
             {
-                SayInfoLine("Victor CX is an auditory conversational user interface for interacting with an organization's products and online customer services.");
+                SayInfoLine("Victor SM is an auditory conversational user interface for interacting with an organization's products and online customer services.");
                 SayInfoLine("It is designed specifically for vision-impaired and differently-abled users and customers who are unable to effectively use a complex GUI or pointing devices like mice and touchscreens when interacting with applications and documents presented in a visual medium.");
             }
             else
