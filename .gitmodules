@@ -13,3 +13,9 @@
 [submodule "ext/canopy"]
 	path = ext/canopy
 	url = https://github.com/allisterb/canopy.git
+[submodule "ext/nledger"]
+	path = ext/nledger
+	url = https://github.com/allisterb/nledger.git
+[submodule "ext/readline"]
+	path = ext/readline
+	url = https://github.com/wwestlake/readline.git
