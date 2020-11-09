@@ -34,7 +34,7 @@ namespace Victor
         static void Main(string[] args)
         {
             Args = args;
-            if (Args.Contains("cx") || Args.Contains("sm"))
+            if (Args.Contains("cx") || Args.Contains("sm") || Args.Contains("fn"))
             {
                 SetLogger(new SerilogLogger(console: false, debug: true));
             }
@@ -49,7 +49,7 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
-            if (!args.Contains("cx") && !args.Contains("sm"))
+            if (!args.Contains("cx") && !args.Contains("sm") && !args.Contains("fn"))
             {
                 PrintLogo();
             }
@@ -57,7 +57,7 @@ namespace Victor
             {
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions, CXOptions, SMOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, CUIOptions, NLUOptions, CXOptions, SMOptions, FNOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -77,7 +77,7 @@ namespace Victor
                     }
                     else
                     {
-                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
+                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions), typeof(FNOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
@@ -85,13 +85,13 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
                     HelpRequestedError error = (HelpRequestedError)errors.First(e => e.Tag == ErrorType.HelpRequestedError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions), typeof(FNOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions), typeof(FNOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -105,7 +105,7 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.UnknownOptionError))
                 {
                     UnknownOptionError error = (UnknownOptionError)errors.First(e => e.Tag == ErrorType.UnknownOptionError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions), typeof(SMOptions));
                     Error("Unknown option: {error}.", error.Token);
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
@@ -113,7 +113,7 @@ namespace Victor
                 else
                 {
                     Error("An error occurred parsing the program options: {errors}.", errors);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(CUIOptions), typeof(NLUOptions), typeof(CXOptions), typeof(SMOptions), typeof(SMOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -147,6 +147,12 @@ namespace Victor
             {
                 SMController.Options = o;
                 new SMController(o).Start();
+                Exit(ExitResult.SUCCESS);
+            })
+            .WithParsed<FNOptions>(o =>
+            {
+                FNController.Options = o;
+                new FNController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
 
@@ -1292,8 +1298,7 @@ namespace Victor
 
         #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-
+        { 
             Error((Exception)e.ExceptionObject, "Unhandled error occurred during operation. Victor CLI will now shutdown.");
             Exit(ExitResult.UNHANDLED_EXCEPTION);
         }
@@ -1304,9 +1309,6 @@ namespace Victor
             Cts.Cancel();
             Exit(ExitResult.SUCCESS);
         }
-        #endregion
-
-        #region Fields
         #endregion
     }
 }

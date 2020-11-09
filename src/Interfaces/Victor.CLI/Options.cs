@@ -13,7 +13,7 @@ namespace Victor
         public bool Debug { get; set; }
     }
 
-    [Verb("asr", HelpText = "Test the default speech recognition feature of Victor with the default mic as the input source.")]
+    [Verb("asr", HelpText = "Test the speech recognition feature of Victor with the default mic as the input source.")]
     class SpeechRecognitionOptions : Options
     {
 
@@ -36,7 +36,7 @@ namespace Victor
         public string Text { get; set; }
     }
 
-    [Verb("cui", HelpText = "Administer the CUI features of Victor (admin only.)")]
+    [Verb("eddi-cui", HelpText = "Administer the E.D.D.I CUI features of Victor (admin only.)")]
     public class CUIOptions : Options
     {
         [Option('v', "version", Required = false, Default = 1, HelpText = "Set the version of the object to be retrieved.")]
@@ -161,6 +161,13 @@ namespace Victor
 
     [Verb("sm", HelpText = "Launch the Victor SM auditory CUI.")]
     public class SMOptions : Options
+    {
+        [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
+        public bool NoBeeper { get; set; }
+    }
+
+    [Verb("fn", HelpText = "Launch the Victor FN auditory CUI.")]
+    public class FNOptions : Options
     {
         [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
         public bool NoBeeper { get; set; }

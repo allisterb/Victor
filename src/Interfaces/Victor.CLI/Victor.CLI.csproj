@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\..\build\common.props" />
+  
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
@@ -11,20 +11,30 @@
     <Version>0.3.1</Version>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+    <DefineConstants>TRACE;NET461</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+    <DefineConstants>TRACE;NETCORE3</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="victor.cmd" />
     <None Remove="Victor.log" />
   </ItemGroup>
 
+  
+  <Import Project="..\..\..\build\common.props" />
+  
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All" Version="1.0.0" />
     <PackageReference Include="Colorful.Console" Version="1.2.9" />
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="Figgle" Version="0.3.0" />
-    <PackageReference Include="LagDaemon.ReadLine" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ext\readline\src\ReadLine\ReadLine.csproj" />
     <ProjectReference Include="..\..\ASR\Victor.ASR.Julius\Victor.ASR.Julius.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
