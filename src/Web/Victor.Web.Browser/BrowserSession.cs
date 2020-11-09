@@ -37,7 +37,7 @@ namespace Victor
         {
             ThrowIfNotInitialized();
             var doc = await Browser.NavigateAsync(uri, headers, formData);
-            doc.
+            //doc.
             return action(doc);
          
         }

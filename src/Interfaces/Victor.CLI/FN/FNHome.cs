@@ -370,7 +370,7 @@ namespace Victor.CLI
                     {
                         SayInfoLine("Loading Vish package...");
                         Controller.StartBeeper();
-                        SubPackages.Add(new Vish(this.Controller));
+                        //SubPackages.Add(new Vish(this.Controller));
                         Controller.StopBeeper();
                     }
                     Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
@@ -391,17 +391,17 @@ namespace Victor.CLI
             {
                 SayInfoLine("Loading Bots...");
                 Controller.StartBeeper();
-                var bots = new Bots(this.Controller);
-                Controller.StopBeeper();
-                if (bots.Initialized)
-                {
-                    SubPackages.Add(new Bots(this.Controller));
-                }
-                else
-                {
-                    SayErrorLine("The Bots package failed to initialize.");
+                //var bots = new Bots(this.Controller);
+                //Controller.StopBeeper();
+                //if (bots.Initialized)
+               // {
+                    //SubPackages.Add(new Bots(this.Controller));
+               // }
+                //else
+                //{
+                //    SayErrorLine("The Bots package failed to initialize.");
                     return;
-                }
+                //}
                 
             }
             Controller.ActivePackage = SubPackages.Single(p => p.Name == "Bots"); 

@@ -1,8 +1,0 @@
-{
-  "resource" : "eddi://ai.labs.bot/botstore/bots/5db2454dfc051079c87b93f6?version=1",
-  "createdOn" : 1571964237250,
-  "lastModifiedOn" : 1571964237250,
-  "deleted" : false,
-  "name" : "Weather Bot Example v2",
-  "description" : "Weather api implementation with the use of properties (variables)"
-}

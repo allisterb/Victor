@@ -1,5 +1,0 @@
-{
-  "resource": "eddi://ai.labs.bot/botstore/bots/5ddcce1227c35179bce0c1e7?version=1",
-  "name": "Banking Demo",
-  "description": "Bot that simulates a home banking interface using RHDM server."
-}
