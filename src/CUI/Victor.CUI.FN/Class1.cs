@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Speech;
 
-namespace Victor.TTS.WindowsSpeech
+namespace Victor.CUI.FN
 {
     public class Class1
     {
