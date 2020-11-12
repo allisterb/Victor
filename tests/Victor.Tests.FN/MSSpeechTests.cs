@@ -1,23 +1,16 @@
-using System;
-using Microsoft.Speech.Recognition;
-using Microsoft.Speech.Synthesis;
-using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 using Xunit;
 
-using Victor.Vision;
+using Microsoft.Speech.Recognition;
+using Microsoft.Speech.Synthesis;
+
 namespace Victor.Tests
 {
     public class MSSpeechTests
     {
-      
-        [Fact]
-        public void CanCapture()
-        {
-            CV.CaptureCamera();
-            Assert.True(true);
-        }
-        
         [Fact]
         public void CanSpeak()
         {
@@ -25,6 +18,7 @@ namespace Victor.Tests
             ss.SetOutputToDefaultAudioDevice();
             ss.Speak("I am awake");
             Assert.NotNull(ss);
+            ss.Dispose();
         }
     }
 }

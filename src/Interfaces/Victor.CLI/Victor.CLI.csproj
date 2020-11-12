@@ -20,6 +20,20 @@
     <DefineConstants>TRACE;NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
+
+  <PropertyGroup Condition="'$(OS)' == 'Unix'">
+    <DefineConstants>UNIX</DefineConstants>    
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <DefineConstants>WINDOWS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(OS)' == 'Unix'">
+    <ProjectReference Include="..\..\ASR\Victor.ASR.Julius\Victor.ASR.Julius.csproj" />
+    <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="victor.cmd" />
     <None Remove="Victor.log" />
@@ -35,13 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ext\readline\src\ReadLine\ReadLine.csproj" />
-    <ProjectReference Include="..\..\ASR\Victor.ASR.Julius\Victor.ASR.Julius.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
-    <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />
-    <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
+    <ProjectReference Include="..\..\CUI\Victor.CUI.FN\Victor.CUI.FN.csproj" />
+    <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
+    <ProjectReference Include="..\..\..\ext\readline\src\ReadLine\ReadLine.csproj" />
   </ItemGroup>
 
 </Project>

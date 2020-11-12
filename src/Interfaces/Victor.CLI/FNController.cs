@@ -33,7 +33,9 @@ namespace Victor.CLI
             HomePackage = Packages[0];
             ActivePackage = Packages[0];
             PreviousPackage = Packages[0];
+            #if UNIX
             JuliusSession = new JuliusSession();
+            #endif
             Initialized = Packages[0].Initialized;
             StopBeeper();
         }
@@ -93,6 +95,7 @@ namespace Victor.CLI
 
         public override void EnableASR()
         {
+            #if UNIX
             if (JuliusSession == null || !JuliusSession.Initialized)
             {
                 SayInfoLine("Sorry ASR is not available. Check that your Victor binary release has the required files or check the Victor log file for errors.");
@@ -112,20 +115,37 @@ namespace Victor.CLI
                 JuliusSession.Start();
                 SayInfoLine("Waiting for the ASR process to become ready...");
             }
+            #endif
         }
 
-        public override void StopASR() => JuliusSession.Stop();
+        public override void StopASR()
+        {
+            #if UNIX
+            JuliusSession.Stop();
+            #endif
+        }
 
-        public override bool ASREnabled => JuliusSession.Initialized && JuliusSession.IsListening;
+        public override bool ASREnabled
+        {
+            get
+            {
+                #if UNIX
+                return JuliusSession.Initialized && JuliusSession.IsListening;
+                #else
+                return false;
+                #endif
+            }
+        }
         #endregion
 
         #region Properties
         public static FNOptions Options { get; set; }
-
+        #if UNIX
         public JuliusSession JuliusSession { get; protected set; }
+        #endif
         #endregion
         
-        #region Methods
+#region Methods
         internal static void EnableBeeper()
         {
             if (Options.NoBeeper) return;
@@ -166,9 +186,9 @@ namespace Victor.CLI
             }
             SayErrorLine("Sorry, I don't understand what you mean. Enter {0} to see the things you can do right now or {1} to get more help.", "info", "help");
         }
-        #endregion
+#endregion
 
-        #region Event Handlers
+#region Event Handlers
         private void JuliusSession_Recognized(string sentence)
         {
             if (InputEnabled)
@@ -187,14 +207,14 @@ namespace Victor.CLI
             SayInfoLine("ASR enabled.");
         }
 
-        #endregion
+#endregion
 
-        #region Fields
+#region Fields
         static Thread _beeperThread;
 
         static ManualResetEvent _signalBeep;
 
         public static bool beeperOn;
-        #endregion
+#endregion
     }
 }

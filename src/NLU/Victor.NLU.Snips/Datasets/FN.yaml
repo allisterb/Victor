@@ -5,45 +5,35 @@ name: help
 slots:
   - name: package
     entity: package
+  - name: feature
+    entity: feature
+  - name: function
+    entity: function
 utterances:
   - help
   - help with this
-  - What is vish
-  - help vish
-  - help vish packages
-  - help administer
-  - help administer computers
-  - help manage computers
-  - help with [package](openshift) package
-  - help with vish packages
-  - help with [package](openshift)
-  - help with [package](openshift) package
-  - What are vish packages
-  - What is a vish package?
-  - Tell me about vish packages
-  - What's the [package](openshift) vish package
-  - How do I use the vish [package](openshift) package
-  - How do I use [package](openshift) openshift  
-  - What vish packages are there
-  - I want to manage [package](openshift)
+  - What is victor
+  - help victor packages
+  - help finance packages
+  - help manage [package](accounts)
+  - help with [package](banking) package
+  - help with victor packages
+  - help with [package](documents)
+  - help with [package](forms)
+  - Tell me about Victor packages
+  - What's the [package](forms) package
+  - How do I use the [package](documents) package
+  - How do I use [package](documents)  
+  - What victor packages are there
 
-# launch intent
----
-type: intent
-name: launch
-slots:
-  - name: package
-    entity: vish_package
-utterances:
-  - launch [package](openshift)
-  - launch [package](redhat openshift)
-  - start [package](openshift)
-  - goto [package](redhat openshift)
-
-# vish_package entity
+# package entity
 ---
 type: entity
-name: vish_package
+name: package
 automatically_extensible: no
+use_synonyms: yes
 values:
-- [openshift, redhat openshift]
+- [accounting, accounts, bookkeeping, financial accounting, personal accounting, ledger]
+- [banking, bank, banks, bank account]
+- [documents, document, pdf document]
+- [forms, form]

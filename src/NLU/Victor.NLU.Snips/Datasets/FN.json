@@ -1,0 +1,198 @@
+{
+  "entities": {
+    "package": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "accounts",
+            "bookkeeping",
+            "financial accounting",
+            "personal accounting",
+            "ledger"
+          ],
+          "value": "accounting"
+        },
+        {
+          "synonyms": [
+            "bank",
+            "banks",
+            "bank account"
+          ],
+          "value": "banking"
+        },
+        {
+          "synonyms": [
+            "document",
+            "pdf document"
+          ],
+          "value": "documents"
+        },
+        {
+          "synonyms": [
+            "form"
+          ],
+          "value": "forms"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "help"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is victor"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help victor packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help finance packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help manage "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "accounts"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "banking"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with victor packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "documents"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "forms"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Tell me about Victor packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What's the "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "forms"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use the "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "documents"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "documents"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What victor packages are there"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}
