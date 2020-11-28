@@ -237,11 +237,11 @@ namespace Victor
         static void WriteInfo(string template, params object[] args) => CO.WriteLineFormatted(template, Color.AliceBlue, Color.PaleGoldenrod, args);
 #endregion
 
-#region Properties
+        #region Properties
         static string [] Args { get; set; }
-#endregion
+        #endregion
 
-#region Event Handlers
+        #region Event Handlers
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         { 
             Error((Exception)e.ExceptionObject, "Unhandled error occurred during operation. Victor CLI will now shutdown.");
@@ -254,6 +254,6 @@ namespace Victor
             Cts.Cancel();
             Exit(ExitResult.SUCCESS);
         }
-#endregion
+        #endregion
     }
 }

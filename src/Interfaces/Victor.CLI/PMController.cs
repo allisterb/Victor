@@ -12,16 +12,16 @@ using Co = Colorful.Console;
 
 namespace Victor.CLI
 {
-    public class FNController : CUIController
+    public class PMController : CUIController
     {
         #region Constructors 
-        public FNController(FNOptions o) : base("Victor CLI", Ct)
+        public PMController(FNOptions o) : base("Victor CLI", Ct)
         {
             if (_beeperThread == null)
             {
                 EnableBeeper();
             }
-            SayInfoLine("Victor FN loading...");
+            SayInfoLine("Victor PM loading...");
             StartBeeper();
             Options = o;
             if(Options.Debug)
