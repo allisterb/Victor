@@ -2,12 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
-using Colorful;
 using CO = Colorful.Console;
 using Figgle;
 using CommandLine;
@@ -34,7 +29,7 @@ namespace Victor
         static void Main(string[] args)
         {
             Args = args;
-            if (Args.Contains("cx") || Args.Contains("sm") || Args.Contains("fn"))
+            if (Args.Contains("fn") || Args.Contains("pm") || Args.Contains("cr"))
             {
                 SetLogger(new SerilogLogger(console: false, debug: true));
             }
@@ -49,7 +44,7 @@ namespace Victor
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
-            if (!args.Contains("cx") && !args.Contains("sm") && !args.Contains("fn"))
+            if (!args.Contains("fn") && !args.Contains("pm") && !args.Contains("cr"))
             {
                 PrintLogo();
             }
@@ -57,7 +52,7 @@ namespace Victor
             {
                 Info("Debug mode set.");
             }
-            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, FNOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, FNOptions, PMOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -77,7 +72,7 @@ namespace Victor
                     }
                     else
                     {
-                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions));
+                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
@@ -85,13 +80,13 @@ namespace Victor
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
                     HelpRequestedError error = (HelpRequestedError)errors.First(e => e.Tag == ErrorType.HelpRequestedError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -132,6 +127,12 @@ namespace Victor
             {
                 FNController.Options = o;
                 new FNController(o).Start();
+                Exit(ExitResult.SUCCESS);
+            })
+            .WithParsed<PMOptions>(o =>
+            {
+                PMController.Options = o;
+                new PMController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
 
@@ -235,7 +236,7 @@ namespace Victor
         }
 
         static void WriteInfo(string template, params object[] args) => CO.WriteLineFormatted(template, Color.AliceBlue, Color.PaleGoldenrod, args);
-#endregion
+        #endregion
 
         #region Properties
         static string [] Args { get; set; }

@@ -16,7 +16,8 @@ namespace Victor
     [Verb("asr", HelpText = "Test the speech recognition feature of Victor with the default mic as the input source.")]
     class SpeechRecognitionOptions : Options
     {
-
+        [Option('t', "text", Required = true, HelpText = "The text to understand.")]
+        public string Text { get; set; }
     }
 
     [Verb("nlu", HelpText = "Test the NLU feature of Victor.")]
@@ -38,6 +39,13 @@ namespace Victor
 
     [Verb("fn", HelpText = "Launch the Victor FN auditory CUI.")]
     public class FNOptions : Options
+    {
+        [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
+        public bool NoBeeper { get; set; }
+    }
+
+    [Verb("pm", HelpText = "Launch the Victor PM auditory CUI.")]
+    public class PMOptions : Options
     {
         [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
         public bool NoBeeper { get; set; }

@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
     <Authors>Allister Beharry</Authors>
     <Product>Victor</Product>
     <Company />
@@ -32,6 +32,10 @@
   <ItemGroup Condition="'$(OS)' == 'Unix'">
     <ProjectReference Include="..\..\ASR\Victor.ASR.Julius\Victor.ASR.Julius.csproj" />
     <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT' AND '$(TargetFramework)'=='net461'">
+    <ProjectReference Include="..\..\ASR\Victor.ASR.MicrosoftSpeech\Victor.ASR.MicrosoftSpeech.csproj" />
   </ItemGroup>
 
   <ItemGroup>

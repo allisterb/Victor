@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 using Xunit;
@@ -26,7 +25,6 @@ namespace Victor.Tests
         [Fact]
         public void CanRecognize()
         {
-            CultureInfo ci = new CultureInfo("en-us");
             var sre = new SpeechRecognitionEngine();
             sre.SetInputToDefaultAudioDevice();
             sre.SpeechRecognized += Sre_SpeechRecognized; 

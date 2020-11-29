@@ -45,8 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="PM\HomeGrammar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj">
+      <Project>{7abdbccf-e8a5-4601-9e57-24c3974ef4cc}</Project>
+      <Name>Victor.Base.CUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj">
+      <Project>{f51e4c71-0ec7-43bf-b095-09bfe6271f52}</Project>
+      <Name>Victor.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

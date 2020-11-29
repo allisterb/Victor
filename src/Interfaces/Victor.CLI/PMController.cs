@@ -15,7 +15,7 @@ namespace Victor.CLI
     public class PMController : CUIController
     {
         #region Constructors 
-        public PMController(FNOptions o) : base("Victor CLI", Ct)
+        public PMController(PMOptions o) : base("Victor CLI", Ct)
         {
             if (_beeperThread == null)
             {
@@ -139,7 +139,7 @@ namespace Victor.CLI
         #endregion
 
         #region Properties
-        public static FNOptions Options { get; set; }
+        public static PMOptions Options { get; set; }
         #if UNIX
         public JuliusSession JuliusSession { get; protected set; }
         #endif

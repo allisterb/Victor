@@ -1,0 +1,12 @@
+{
+  "config": {
+    "ignore_stop_words": true,
+    "unit_name": "lookup_intent_parser"
+  },
+  "entity_scopes": [],
+  "intents_names": [],
+  "language_code": "en",
+  "map": {},
+  "slots_names": [],
+  "stop_words_whitelist": {}
+}
