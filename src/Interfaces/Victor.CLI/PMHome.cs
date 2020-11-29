@@ -31,22 +31,33 @@ namespace Victor.CLI
 
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
-            if (input.ToLower() == "vish")
+            switch(input.ToLower())
             {
-                GetPackagesMenuItem(1);
-                return true;
+                case "help":
+                    Help(null);
+                    return true;
+                case "menu":
+                    Menu(null);
+                    return true;
+                case "exit":
+                    Exit(null);
+                    return true;
+                case "hello":
+                    Hello(null);
+                    return true;
+                case "enable":
+                    Enable(null);
+                    return true;
+                case "disable":
+                    Disable(null);
+                    return true;
+                case "back":
+                    Back(null);
+                    return true;
+                case "page":
+                    Controller.ActivePackage.Page(null);
+                    return true;
             }
-            else if (input.ToLower() == "services")
-            {
-                GetPackagesMenuItem(2);
-                return true;
-            }
-            else if (input.ToLower() == "bots")
-            {
-                GetPackagesMenuItem(3);
-                return true;
-            }
-            
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {

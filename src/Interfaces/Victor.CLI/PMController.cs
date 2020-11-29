@@ -29,7 +29,7 @@ namespace Victor.CLI
                 DebugEnabled = true;
                 SayInfoLine("Debug enabled.");
             }
-            Packages.Add(new FNHome(this));
+            Packages.Add(new PMHome(this));
             HomePackage = Packages[0];
             ActivePackage = Packages[0];
             PreviousPackage = Packages[0];
