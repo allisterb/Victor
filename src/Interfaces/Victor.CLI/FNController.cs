@@ -136,6 +136,11 @@ namespace Victor.CLI
                 #endif
             }
         }
+
+        public override void Exit(ExitResult code)
+        {
+            Program.Exit(code);
+        }
         #endregion
 
         #region Properties

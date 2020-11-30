@@ -17,6 +17,17 @@ namespace Victor
 {
     public abstract class Api
     {
+        #region Enums
+        public enum ExitResult
+        {
+            SUCCESS = 0,
+            UNHANDLED_EXCEPTION = 1,
+            INVALID_OPTIONS = 2,
+            UNKNOWN_ERROR = 3,
+            NOT_FOUND_OR_SERVER_ERROR = 4
+        }
+        #endregion
+
         #region Constructors
         static Api()
         {
@@ -38,7 +49,8 @@ namespace Victor
             {
                 Configuration = new ConfigurationBuilder()
                 .AddJsonFile("config.json", optional: true)
-                .AddUserSecrets("d24251d3-99ae-4afc-a9d8-bf9eafcc0ca0")
+                .AddEnvironmentVariables()
+                //.AddUserSecrets("d24251d3-99ae-4afc-a9d8-bf9eafcc0ca0")
                 .Build();
             }
 

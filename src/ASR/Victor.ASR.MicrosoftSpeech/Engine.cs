@@ -14,12 +14,23 @@ namespace Victor
         #region Constructors 
         public MSSpeech() :base()
         {
-
+            //this.SRE.
         }
         #endregion
         
-        #region Properties                                                      
+        #region fields.                                                      
         public SpeechRecognitionEngine SRE = new SpeechRecognitionEngine();
+
         #endregion
+
+        public override bool AddGrammar(Dictionary<string, object> entries)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool RemoveGrammar(Dictionary<string, object> entries)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

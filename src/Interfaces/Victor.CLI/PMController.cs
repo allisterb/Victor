@@ -38,6 +38,9 @@ namespace Victor.CLI
             #endif
             Initialized = Packages[0].Initialized;
             StopBeeper();
+            var boards = Victor.CUI.PM.MdcApi.GetBoards().Result;
+            
+            //Assert.NotNull(boards.Data);
         }
         #endregion
 
@@ -125,6 +128,7 @@ namespace Victor.CLI
             #endif
         }
 
+        public override void Exit(ExitResult code) => Program.Exit(code);
         public override bool ASREnabled
         {
             get

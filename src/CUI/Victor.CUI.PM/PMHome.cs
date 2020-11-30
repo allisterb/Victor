@@ -17,7 +17,7 @@ namespace Victor.CLI
             if (!Initialized)
             {
                 SayErrorLine("NLU engine for package {0} did not initialize. Exiting.", this.Name);
-                Program.Exit(ExitResult.UNKNOWN_ERROR);
+                Controller.Exit(ExitResult.UNKNOWN_ERROR);
             }
         }
         #endregion
@@ -257,7 +257,7 @@ namespace Victor.CLI
             {
                 Controller.StopASR();
             }
-            Program.Exit(ExitResult.SUCCESS);
+            Controller.Exit(ExitResult.SUCCESS);
         }
 
         public void Hello(Intent intent)

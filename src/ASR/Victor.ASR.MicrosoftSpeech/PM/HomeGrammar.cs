@@ -13,6 +13,11 @@ namespace Victor.ASR.MicrosoftSpeech.PM
     {
         public HomeGrammar()
         {
+            Choices home = new Choices();
+            home.Add("menu", "help");
+            GrammarBuilder gb = new GrammarBuilder();
+            //gb.ap
+            //Grammar g = new Grammar()
             /*
             Choices ch_StartStopCommands = new Choices();
             ch_StartStopCommands.Add("speech on");

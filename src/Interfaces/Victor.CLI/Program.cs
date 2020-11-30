@@ -12,17 +12,6 @@ using Victor.CLI;
 
 namespace Victor
 {
-    #region Enums
-    public enum ExitResult
-    {
-        SUCCESS = 0,
-        UNHANDLED_EXCEPTION = 1,
-        INVALID_OPTIONS = 2,
-        UNKNOWN_ERROR = 3,
-        NOT_FOUND_OR_SERVER_ERROR = 4
-    }
-    #endregion
-
     class Program : Api
     {
         #region Entry-point
@@ -43,7 +32,7 @@ namespace Victor
             }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            System.Console.CancelKeyPress += Console_CancelKeyPress;
+            Console.CancelKeyPress += Console_CancelKeyPress;
             if (!args.Contains("fn") && !args.Contains("pm") && !args.Contains("cr"))
             {
                 PrintLogo();

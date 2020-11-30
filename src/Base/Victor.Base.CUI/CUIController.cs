@@ -70,7 +70,9 @@ namespace Victor
         public abstract void EnableASR();
 
         public abstract void StopASR();
-        
+
+        public abstract void Exit(ExitResult code);
+
         public abstract bool ASREnabled { get; }
         #endregion
 

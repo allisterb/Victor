@@ -14,7 +14,8 @@ namespace Victor
         #endregion
 
         #region Abstract methods
-        
+        public abstract bool AddGrammar(Dictionary<string, object> entries);
+        public abstract bool RemoveGrammar(Dictionary<string, object> entries);
         #endregion
     }
 }
