@@ -8,9 +8,9 @@ using Figgle;
 using CommandLine;
 using CommandLine.Text;
 
-using Victor.CLI;
+using Victor.CUI;
 
-namespace Victor
+namespace Victor.CLI
 {
     class Program : Api
     {

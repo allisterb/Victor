@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Victor.CLI
+namespace Victor.CUI
 {
     public class PMHome : CUIPackage
     {
         #region Constructors
-        public PMHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
+        public PMHome(CUIController controller) : base("ProjectManagement", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
         {
-            MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
-            MenuIndexes[Prefixed("PACKAGES")] = 3;
+            MenuHandlers[Prefixed("FEATURES")] = GetFeaturesMenuItem;
+            MenuIndexes[Prefixed("FEATURES")] = 3;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -23,9 +23,9 @@ namespace Victor.CLI
         #endregion
         
         #region Overriden members
-        public override string[] VariableNames { get; } = { "NAME" };
+        public override string[] VariableNames { get; } = { "BOARD" };
 
-        public override string[] MenuNames { get; } = { "PACKAGES" };
+        public override string[] MenuNames { get; } = { "FEATURES" };
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
@@ -106,13 +106,11 @@ namespace Victor.CLI
         #region Intents
         public override void Menu(Intent intent)
         {
-            SetMenuContext("PACKAGES");
-            SayInfoLine("Select a package to use.");
-            SayInfoLine("1. {0}", "Medications");
-            SayInfoLine("2. {0}", "Symptoms");
-            SayInfoLine("3. {0}", "Activities");
-            SayInfoLine("4. {0}", "Evaluations");
-            SayInfoLine("5. {0}", "Knowledge");
+            SetMenuContext("FEATURES");
+            SayInfoLine("Select a feature to use.");
+            SayInfoLine("1. {0}", "Boards");
+            SayInfoLine("2. {0}", "Tasks");
+            SayInfoLine("3. {0}", "Users");
         }
 
         public override void Help(Intent intent)
@@ -372,23 +370,13 @@ namespace Victor.CLI
         }
         #endregion
 
-        protected void GetPackagesMenuItem(int i)
+        protected void GetFeaturesMenuItem(int i)
         {
+            
             switch(i - 1)
             {
                 case 0:
-                    if (!SubPackages.Any(p => p.Name == "Vish"))
-                    {
-                        SayInfoLine("Loading Vish package...");
-                        Controller.StartBeeper();
-                        //SubPackages.Add(new Vish(this.Controller));
-                        Controller.StopBeeper();
-                    }
-                    Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
-                    DispatchIntent(null, Controller.ActivePackage.Menu);
-                    break;
-                case 2:
-                    LoadBots();
+                    LoadBoards();
                     break;
 
                 default:
@@ -396,35 +384,14 @@ namespace Victor.CLI
             }
         }
 
-        protected void LoadBots()
+        protected void LoadBoards()
         {
-            if (!SubPackages.Any(p => p.Name == "Bots"))
-            {
-                SayInfoLine("Loading Bots...");
-                Controller.StartBeeper();
-                //var bots = new Bots(this.Controller);
-                //Controller.StopBeeper();
-                //if (bots.Initialized)
-               // {
-                    //SubPackages.Add(new Bots(this.Controller));
-               // }
-                //else
-                //{
-                //    SayErrorLine("The Bots package failed to initialize.");
-                    return;
-                //}
-                
-            }
-            Controller.ActivePackage = SubPackages.Single(p => p.Name == "Bots"); 
+            
 
-            if (CurrentContext.StartsWith("MENU_"))
-            {
-                DispatchIntent(null, Controller.ActivePackage.Menu);
-            }
-            else
-            {
-                DispatchIntent(null, Controller.ActivePackage.Menu);
-            }
+        }
+
+        protected void LoadUsers()
+        {
 
         }
         #endregion

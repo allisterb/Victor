@@ -14,17 +14,23 @@ utterances:
   - help with this
   - What is victor
   - help victor packages
-  - help project management packages
-  - help manage [package](tasks)
-  - help with [package](people) package
   - help with victor packages
-  - help with [package](boards)
-  - help with [package](forms)
-  - Tell me about Victor packages
-  - What's the [package](forms) package
-  - How do I use the [package](documents) package
-  - How do I use [package](documents)  
-  - What victor packages are there
+  - help [package](project management) package
+  - help with [package](project management)
+  - how do I manage [package](projects)
+  - help with [package](pm)
+  - help manage [package](project)
+
+  - help manage [feature](tasks)
+  - help [feature](task) management
+  - help with [feature](people)
+  - how do I manage [feature](people)
+  - how do you manage [feature](users)
+  - how to manage [feature](people)
+
+  - help with [feature](boards)
+  - how to use [feature](boards)
+
 
 # package entity
 ---
@@ -33,10 +39,15 @@ name: package
 automatically_extensible: no
 use_synonyms: yes
 values:
-- [boards]
-- [tasks]
-- [people]
-- [accounting, accounts, bookkeeping, financial accounting, personal accounting, ledger]
-- [banking, bank, banks, bank account]
-- [documents, document, pdf document]
-- [forms, form]
+- [project management, pm, project, projects]
+
+# feature entity
+---
+type: entity
+name: feature
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [users, user, people, workers]
+- [tasks, task]
+- [boards, board]

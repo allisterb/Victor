@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json;
 using GraphQL.Client;
-
 
 using Victor.CUI.PM.Models;
 
@@ -15,9 +9,9 @@ namespace Victor.CUI.PM
 {
     public class MdcApi : Api
     {
-        public static async Task<BoardsQueryResult> GetBoards()
+        public static async Task<BoardsQueryResultData> GetBoards()
         {
-            var graphQLClient = new GraphQLClient("https://api.monday.com/v2"); // new NewtonsoftJsonSerializer());
+            var graphQLClient = new GraphQLClient("https://api.monday.com/v2");
             graphQLClient.DefaultRequestHeaders.Add("Authorization", Config("MDC_API_TOKEN"));
             var boardsQueryRequest = new GraphQL.Common.Request.GraphQLRequest
             {
@@ -33,16 +27,21 @@ namespace Victor.CUI.PM
                     groups {
     	                title
                       id
-                    }
-    
-                    
+                    }  
                   }
                 }"
             };
+            try
+            {
+                var graphQLResponse = await graphQLClient.PostAsync(boardsQueryRequest);
+                return graphQLResponse.Data.ToObject<BoardsQueryResultData>();
+            }
+            catch(Exception e)
+            {
+                Error(e, "Error retrieving boards from monday.com API.");
+                return null;
+            }
             
-            var graphQLResponse = await graphQLClient.PostAsync(boardsQueryRequest);
-            var x = graphQLResponse.Data.ToObject<BoardsQueryResultData>();
-            return null;
         }
     }
 }

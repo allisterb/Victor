@@ -10,6 +10,8 @@ using Sc = System.Console;
 using Colorful;
 using Co = Colorful.Console;
 
+using Victor.CUI;
+
 namespace Victor.CLI
 {
     public class PMController : CUIController
@@ -128,7 +130,7 @@ namespace Victor.CLI
             #endif
         }
 
-        public override void Exit(ExitResult code) => Program.Exit(code);
+        public override void Exit(ExitResult code) => Victor.CLI.Program.Exit(code);
         public override bool ASREnabled
         {
             get
