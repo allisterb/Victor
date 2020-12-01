@@ -385,7 +385,6 @@ namespace Victor
         public virtual void Welcome(Intent intent = null)
         {
             Controller.SetContext("WELCOME_" + this.Name.ToUpper());
-            Help(null);
         }
 
         public abstract void Help(Intent intent = null);

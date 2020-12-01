@@ -5,8 +5,10 @@ using System.IO;
 using System.Threading;
 using System.Text;
 
-using Sc = System.Console;
+using Microsoft.Speech.Recognition;
+using Microsoft.Speech.Synthesis;
 
+using Sc = System.Console;
 using Colorful;
 using Co = Colorful.Console;
 
@@ -35,14 +37,13 @@ namespace Victor.CLI
             HomePackage = Packages[0];
             ActivePackage = Packages[0];
             PreviousPackage = Packages[0];
-            #if UNIX
+#if UNIX
             JuliusSession = new JuliusSession();
-            #endif
+#endif
+
             Initialized = Packages[0].Initialized;
             StopBeeper();
             var boards = Victor.CUI.PM.MdcApi.GetBoards().Result;
-            
-            //Assert.NotNull(boards.Data);
         }
         #endregion
 
@@ -100,7 +101,7 @@ namespace Victor.CLI
 
         public override void EnableASR()
         {
-            #if UNIX
+#if UNIX
             if (JuliusSession == null || !JuliusSession.Initialized)
             {
                 SayInfoLine("Sorry ASR is not available. Check that your Victor binary release has the required files or check the Victor log file for errors.");
@@ -120,14 +121,29 @@ namespace Victor.CLI
                 JuliusSession.Start();
                 SayInfoLine("Waiting for the ASR process to become ready...");
             }
-            #endif
+#elif WINDOWS && NET461
+
+            if (sre.Grammars.Count == 0)
+            {
+                sre.SetInputToDefaultAudioDevice();
+                sre.LoadGrammarAsync(rootGrammar);
+                sre.LoadGrammarCompleted += Sre_LoadGrammarCompleted;
+                sre.SpeechRecognized += Sre_SpeechRecognized;
+                sre.SpeechDetected += Sre_SpeechDetected;
+                sre.SpeechRecognitionRejected += Sre_SpeechRecognitionRejected;
+            }
+            sre.RecognizeAsync(RecognizeMode.Multiple);
+            
+#endif
         }
 
         public override void StopASR()
         {
-            #if UNIX
+#if UNIX
             JuliusSession.Stop();
-            #endif
+#elif WINDOWS && NET461
+            sre.RecognizeAsyncStop();
+#endif
         }
 
         public override void Exit(ExitResult code) => Victor.CLI.Program.Exit(code);
@@ -161,7 +177,7 @@ namespace Victor.CLI
                 while (true)
                 {
                     _signalBeep.WaitOne();
-                    System.Console.Beep();
+                    Sc.Beep();
                     Thread.Sleep(800);
                 }
             }, 1);
@@ -195,6 +211,7 @@ namespace Victor.CLI
         #endregion
 
         #region Event Handlers
+#if UNIX
         private void JuliusSession_Recognized(string sentence)
         {
             if (InputEnabled)
@@ -212,7 +229,38 @@ namespace Victor.CLI
             }
             SayInfoLine("ASR enabled.");
         }
+#endif
 
+#if WINDOWS && NET461
+        private void Sre_LoadGrammarCompleted(object sender, LoadGrammarCompletedEventArgs e)
+        {
+            if (beeperOn)
+            {
+                StopBeeper();
+            }
+            SayInfoLine("ASR enabled.");
+        }
+
+        private void Sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            
+        }
+
+        private void Sre_SpeechDetected(object sender, SpeechDetectedEventArgs e)
+        {
+            
+        }
+
+        private void Sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            if (InputEnabled)
+            {
+                ReadLine.Send(e.Result.Text);
+                ReadLine.Send(ConsoleKey.Enter);
+            };
+        }
+#endif
+        
         #endregion
 
         #region Fields
@@ -221,6 +269,11 @@ namespace Victor.CLI
         static ManualResetEvent _signalBeep;
 
         public static bool beeperOn;
-        #endregion
+
+#if WINDOWS && NET461
+        SpeechRecognitionEngine sre = new SpeechRecognitionEngine();
+        Grammar rootGrammar = new Grammar(new GrammarBuilder(new Choices("menu", "info", "help")));
+#endif
+#endregion
     }
 }
