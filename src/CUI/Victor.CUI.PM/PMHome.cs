@@ -62,9 +62,8 @@ namespace Victor.CUI
             if (Controller.DebugEnabled)
             {
                 DebugIntent(intent);
-            }
-                      
-            if (Empty(intent) || intent.Top.Score < 0.6)
+            }                      
+            if (Empty(intent) || intent.Top.Score < 0.7)
             {
                 return false;
             }
@@ -120,16 +119,18 @@ namespace Victor.CUI
             {
                 switch (context)
                 {
-                    case "WELCOME_HOME":
-                        SayInfoLine("Welcome to Victor SM.");
+                    case "WELCOME_PROJECTMANAGEMENT":
+                        SayInfoLine("Welcome to Victor PM.");
+                        SayInfoLine("Victor PM is a project management program designed for people with vision or other disabilities.");
+                        SayInfoLine("Victor PM is a project management program designed for people with vision or other disabilities.");
                         SayInfoLine("Victor SM tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
-                        SayInfoLine("Say {0} to show the packages menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
+                        SayInfoLine("Say {0} to show the main menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
                         break;
                     case "MENU_HOME_PACKAGES":
                         SayInfoLine("Enter the number associated with the Victor SM package category you want to select.");
                         break;
                     default:
-                        SayErrorLine("Unknown HOME context: {0}.", context);
+                        SayErrorLine("Unknown HELP context: {0}.", context);
                         SayInfoLine("Say {0} to enable debug mode.", "enable debug");
                         break;
                 }

@@ -7,8 +7,6 @@ slots:
     entity: package
   - name: feature
     entity: feature
-  - name: function
-    entity: function
 utterances:
   - help
   - help with this

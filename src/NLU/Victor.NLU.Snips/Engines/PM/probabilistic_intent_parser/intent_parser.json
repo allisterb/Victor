@@ -184,5 +184,10 @@
     },
     "unit_name": "probabilistic_intent_parser"
   },
-  "slot_fillers": []
+  "slot_fillers": [
+    {
+      "intent": "help",
+      "slot_filler_name": "slot_filler_0"
+    }
+  ]
 }

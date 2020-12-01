@@ -1,0 +1,250 @@
+{
+  "entities": {
+    "feature": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "user",
+            "people",
+            "workers"
+          ],
+          "value": "users"
+        },
+        {
+          "synonyms": [
+            "task"
+          ],
+          "value": "tasks"
+        },
+        {
+          "synonyms": [
+            "board"
+          ],
+          "value": "boards"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "package": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "pm",
+            "project",
+            "projects"
+          ],
+          "value": "project management"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    }
+  },
+  "intents": {
+    "help": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "help"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with this"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is victor"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help victor packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with victor packages"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "project management"
+            },
+            {
+              "text": " package"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "project management"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "how do I manage "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "projects"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "pm"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help manage "
+            },
+            {
+              "entity": "package",
+              "slot_name": "package",
+              "text": "project"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help manage "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "tasks"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "task"
+            },
+            {
+              "text": " management"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "people"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "how do I manage "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "people"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "how do you manage "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "users"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "how to manage "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "people"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "help with "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "boards"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "how to use "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "boards"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "language": "en"
+}
