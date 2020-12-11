@@ -15,6 +15,9 @@ engine = SnipsNLUEngine(config=CONFIG_EN)
 
 def train_model(_input, name, sub=""):
     input = os.path.join("..", "Victor.NLU.Snips", "Datasets", sub, _input)
+    if not os.path.exists(input) or not os.path.isfile(input):
+        raise f'The file {input}" does not exist'
+
     output = input.replace(".yaml", ".json")
     with TextIOWrapper(io.FileIO(output, "wb"), sys.stdout.encoding) as buf, redirect_stdout(buf):
         generate_dataset.generate_dataset("en", input)

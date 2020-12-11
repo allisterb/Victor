@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Victor.CUI
+using Victor.CUI.PM.Models;
+
+namespace Victor.CUI.PM
 {
     public class PMHome : CUIPackage
     {
@@ -13,6 +15,8 @@ namespace Victor.CUI
         {
             MenuHandlers[Prefixed("FEATURES")] = GetFeaturesMenuItem;
             MenuIndexes[Prefixed("FEATURES")] = 3;
+            ItemsDescriptionHandlers[Prefixed("BOARDS")] = DescribeBoards;
+            ItemsPageSize["BOARDS"] = 8;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -41,9 +45,7 @@ namespace Victor.CUI
             }
             else
             {
-                var feature = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "feature")?.Value : null;
-                var package = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "package")?.Value : null;
-                var function = intent.Entities.Length > 0 ? intent.Entities.FirstOrDefault(e => e.SlotName == "function")?.Value : null;
+                var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
                 var context = Context.Count > 0 ? Context.Peek().Label : "";
 
                 if (!string.IsNullOrEmpty(feature))
@@ -209,6 +211,17 @@ namespace Victor.CUI
                 case "page":
                     Controller.ActivePackage.Page(null);
                     return true;
+                case "list boards":
+                    var boards = PM.MdcApi.GetBoards();
+                    for(int i = 0; i < boards.Result.Boards.Count; i++)
+                    {
+                        SayInfoLine("{0}.{1}", i, boards.Result.Boards[i].Name);
+                    }
+                    return true;
+                    //foreach(var b in broads)
+                    //{
+                    //    SayInfoLine("")
+                    //}
             }
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
@@ -287,6 +300,44 @@ namespace Victor.CUI
                 SayInfoLine("Hello, welcome to the Victor CX auditory user interface.");
             }
             SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
+        }
+
+        public void List(Intent intent)
+        {
+            if (ObjectEmpty(intent))
+            {
+                switch (GetItemsContext())
+                {
+                    case "BOARDS":
+                        DispatchIntent(intent, Boards);
+                        break;
+                    default:
+                        SayErrorLine("Sorry I don't know how to list that.");
+                        DebugIntent(intent);
+                        break;
+                }
+            }
+            else
+            {
+                var (task, command, objects) = GetIntentTaskCommandObjects(intent);
+                if (objects.Count == 0)
+                {
+                    SayInfoLine("Sorry I don't know how to list what you are saying: {0}. Say something like {1} or say {2} to see the OpenShift menu.", intent.Top.Label, "list pods", "menu");
+                }
+                else
+                {
+                    var mdcobject = objects.First();
+                    switch (mdcobject)
+                    {
+                        case "pod":
+                            DispatchIntent(intent, Boards);
+                            break;
+                        default:
+                            SayInfoLine("Sorry I don't know how to list what you are saying. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
+                            break;
+                    }
+                }
+            }
         }
 
         protected void Enable(Intent intent)
@@ -380,8 +431,27 @@ namespace Victor.CUI
                 Controller.Buzz();
             }
         }
+
+        public void Boards(Intent intent)
+        {
+            ThrowIfNotInitialized();
+            var boards = GetItems<List<Board>>("BOARDS"); 
+            
+            if (boards == null)
+            {
+                SetItems("BOARDS", boards = FetchBoards());
+                ItemsCurrentPage[Prefixed("BOARDS")] = 1;
+            }
+            SetItemsContext("BOARDS");
+            if (!Empty(intent) && intent.Top.Label == "list")
+            {
+                DescribeItems(GetItemsCurrentPage("BOARDS"));
+            }
+
+        }
         #endregion
 
+        #region Items
         protected void GetFeaturesMenuItem(int i)
         {
             
@@ -406,6 +476,57 @@ namespace Victor.CUI
         {
 
         }
+
+        protected void DescribeBoards(int page, CUIPackage package)
+        {
+            var pageSize = ItemsPageSize[Prefixed("BOARDS")];
+            var boards = GetItems<List<Board>>("BOARDS");
+            var count = boards.Count;
+            var pages = count / pageSize + 1;
+            if (page > pages)
+            {
+                SayErrorLine("There are only {0} pages available.", pages);
+                return;
+            }
+            else
+            {
+                /*
+                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+                int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
+                if (end > count) end = count;
+                if (Controller.DebugEnabled)
+                {
+                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", projects.Items.Count, page, start, end);
+                }
+                SayInfoLine("Projects page {0} of {1}.", page, pages);
+                for (int i = start; i < end; i++)
+                {
+                    var project = projects.Items[i];
+                    oc.SayInfoLine("{0}. Name: {1}, Status: {2}, Requester: {3}, Labels: {4}.", i + 1, project.Metadata.Name, project.Status.Phase,
+                        project.Metadata.Annotations.First(a => a.Key.ToLower().Contains("requester")).Value,
+                        project.Metadata.Labels?.Select(kv => kv.Key + "=" + kv.Value).Aggregate((s1, s2) => s1 + " " + s2) ?? "{}");
+                }
+                oc.ItemsCurrentPage["OPENSHIFT_PROJECTS"] = page;
+                */
+            }
+        }
+
+        #endregion
+
+        #region Monday.com API
+        internal List<Board> FetchBoards()
+        {
+            ThrowIfNotInitialized();
+            SayInfoLine("Fetching boards for your account...");
+            Controller.StartBeeper();
+            var boards = MdcApi.GetBoards().Result.Boards;
+            SetItems("PROJECTS", boards);
+            Controller.StopBeeper();
+            SayInfoLine("Fetched {0} projects.", boards.Count());
+            return boards;
+        }
+        #endregion
+
         #endregion
     }
 }

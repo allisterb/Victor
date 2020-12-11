@@ -33,6 +33,7 @@ namespace Victor.CLI
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Console.CancelKeyPress += Console_CancelKeyPress;
+            
             if (!args.Contains("fn") && !args.Contains("pm") && !args.Contains("cr"))
             {
                 PrintLogo();
@@ -41,6 +42,7 @@ namespace Victor.CLI
             {
                 Info("Debug mode set.");
             }
+            
             ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, FNOptions, PMOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {

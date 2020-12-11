@@ -17,7 +17,7 @@ namespace Victor.Tests
         public void CanGetBoards()
         {
             var boards = MdcApi.GetBoards().Result;
-            Assert.NotNull(boards.Data);
+            Assert.NotNull(boards.);
         }
     }
 }

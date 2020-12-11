@@ -61,7 +61,6 @@ namespace Victor
 
         public Dictionary<string, int> ItemsCurrentPage { get; } = new Dictionary<string, int>();
 
-        
         public Dictionary<string, int> ItemsSelection = new Dictionary<string, int>();
 
         public Dictionary<string, Action<int, CUIPackage>> ItemsDescriptionHandlers { get; } = new Dictionary<string, Action<int, CUIPackage>>();
@@ -155,6 +154,8 @@ namespace Victor
         #region Items
         public T GetItems<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default(T);
 
+        public T GetOrFetchItems<T>(string name, Func<T> fetch) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : fetch();
+
         public T SetItems<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
 
         public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
@@ -224,9 +225,9 @@ namespace Victor
             {
                 throw new InvalidOperationException("The intent has no object.");
             }
-            var feature = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("feature"))?.Value.ToAlphaNumeric();
-            var package = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("package"))?.Value.ToAlphaNumeric();
-            var function = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("function"))?.Value.ToAlphaNumeric();
+            var feature = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("feature"))?.Value;
+            var package = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("package"))?.Value;
+            var function = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("function"))?.Value;
             return new Tuple<string, string, string>(feature, package, function);
 
         }

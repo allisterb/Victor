@@ -12,7 +12,7 @@ using Sc = System.Console;
 using Colorful;
 using Co = Colorful.Console;
 
-using Victor.CUI;
+using Victor.CUI.PM;
 
 namespace Victor.CLI
 {
@@ -131,8 +131,18 @@ namespace Victor.CLI
                 sre.SpeechRecognized += Sre_SpeechRecognized;
                 sre.SpeechDetected += Sre_SpeechDetected;
                 sre.SpeechRecognitionRejected += Sre_SpeechRecognitionRejected;
+                sre.RecognizeAsync(RecognizeMode.Multiple);
             }
-            sre.RecognizeAsync(RecognizeMode.Multiple);
+            else
+            {
+                sre.RecognizeAsync(RecognizeMode.Multiple);
+                if (beeperOn)
+                {
+                    StopBeeper();
+                }
+                SayInfoLine("ASR enabled.");
+            }
+
             
 #endif
         }
@@ -143,6 +153,7 @@ namespace Victor.CLI
             JuliusSession.Stop();
 #elif WINDOWS && NET461
             sre.RecognizeAsyncStop();
+            SayInfoLine("ASR disabled.");
 #endif
         }
 
@@ -272,7 +283,9 @@ namespace Victor.CLI
 
 #if WINDOWS && NET461
         SpeechRecognitionEngine sre = new SpeechRecognitionEngine();
-        Grammar rootGrammar = new Grammar(new GrammarBuilder(new Choices("menu", "info", "help")));
+        Grammar rootGrammar = new Grammar(new GrammarBuilder(new Choices(
+            "menu", "info", "help", "exit", "list boards", "list users"
+        )));
 #endif
 #endregion
     }

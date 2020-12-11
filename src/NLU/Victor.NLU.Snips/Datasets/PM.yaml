@@ -10,6 +10,7 @@ slots:
 utterances:
   - help
   - help with this
+  - what is this
   - What is victor
   - help victor packages
   - help with victor packages
@@ -28,7 +29,6 @@ utterances:
 
   - help with [feature](boards)
   - how to use [feature](boards)
-
 
 # package entity
 ---
