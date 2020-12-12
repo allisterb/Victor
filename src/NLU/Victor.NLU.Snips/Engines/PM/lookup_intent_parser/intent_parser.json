@@ -8,17 +8,29 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "package",
-          "feature"
+          "feature",
+          "package"
         ]
       },
       "intent_group": [
         "help"
       ]
+    },
+    {
+      "entity_scope": {
+        "builtin": [],
+        "custom": [
+          "item"
+        ]
+      },
+      "intent_group": [
+        "list"
+      ]
     }
   ],
   "intents_names": [
-    "help"
+    "help",
+    "list"
   ],
   "language_code": "en",
   "map": {
@@ -66,6 +78,12 @@
         0
       ]
     ],
+    "648462798": [
+      1,
+      [
+        2
+      ]
+    ],
     "796873821": [
       0,
       []
@@ -106,6 +124,10 @@
       0,
       []
     ],
+    "1769242945": [
+      1,
+      []
+    ],
     "1921100604": [
       0,
       [
@@ -115,7 +137,8 @@
   },
   "slots_names": [
     "package",
-    "feature"
+    "feature",
+    "item"
   ],
   "stop_words_whitelist": {}
 }

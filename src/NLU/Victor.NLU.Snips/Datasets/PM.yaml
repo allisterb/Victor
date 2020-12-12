@@ -30,6 +30,17 @@ utterances:
   - help with [feature](boards)
   - how to use [feature](boards)
 
+# list intent
+---
+type: intent
+name: list
+slots:
+  - name: item
+    entity: item
+utterances:
+  - list
+  - list [item](boards)
+ 
 # package entity
 ---
 type: entity
@@ -49,3 +60,12 @@ values:
 - [users, user, people, workers]
 - [tasks, task]
 - [boards, board]
+
+# item entity
+---
+type: entity
+name: item
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [boards, project boards]

@@ -26,9 +26,9 @@ namespace Victor
             Intents.Add("page", Page);
             MenuHandlers["OPENSHIFT_OBJECTS"] = GetOpenShiftMenuSelection;
             MenuIndexes["OPENSHIFT_OBJECTS"] = 5;
-            ItemsDescriptionHandlers["OPENSHIFT_PODS"] = DescribePods;
-            ItemsDescriptionHandlers["OPENSHIFT_PROJECTS"] = DescribeProjects;
-            ItemsDescriptionHandlers["OPENSHIFT_BUILDS"] = DescribeBuilds;
+            //ItemDescriptionHandlers["OPENSHIFT_PODS"] = DescribePods;
+            //ItemsDescriptionHandlers["OPENSHIFT_PROJECTS"] = DescribeProjects;
+            //ItemsDescriptionHandlers["OPENSHIFT_BUILDS"] = DescribeBuilds;
             ApiUrl = Config("CUI_VISH_OPENSHIFT_URL");
             ApiToken = Config("CUI_VISH_OPENSHIFT_TOKEN");
             if (!string.IsNullOrEmpty(ApiToken) && !string.IsNullOrEmpty(ApiUrl))
@@ -59,7 +59,7 @@ namespace Victor
 
         #region Intents
 
-        public override void Help(Intent intent)
+        protected override void Help(Intent intent)
         {
             if (Empty(intent))
             {
@@ -85,7 +85,7 @@ namespace Victor
             }
         }
 
-        public override void Info(Intent intent)
+        protected override void Info(Intent intent)
         {
             if (intent.Entities.Length == 0)
             {
@@ -111,7 +111,7 @@ namespace Victor
             }
         }
 
-        public override void Menu(Intent intent)
+        protected override void Menu(Intent intent)
         {
             SetMenuContext("OBJECTS");
             SayInfoLine("Red Hat OpenShift");
@@ -203,7 +203,7 @@ namespace Victor
             }
 
         }
-        public void List(Intent intent)
+        protected override void List(Intent intent)
         {
             if (ObjectEmpty(intent))
             {

@@ -200,6 +200,9 @@
       "feature": {
         "automatically_extensible": false
       },
+      "item": {
+        "automatically_extensible": false
+      },
       "package": {
         "automatically_extensible": false
       }
@@ -209,6 +212,9 @@
       "help": {
         "feature": "feature",
         "package": "package"
+      },
+      "list": {
+        "item": "item"
       }
     }
   },

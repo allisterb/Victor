@@ -30,23 +30,7 @@ namespace Victor.CLI
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
-        {
-            if (input.ToLower() == "vish")
-            {
-                GetPackagesMenuItem(1);
-                return true;
-            }
-            else if (input.ToLower() == "services")
-            {
-                GetPackagesMenuItem(2);
-                return true;
-            }
-            else if (input.ToLower() == "bots")
-            {
-                GetPackagesMenuItem(3);
-                return true;
-            }
-            
+        {            
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {
@@ -70,9 +54,6 @@ namespace Victor.CLI
                     case "exit":
                         Exit(intent);
                         break;
-                    case "hello":
-                        Hello(intent);
-                        break;
                     case "enable":
                         Enable(intent);
                         break;
@@ -83,7 +64,7 @@ namespace Victor.CLI
                         Back(intent);
                         break;
                     case "page":
-                        Controller.ActivePackage.Page(intent);
+                        Page(intent);
                         break;
                     default:
                         break;
@@ -93,7 +74,7 @@ namespace Victor.CLI
         }
         
         #region Intents
-        public override void Menu(Intent intent)
+        protected override void Menu(Intent intent)
         {
             SetMenuContext("PACKAGES");
             SayInfoLine("Select a package to use.");
@@ -104,7 +85,7 @@ namespace Victor.CLI
             SayInfoLine("5. {0}", "Knowledge");
         }
 
-        public override void Help(Intent intent)
+        protected override void Help(Intent intent)
         {
             var context = CurrentContext;
             if (ObjectEmpty(intent))
@@ -183,7 +164,7 @@ namespace Victor.CLI
             }
         }
 
-        public override void Info(Intent intent = null)
+        protected override void Info(Intent intent = null)
         {
             if (intent == null || intent.Entities.Length == 0)
             {
@@ -239,126 +220,6 @@ namespace Victor.CLI
 
         #region Intents
 
-        public void Exit(Intent intent)
-        {
-            SayInfoLine("Shutting down...");
-            if (Controller.ASREnabled)
-            {
-                Controller.StopASR();
-            }
-            Program.Exit(ExitResult.SUCCESS);
-        }
-
-        public void Hello(Intent intent)
-        {
-            var name = intent != null && intent.Entities.Length > 0 ? intent.Entities.First().Value : "";
-            if (!string.IsNullOrEmpty(name))
-            {
-                SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
-                Variables["HOME_NAME"] = name;
-            }
-            else if (Variables["HOME_NAME"] != null)
-            {
-                SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", Variables["HOME_NAME"]);
-            }
-            else
-            {
-                SayInfoLine("Hello, welcome to the Victor CX auditory user interface.");
-            }
-            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
-        }
-
-        protected void Enable(Intent intent)
-        {
-            if (intent.Entities.Length == 0)
-            {
-                SayErrorLine("Sorry I don't know what you want to enable.");
-            }
-            else
-            {
-                switch (intent.Entities.First().Value)
-                {
-                    case "debug":
-                        if (!Controller.DebugEnabled)
-                        {
-                            Controller.DebugEnabled = true;
-                            SayInfoLine("Debug enabled.");
-                            break;
-                        }
-                        else
-                        {
-                            SayErrorLine("Debug is already enabled.");
-                        }
-                        break;
-                    case "asr":
-                        if (!Controller.ASREnabled)
-                        {
-                            Controller.EnableASR();
-                            break;
-                        }
-                        else
-                        {
-                            SayErrorLine("ASR is already enabled.");
-                        }
-                        break;
-                    default:
-                        SayErrorLine("Sorry I don't know how to enable that.");
-                        break;
-                }
-            }
-        }
-
-        protected void Disable(Intent intent)
-        {
-            if (intent.Entities.Length == 0)
-            {
-                SayErrorLine("Sorry I don't know what you want to disable.");
-            }
-            else
-            {
-                switch (intent.Entities.First().Value)
-                {
-                    case "debug":
-                        if (Controller.DebugEnabled)
-                        {
-                            Controller.DebugEnabled = false;
-                            SayInfoLine("Debug disabled. Commands will be executed.");
-                        }
-                        else
-                        {
-                            SayErrorLine("Debug is not enabled.");
-                        }
-                        break;
-                    case "asr":
-                        if (Controller.ASREnabled)
-                        {
-                            Controller.StopASR();
-                            SayInfoLine("ASR disabled.");
-                        }
-                        else
-                        {
-                            SayErrorLine("ASR is not enabled.");
-                        }
-                        break;
-                    default:
-                        SayErrorLine("Sorry I don't know how to enable that.");
-                        break;
-                }
-            }
-        }
-
-        public void Back(Intent intent)
-        {
-            if (Controller.ActivePackage != Controller.PreviousPackage)
-            {
-                Controller.ActivePackage = Controller.PreviousPackage;
-                Controller.ActivePackage.DispatchIntent(null, Controller.ActivePackage.Menu);
-            }
-            else
-            {
-                Controller.Buzz();
-            }
-        }
         #endregion
 
         protected void GetPackagesMenuItem(int i)
@@ -374,7 +235,7 @@ namespace Victor.CLI
                         Controller.StopBeeper();
                     }
                     Controller.SetActivePackage(SubPackages.Single(p => p.Name == "Vish"));
-                    DispatchIntent(null, Controller.ActivePackage.Menu);
+                    DispatchIntent(null, Menu);
                     break;
                 case 2:
                     LoadBots();
@@ -408,11 +269,11 @@ namespace Victor.CLI
 
             if (CurrentContext.StartsWith("MENU_"))
             {
-                DispatchIntent(null, Controller.ActivePackage.Menu);
+                DispatchIntent(null, Menu);
             }
             else
             {
-                DispatchIntent(null, Controller.ActivePackage.Menu);
+                DispatchIntent(null, Menu);
             }
 
         }

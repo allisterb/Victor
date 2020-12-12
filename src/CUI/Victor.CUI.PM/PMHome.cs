@@ -15,8 +15,9 @@ namespace Victor.CUI.PM
         {
             MenuHandlers[Prefixed("FEATURES")] = GetFeaturesMenuItem;
             MenuIndexes[Prefixed("FEATURES")] = 3;
-            ItemsDescriptionHandlers[Prefixed("BOARDS")] = DescribeBoards;
-            ItemsPageSize["BOARDS"] = 8;
+            ItemDescriptionHandlers[Prefixed("BOARDS")] = DescribeBoard;
+            ItemsPageSize[Prefixed("BOARDS")] = 8;
+            ItemsListHandlers[Prefixed("BOARDS")] = Boards;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -36,7 +37,7 @@ namespace Victor.CUI.PM
             SayInfoLine("Say {0} to show the main menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
         }
 
-        public override void Info(Intent intent = null)
+        protected override void Info(Intent intent = null)
         {
             if (ObjectEmpty(intent))
             {
@@ -83,7 +84,7 @@ namespace Victor.CUI.PM
 
         }
 
-        public override void Help(Intent intent)
+        protected override void Help(Intent intent)
         {
             var context = CurrentContext;
             if (ObjectEmpty(intent))
@@ -163,7 +164,7 @@ namespace Victor.CUI.PM
             }
         }
 
-        public override void Menu(Intent intent)
+        protected override void Menu(Intent intent)
         {
             SetMenuContext("FEATURES");
             SayInfoLine("Select a feature to use.");
@@ -196,9 +197,7 @@ namespace Victor.CUI.PM
                 case "exit":
                     Exit(null);
                     return true;
-                case "hello":
-                    Hello(null);
-                    return true;
+               
                 case "enable asr":
                     this.Controller.EnableASR();
                     return true;
@@ -209,15 +208,17 @@ namespace Victor.CUI.PM
                     Back(null);
                     return true;
                 case "page":
-                    Controller.ActivePackage.Page(null);
+                    Page(null);
                     return true;
-                case "list boards":
-                    var boards = PM.MdcApi.GetBoards();
-                    for(int i = 0; i < boards.Result.Boards.Count; i++)
-                    {
-                        SayInfoLine("{0}.{1}", i, boards.Result.Boards[i].Name);
-                    }
-                    return true;
+                //case "list boards":
+                    //DispatchIntent(intent, List);
+                    //break;
+                    //var boards = PM.MdcApi.GetBoards();
+                    //for(int i = 0; i < boards.Result.Boards.Count; i++)
+                    //{
+                    //    SayInfoLine("{0}.{1}", i, boards.Result.Boards[i].Name);
+                    //}
+                    //return true;
                     //foreach(var b in broads)
                     //{
                     //    SayInfoLine("")
@@ -245,9 +246,6 @@ namespace Victor.CUI.PM
                     case "exit":
                         Exit(intent);
                         break;
-                    case "hello":
-                        Hello(intent);
-                        break;
                     case "enable":
                         Enable(intent);
                         break;
@@ -258,7 +256,10 @@ namespace Victor.CUI.PM
                         Back(intent);
                         break;
                     case "page":
-                        Controller.ActivePackage.Page(intent);
+                        Page(intent);
+                        break;
+                    case "list":
+                        DispatchIntent(intent, List);
                         break;
                     default:
                         break;
@@ -272,171 +273,26 @@ namespace Victor.CUI.PM
         #region Methods
 
         #region Intents
+        #endregion
 
-        public void Exit(Intent intent)
+        #region Items
+        protected void GetFeaturesMenuItem(int i)
         {
-            SayInfoLine("Shutting down...");
-            if (Controller.ASREnabled)
+            switch(i - 1)
             {
-                Controller.StopASR();
-            }
-            Controller.Exit(ExitResult.SUCCESS);
-        }
+                case 0:
+                    //LoadBoards();
+                    break;
 
-        public void Hello(Intent intent)
-        {
-            var name = intent != null && intent.Entities.Length > 0 ? intent.Entities.First().Value : "";
-            if (!string.IsNullOrEmpty(name))
-            {
-                SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", name);
-                Variables["HOME_NAME"] = name;
-            }
-            else if (Variables["HOME_NAME"] != null)
-            {
-                SayInfoLine("Hello {0} welcome to the Victor CX auditory user interface.", Variables["HOME_NAME"]);
-            }
-            else
-            {
-                SayInfoLine("Hello, welcome to the Victor CX auditory user interface.");
-            }
-            SayInfoLine("Enter {0} to see a menu of options or {1} to get help. Enter {2} if you want to quit.", "menu", "help", "exit");
-        }
-
-        public void List(Intent intent)
-        {
-            if (ObjectEmpty(intent))
-            {
-                switch (GetItemsContext())
-                {
-                    case "BOARDS":
-                        DispatchIntent(intent, Boards);
-                        break;
-                    default:
-                        SayErrorLine("Sorry I don't know how to list that.");
-                        DebugIntent(intent);
-                        break;
-                }
-            }
-            else
-            {
-                var (task, command, objects) = GetIntentTaskCommandObjects(intent);
-                if (objects.Count == 0)
-                {
-                    SayInfoLine("Sorry I don't know how to list what you are saying: {0}. Say something like {1} or say {2} to see the OpenShift menu.", intent.Top.Label, "list pods", "menu");
-                }
-                else
-                {
-                    var mdcobject = objects.First();
-                    switch (mdcobject)
-                    {
-                        case "pod":
-                            DispatchIntent(intent, Boards);
-                            break;
-                        default:
-                            SayInfoLine("Sorry I don't know how to list what you are saying. Say something like {0} or say {1} to see the OpenShift menu.", "list pods", "menu");
-                            break;
-                    }
-                }
+                default:
+                    throw new IndexOutOfRangeException();
             }
         }
 
-        protected void Enable(Intent intent)
-        {
-            if (intent.Entities.Length == 0)
-            {
-                SayErrorLine("Sorry I don't know what you want to enable.");
-            }
-            else
-            {
-                switch (intent.Entities.First().Value)
-                {
-                    case "debug":
-                        if (!Controller.DebugEnabled)
-                        {
-                            Controller.DebugEnabled = true;
-                            SayInfoLine("Debug enabled.");
-                            break;
-                        }
-                        else
-                        {
-                            SayErrorLine("Debug is already enabled.");
-                        }
-                        break;
-                    case "asr":
-                        if (!Controller.ASREnabled)
-                        {
-                            Controller.EnableASR();
-                            break;
-                        }
-                        else
-                        {
-                            SayErrorLine("ASR is already enabled.");
-                        }
-                        break;
-                    default:
-                        SayErrorLine("Sorry I don't know how to enable that.");
-                        break;
-                }
-            }
-        }
-
-        protected void Disable(Intent intent)
-        {
-            if (intent.Entities.Length == 0)
-            {
-                SayErrorLine("Sorry I don't know what you want to disable.");
-            }
-            else
-            {
-                switch (intent.Entities.First().Value)
-                {
-                    case "debug":
-                        if (Controller.DebugEnabled)
-                        {
-                            Controller.DebugEnabled = false;
-                            SayInfoLine("Debug disabled. Commands will be executed.");
-                        }
-                        else
-                        {
-                            SayErrorLine("Debug is not enabled.");
-                        }
-                        break;
-                    case "asr":
-                        if (Controller.ASREnabled)
-                        {
-                            Controller.StopASR();
-                            SayInfoLine("ASR disabled.");
-                        }
-                        else
-                        {
-                            SayErrorLine("ASR is not enabled.");
-                        }
-                        break;
-                    default:
-                        SayErrorLine("Sorry I don't know how to enable that.");
-                        break;
-                }
-            }
-        }
-
-        public void Back(Intent intent)
-        {
-            if (Controller.ActivePackage != Controller.PreviousPackage)
-            {
-                Controller.ActivePackage = Controller.PreviousPackage;
-                Controller.ActivePackage.DispatchIntent(null, Controller.ActivePackage.Menu);
-            }
-            else
-            {
-                Controller.Buzz();
-            }
-        }
-
-        public void Boards(Intent intent)
+        protected void Boards(Intent intent)
         {
             ThrowIfNotInitialized();
-            var boards = GetItems<List<Board>>("BOARDS"); 
-            
+            var boards = GetItems<List<Board>>("BOARDS");
             if (boards == null)
             {
                 SetItems("BOARDS", boards = FetchBoards());
@@ -449,68 +305,10 @@ namespace Victor.CUI.PM
             }
 
         }
-        #endregion
 
-        #region Items
-        protected void GetFeaturesMenuItem(int i)
-        {
-            
-            switch(i - 1)
-            {
-                case 0:
-                    LoadBoards();
-                    break;
-
-                default:
-                    throw new IndexOutOfRangeException();
-            }
-        }
-
-        protected void LoadBoards()
-        {
-            
-
-        }
-
-        protected void LoadUsers()
-        {
-
-        }
-
-        protected void DescribeBoards(int page, CUIPackage package)
-        {
-            var pageSize = ItemsPageSize[Prefixed("BOARDS")];
-            var boards = GetItems<List<Board>>("BOARDS");
-            var count = boards.Count;
-            var pages = count / pageSize + 1;
-            if (page > pages)
-            {
-                SayErrorLine("There are only {0} pages available.", pages);
-                return;
-            }
-            else
-            {
-                /*
-                int start = (page - 1) * oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-                int end = start + oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
-                if (end > count) end = count;
-                if (Controller.DebugEnabled)
-                {
-                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", projects.Items.Count, page, start, end);
-                }
-                SayInfoLine("Projects page {0} of {1}.", page, pages);
-                for (int i = start; i < end; i++)
-                {
-                    var project = projects.Items[i];
-                    oc.SayInfoLine("{0}. Name: {1}, Status: {2}, Requester: {3}, Labels: {4}.", i + 1, project.Metadata.Name, project.Status.Phase,
-                        project.Metadata.Annotations.First(a => a.Key.ToLower().Contains("requester")).Value,
-                        project.Metadata.Labels?.Select(kv => kv.Key + "=" + kv.Value).Aggregate((s1, s2) => s1 + " " + s2) ?? "{}");
-                }
-                oc.ItemsCurrentPage["OPENSHIFT_PROJECTS"] = page;
-                */
-            }
-        }
-
+        protected void DescribeBoard(CUIPackage package, object item)
+        { 
+        }        
         #endregion
 
         #region Monday.com API
@@ -520,9 +318,9 @@ namespace Victor.CUI.PM
             SayInfoLine("Fetching boards for your account...");
             Controller.StartBeeper();
             var boards = MdcApi.GetBoards().Result.Boards;
-            SetItems("PROJECTS", boards);
+            SetItems("BOARDS", boards);
             Controller.StopBeeper();
-            SayInfoLine("Fetched {0} projects.", boards.Count());
+            SayInfoLine("Fetched {0} boards.", boards.Count());
             return boards;
         }
         #endregion

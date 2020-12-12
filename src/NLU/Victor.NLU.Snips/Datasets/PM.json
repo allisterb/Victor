@@ -27,6 +27,19 @@
       "matching_strictness": 1.0,
       "use_synonyms": true
     },
+    "item": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "project boards"
+          ],
+          "value": "boards"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
     "package": {
       "automatically_extensible": false,
       "data": [
@@ -246,6 +259,29 @@
             {
               "entity": "feature",
               "slot_name": "feature",
+              "text": "boards"
+            }
+          ]
+        }
+      ]
+    },
+    "list": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "list"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "list "
+            },
+            {
+              "entity": "item",
+              "slot_name": "item",
               "text": "boards"
             }
           ]

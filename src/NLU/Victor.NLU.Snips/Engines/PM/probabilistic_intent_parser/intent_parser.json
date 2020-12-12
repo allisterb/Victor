@@ -188,6 +188,10 @@
     {
       "intent": "help",
       "slot_filler_name": "slot_filler_0"
+    },
+    {
+      "intent": "list",
+      "slot_filler_name": "slot_filler_1"
     }
   ]
 }
