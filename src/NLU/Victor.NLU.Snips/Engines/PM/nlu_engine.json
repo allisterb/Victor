@@ -200,7 +200,10 @@
       "feature": {
         "automatically_extensible": false
       },
-      "item": {
+      "function": {
+        "automatically_extensible": false
+      },
+      "items": {
         "automatically_extensible": false
       },
       "package": {
@@ -214,7 +217,7 @@
         "package": "package"
       },
       "list": {
-        "item": "item"
+        "items": "items"
       }
     }
   },

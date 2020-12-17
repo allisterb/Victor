@@ -10,9 +10,11 @@ using Sc = System.Console;
 using Colorful;
 using Co = Colorful.Console;
 
+using Victor.CUI;
+
 namespace Victor.CLI
 {
-    public class FNController : CUIController
+    public class FNController : Controller
     {
         #region Constructors 
         public FNController(FNOptions o) : base("Victor CLI", Ct)

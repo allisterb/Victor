@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 using Victor.SnipsNLU;
 
-namespace Victor
+namespace Victor.CUI
 {
     public class SnipsNLUEngine : NLUEngine
     {

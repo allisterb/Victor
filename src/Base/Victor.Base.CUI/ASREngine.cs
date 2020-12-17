@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Victor
+namespace Victor.CUI
 {
     public abstract class ASREngine : Api
     {

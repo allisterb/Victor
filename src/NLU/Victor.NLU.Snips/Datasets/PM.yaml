@@ -35,11 +35,10 @@ utterances:
 type: intent
 name: list
 slots:
-  - name: item
-    entity: item
+  - name: items
+    entity: items
 utterances:
-  - list
-  - list [item](boards)
+  - list [items](boards)
  
 # package entity
 ---
@@ -61,10 +60,19 @@ values:
 - [tasks, task]
 - [boards, board]
 
-# item entity
+# function entity
 ---
 type: entity
-name: item
+name: function
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [list, show, show me]
+
+# items entity
+---
+type: entity
+name: items
 automatically_extensible: no
 use_synonyms: yes
 values:

@@ -2,7 +2,7 @@
   <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <RootNamespace>Victor</RootNamespace>
+    <RootNamespace>Victor.CUI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

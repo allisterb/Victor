@@ -3,12 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace Victor
+namespace Victor.CUI
 {
-    public class Vish : CUIPackage
+    public class Vish : Package
     {
         #region Constructors
-        public Vish(CUIController controller, CancellationToken ct) : base("Vish", new SnipsNLUEngine(Path.Combine("Engines", "vish")), controller, ct)
+        public Vish(Controller controller, CancellationToken ct) : base("Vish", new SnipsNLUEngine(Path.Combine("Engines", "vish")), controller, ct)
         {
             Intents.Add("launch", Launch);
             MenuIndexes["VISH_PACKAGES"] = 3;
@@ -16,7 +16,7 @@ namespace Victor
             Initialized = NLUEngine.Initialized;
         }
 
-        public Vish(CUIController controller) : this(controller, Ct) {}
+        public Vish(Controller controller) : this(controller, Ct) {}
 
         #endregion
 
@@ -109,7 +109,7 @@ namespace Victor
         public void Launch(Intent intent)
         {
             var input = intent.Input.ToLower();
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 if (input.Contains("openshift") || input.Contains("open shift"))
                 {
@@ -166,7 +166,7 @@ namespace Victor
             
             if (CurrentContext.StartsWith("MENU_"))
             {
-                DispatchIntent(null, Controller.ActivePackage.Menu);
+                DispatchIntent(null, Menu);
             }
             else
             {

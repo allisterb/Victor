@@ -8,10 +8,10 @@ using Victor.CUI.PM.Models;
 
 namespace Victor.CUI.PM
 {
-    public class PMHome : CUIPackage
+    public class PMHome : Package
     {
         #region Constructors
-        public PMHome(CUIController controller) : base("ProjectManagement", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
+        public PMHome(Controller controller) : base("ProjectManagement", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
         {
             MenuHandlers[Prefixed("FEATURES")] = GetFeaturesMenuItem;
             MenuIndexes[Prefixed("FEATURES")] = 3;
@@ -39,7 +39,7 @@ namespace Victor.CUI.PM
 
         protected override void Info(Intent intent = null)
         {
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 SayInfoLine("Victor PM is a project management program designed for vision-impaired and differently-abled users.");
                 SayInfoLine("This is the Victor auditory conversational user interface for managing project tasks, people, and other data using the monday.com data engine.");            
@@ -87,7 +87,7 @@ namespace Victor.CUI.PM
         protected override void Help(Intent intent)
         {
             var context = CurrentContext;
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 switch (context)
                 {
@@ -181,6 +181,7 @@ namespace Victor.CUI.PM
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
+        /*
         public override bool ParseIntent(CUIContext context, DateTime time, string input)
         {
             switch(input.ToLower())
@@ -267,7 +268,7 @@ namespace Victor.CUI.PM
                 return true;
             }
         }
-        
+        */
         #endregion
 
         #region Methods
@@ -306,7 +307,7 @@ namespace Victor.CUI.PM
 
         }
 
-        protected void DescribeBoard(CUIPackage package, object item)
+        protected void DescribeBoard(Package package, object item)
         { 
         }        
         #endregion

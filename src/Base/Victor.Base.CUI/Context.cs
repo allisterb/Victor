@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Victor
+namespace Victor.CUI
 {
-    public class CUIContext
+    public class Context
     {
-        public CUIContext(DateTime time, string label, Intent intent = null, Action<Intent> action = null)
+        public Context(DateTime time, string label, Intent intent = null, Action<Intent> action = null)
         {
             Time = time;
             Label = label;

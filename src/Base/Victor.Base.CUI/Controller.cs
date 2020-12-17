@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Victor
+namespace Victor.CUI
 {
-    public abstract class CUIController : Api
+    public abstract class Controller : Api
     {
         #region Constructors
-        public CUIController(string name, CancellationToken ct) : base(ct)
+        public Controller(string name, CancellationToken ct) : base(ct)
         {
             Name = name;
         }
 
-        public CUIController(string name) : this(name, Ct) {}
+        public Controller(string name) : this(name, Ct) {}
 
-        public CUIController(string name, CancellationToken ct, params CUIPackage[] packages) : this(name, ct)
+        public Controller(string name, CancellationToken ct, params Package[] packages) : this(name, ct)
         {
             Packages.AddRange(packages.ToList());
         }
@@ -26,17 +26,17 @@ namespace Victor
         #region Properties
         public string Name { get; }
 
-        public List<CUIPackage> Packages { get; } = new List<CUIPackage>();
+        public List<Package> Packages { get; } = new List<Package>();
         
-        public Stack<CUIContext> Context { get; } = new Stack<CUIContext>();
+        public Stack<Context> Context { get; } = new Stack<Context>();
         
         public string PromptString { get; protected set; }
 
-        public CUIPackage HomePackage { get; set; }
+        public Package HomePackage { get; set; }
         
-        public CUIPackage ActivePackage { get;  set; }
+        public Package ActivePackage { get;  set; }
 
-        public CUIPackage PreviousPackage { get; set; }
+        public Package PreviousPackage { get; set; }
 
         public bool DebugEnabled { get; set; }
 
@@ -77,9 +77,9 @@ namespace Victor
         #endregion
 
         #region Methods
-        public void SetContext(string c, Intent intent = null, Action<Intent> action = null) => Context.Push(new CUIContext(DateTime.Now, c, intent, action));
+        public void SetContext(string c, Intent intent = null, Action<Intent> action = null) => Context.Push(new Context(DateTime.Now, c, intent, action));
 
-        public void SetActivePackage(CUIPackage package)
+        public void SetActivePackage(Package package)
         {
             this.PreviousPackage = this.ActivePackage;
             this.ActivePackage = package;

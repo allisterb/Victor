@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Victor.CUI;
 namespace Victor.CLI
 {
-    public class FNHome : CUIPackage
+    public class FNHome : Package
     {
         #region Constructors
-        public FNHome(CUIController controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
+        public FNHome(Controller controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
             MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
             MenuIndexes[Prefixed("PACKAGES")] = 3;
@@ -29,7 +30,7 @@ namespace Victor.CLI
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
-        public override bool ParseIntent(CUIContext context, DateTime time, string input)
+        public override bool ParseIntent(Context context, DateTime time, string input)
         {            
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
@@ -88,7 +89,7 @@ namespace Victor.CLI
         protected override void Help(Intent intent)
         {
             var context = CurrentContext;
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 switch (context)
                 {

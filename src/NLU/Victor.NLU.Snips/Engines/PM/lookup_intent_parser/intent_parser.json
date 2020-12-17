@@ -20,7 +20,7 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "item"
+          "items"
         ]
       },
       "intent_group": [
@@ -30,7 +30,8 @@
   ],
   "intents_names": [
     "help",
-    "list"
+    "list",
+    "command"
   ],
   "language_code": "en",
   "map": {
@@ -78,15 +79,15 @@
         0
       ]
     ],
-    "648462798": [
-      1,
-      [
-        2
-      ]
-    ],
     "796873821": [
       0,
       []
+    ],
+    "986809913": [
+      1,
+      [
+        3
+      ]
     ],
     "1052851754": [
       0,
@@ -124,10 +125,6 @@
       0,
       []
     ],
-    "1769242945": [
-      1,
-      []
-    ],
     "1921100604": [
       0,
       [
@@ -138,7 +135,9 @@
   "slots_names": [
     "package",
     "feature",
-    "item"
+    "item",
+    "items",
+    "function"
   ],
   "stop_words_whitelist": {}
 }

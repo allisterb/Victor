@@ -12,11 +12,12 @@ using Sc = System.Console;
 using Colorful;
 using Co = Colorful.Console;
 
+using Victor.CUI;
 using Victor.CUI.PM;
 
 namespace Victor.CLI
 {
-    public class PMController : CUIController
+    public class PMController : Controller
     {
         #region Constructors 
         public PMController(PMOptions o) : base("Victor CLI", Ct)

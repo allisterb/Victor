@@ -6,18 +6,24 @@ using System.Text;
 using System.Threading;
 
 using Humanizer;
-namespace Victor
+namespace Victor.CUI
 {
-    public abstract class CUIPackage : Api
+    public abstract class Package : Api
     {
         #region Constructors
-        public CUIPackage(string name, NLUEngine engine, CUIController controller, CancellationToken ct, params CUIPackage[] subPackages) : base(ct)
+        public Package(string name, NLUEngine engine, Controller controller, CancellationToken ct, params Package[] subPackages) : base(ct)
         {
             Name = name;
             NLUEngine = engine;
             Controller = controller;
+            Intents.Add("info", Info);
             Intents.Add("help", Help);
             Intents.Add("menu", Menu);
+            Intents.Add("enable", Enable);
+            Intents.Add("disable", Disable);
+            Intents.Add("back", Back);
+            Intents.Add("page", Page);
+            Intents.Add("list", List);
             if (subPackages != null && subPackages.Length > 0)
             {
                 SubPackages = subPackages.ToList();
@@ -25,6 +31,7 @@ namespace Victor
             foreach (var vn in VariableNames)
             {
                 Variables.Add(Prefixed(vn), null);
+                Variables_.Add(Prefixed(vn), null);
             }
             foreach (var i in ItemNames)
             {
@@ -34,14 +41,16 @@ namespace Victor
                 ItemsSelection.Add(Prefixed(i), -1);
                 ItemsListHandlers.Add(Prefixed(i), null);
                 ItemDescriptionHandlers.Add(Prefixed(i), null);
+                Items_.Add(Prefixed(i), null);
             }
             foreach (var m in MenuNames)
             {
                 MenuHandlers.Add(Prefixed(m), null);
                 MenuIndexes.Add(Prefixed(m), 0);
+                Menus_.Add(Prefixed(m), null);
             }
         }
-        public CUIPackage(string name, NLUEngine engine, CUIController controller, params CUIPackage[] subPackages) : this(name, engine, controller, Ct, subPackages) { }
+        public Package(string name, NLUEngine engine, Controller controller, params Package[] subPackages) : this(name, engine, controller, Ct, subPackages) { }
         #endregion
 
         #region Properties
@@ -49,15 +58,23 @@ namespace Victor
 
         public NLUEngine NLUEngine { get; }
 
-        public CUIController Controller { get; }
+        public Controller Controller { get; }
 
-        public List<CUIPackage> SubPackages { get; } = new List<CUIPackage>();
+        public List<Package> SubPackages { get; } = new List<Package>();
 
         public Dictionary<string, Action<Intent>> Intents { get; } = new Dictionary<string, Action<Intent>>();
 
+        public abstract string[] VariableNames { get; }
+
         public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
 
+        public Dictionary<string, Variable> Variables_ { get; } = new Dictionary<string, Variable>();
+
+        public abstract string[] ItemNames { get; }
+
         public Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
+
+        public Dictionary<string, Items> Items_ { get; } = new Dictionary<string, Items>();
 
         protected Dictionary<string, int> ItemsPageSize { get; } = new Dictionary<string, int>();
 
@@ -67,13 +84,17 @@ namespace Victor
 
         public Dictionary<string, Action<Intent>> ItemsListHandlers = new Dictionary<string, Action<Intent>>();
 
-        public Dictionary<string, Action<CUIPackage, object>> ItemDescriptionHandlers { get; } = new Dictionary<string, Action<CUIPackage, object>>();
+        public Dictionary<string, Action<Package, object>> ItemDescriptionHandlers { get; } = new Dictionary<string, Action<Package, object>>();
+
+        public abstract string[] MenuNames { get; }
 
         public Dictionary<string, Action<int>> MenuHandlers { get; } = new Dictionary<string, Action<int>>();
 
         public Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
 
         public Dictionary<string, int> MenuSelection = new Dictionary<string, int>();
+
+        public Dictionary<string, Menu> Menus_ { get; } = new Dictionary<string, Menu>();
 
         #endregion
 
@@ -101,7 +122,7 @@ namespace Victor
         #endregion
 
         #region Context
-        public Stack<CUIContext> Context => Controller.Context;
+        public Stack<Context> Context => Controller.Context;
 
         public string CurrentContext => Context.Count > 0 ? Context.Peek().Label : "";
 
@@ -129,7 +150,7 @@ namespace Victor
             }
         }
 
-        public bool CanDispatchVariableInput(CUIContext context)
+        public bool CanDispatchVariableInput(Context context)
         {
             if (context.Label.StartsWith("INPUT_"))
             {
@@ -142,7 +163,7 @@ namespace Victor
             }
         }
 
-        public virtual void DispatchVariableInput(CUIContext context, string input)
+        public virtual void DispatchVariableInput(Context context, string input)
         {
             string variableName = context.Label.Replace("INPUT_", "");
             Variables[variableName] = input;
@@ -182,7 +203,7 @@ namespace Victor
 
         public int GetItemsCurrentPage(string name) => ItemsCurrentPage[Prefixed(name).ToUpper()];
 
-        public Action<CUIPackage, object> GetItemsDescriptionHandler(string name) => ItemDescriptionHandlers[Prefixed(name).ToUpper()];
+        public Action<Package, object> GetItemsDescriptionHandler(string name) => ItemDescriptionHandlers[Prefixed(name).ToUpper()];
 
         public void DescribeItem(string name, object o)
         {
@@ -285,7 +306,7 @@ namespace Victor
             }
         }
 
-        public void DispatchToMenuItem(CUIContext context, DateTime time, int i)
+        public void DispatchToMenuItem(Context context, DateTime time, int i)
         {
             string label = context.Label.Replace("MENU_", "");
             if (i < 1 || i > MenuIndexes[label])
@@ -301,38 +322,6 @@ namespace Victor
         #endregion
 
         #region Intent parsing
-        protected Tuple<string, string, string> GetIntentFeaturePackageFunction(Intent intent)
-        {
-            if (ObjectEmpty(intent))
-            {
-                throw new InvalidOperationException("The intent has no object.");
-            }
-            var feature = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("feature"))?.Value;
-            var package = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("package"))?.Value;
-            var function = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("function"))?.Value;
-            return new Tuple<string, string, string>(feature, package, function);
-
-        }
-
-        protected Tuple<string, string, List<string>> GetIntentTaskCommandObjects(Intent intent)
-        {
-            if (ObjectEmpty(intent))
-            {
-                throw new InvalidOperationException("The intent has no object.");
-            }
-            var task = intent.Entities.FirstOrDefault(e => e.SlotName == "task")?.Value;
-            var command = intent.Entities.FirstOrDefault(e => e.SlotName == "command")?.Value;
-            var objects =
-                intent.Entities.Any(e => e.SlotName.EndsWith("_object")) ?
-                intent.Entities
-                .Where(e => e.SlotName.EndsWith("_object"))
-                .Select(e => e.Value?.ToAlphaNumeric()).ToList() : new List<string>();
-            if (Controller.DebugEnabled)
-            {
-                SayInfoLine("Task: {0}, Command: {1}, Objects: {2}.", task ?? "None", command ?? "None", objects);
-            }
-            return new Tuple<string, string, List<string>>(task, command, objects);
-        }
 
         public virtual bool HandleInput(DateTime time, string input)
         {
@@ -364,16 +353,12 @@ namespace Victor
             }
         }
 
-        public virtual bool ParseIntent(CUIContext context, DateTime time, string input)
+        public virtual bool ParseIntent(Context context, DateTime time, string input)
         {
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {
                 DebugIntent(intent);
-            }
-            if (!intent.IsNone && intent.Top.Label == "menu" && intent.Top.Score > 0.7)
-            {
-                Menu(intent);
             }
             if (intent.Top.Score < 0.8)
             {
@@ -407,9 +392,61 @@ namespace Victor
             }
         }
 
+        protected Tuple<string, string, string> GetIntentFeaturePackageFunction(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no entities.");
+            }
+            var feature = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("feature"))?.Value;
+            var package = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("package"))?.Value;
+            var function = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("function"))?.Value;
+            return new Tuple<string, string, string>(feature, package, function);
+
+        }
+
+        protected Tuple<string, string, List<string>> GetIntentCommandItemsParams(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no entities.");
+            }
+            var task = intent.Entities.FirstOrDefault(e => e.SlotName == "task")?.Value;
+            var command = intent.Entities.FirstOrDefault(e => e.SlotName == "command")?.Value;
+            var objects =
+                intent.Entities.Any(e => e.SlotName.EndsWith("_object")) ?
+                intent.Entities
+                .Where(e => e.SlotName.EndsWith("_object"))
+                .Select(e => e.Value?.ToAlphaNumeric()).ToList() : new List<string>();
+            if (Controller.DebugEnabled)
+            {
+                SayInfoLine("Task: {0}, Command: {1}, Objects: {2}.", task ?? "None", command ?? "None", objects);
+            }
+            return new Tuple<string, string, List<string>>(task, command, objects);
+        }
+
+        protected Tuple<string, string, List<string>> GetIntentTaskCommandObjects(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no object.");
+            }
+            var task = intent.Entities.FirstOrDefault(e => e.SlotName == "task")?.Value;
+            var command = intent.Entities.FirstOrDefault(e => e.SlotName == "command")?.Value;
+            var objects =
+                intent.Entities.Any(e => e.SlotName.EndsWith("_object")) ?
+                intent.Entities
+                .Where(e => e.SlotName.EndsWith("_object"))
+                .Select(e => e.Value?.ToAlphaNumeric()).ToList() : new List<string>();
+            if (Controller.DebugEnabled)
+            {
+                SayInfoLine("Task: {0}, Command: {1}, Objects: {2}.", task ?? "None", command ?? "None", objects);
+            }
+            return new Tuple<string, string, List<string>>(task, command, objects);
+        }
         protected bool Empty(Intent intent) => intent == null || intent.IsNone;
 
-        protected bool ObjectEmpty(Intent intent) => Empty(intent) || intent.Entities.Count() == 0;
+        protected bool EmptyEntities(Intent intent) => Empty(intent) || intent.Entities.Count() == 0;
         #endregion
 
         #region Intents
@@ -538,7 +575,7 @@ namespace Victor
             var items = GetItemsContext();
             var current = GetItemsCurrentPage(items);
             int page;
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 if (input == "np" || input.Contains("next"))
                 {
@@ -564,7 +601,7 @@ namespace Victor
 
         protected virtual void List(Intent intent = null)
         {
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 var ctx = GetItemsContext();
                 if (ItemsListHandlers.ContainsKey(ctx))
@@ -600,15 +637,6 @@ namespace Victor
             }
         }
         #endregion
-
-        #endregion
-
-        #region Abstract members
-        public abstract string[] VariableNames { get; }
-
-        public abstract string[] MenuNames { get; }
-
-        public abstract string[] ItemNames { get; }
 
         #endregion
     }

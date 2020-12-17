@@ -27,7 +27,21 @@
       "matching_strictness": 1.0,
       "use_synonyms": true
     },
-    "item": {
+    "function": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "show",
+            "show me"
+          ],
+          "value": "list"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "items": {
       "automatically_extensible": false,
       "data": [
         {
@@ -270,18 +284,11 @@
         {
           "data": [
             {
-              "text": "list"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
               "text": "list "
             },
             {
-              "entity": "item",
-              "slot_name": "item",
+              "entity": "items",
+              "slot_name": "items",
               "text": "boards"
             }
           ]

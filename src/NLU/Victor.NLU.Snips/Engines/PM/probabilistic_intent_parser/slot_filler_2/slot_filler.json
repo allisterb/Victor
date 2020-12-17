@@ -101,7 +101,6 @@
       {
         "args": {
           "entities": [
-            "function",
             "items"
           ],
           "entity_filter": {
@@ -177,10 +176,9 @@
     "unit_name": "crf_slot_filler"
   },
   "crf_model_file": "model.crfsuite",
-  "intent": "command",
+  "intent": "list",
   "language_code": "en",
   "slot_name_mapping": {
-    "function": "function",
     "items": "items"
   }
 }

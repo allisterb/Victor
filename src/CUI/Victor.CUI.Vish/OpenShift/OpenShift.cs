@@ -15,12 +15,12 @@ using Victor.CUI.Vish.OpenShift.Client;
 using Victor.CUI.Vish.OpenShift.Client.Models;
 
 [assembly: InternalsVisibleTo("Victor.Tests.Vish")]
-namespace Victor
+namespace Victor.CUI
 {
-    public class OpenShift : CUIPackage
+    public class OpenShift : Package
     {
         #region Constructors
-        public OpenShift(CUIController controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
+        public OpenShift(Controller controller, CancellationToken ct) : base("OpenShift", new SnipsNLUEngine(Path.Combine("Engines", "openshift")),  controller, ct)
         {
             Intents.Add("list", List);
             Intents.Add("page", Page);
@@ -47,7 +47,7 @@ namespace Victor
             }
         }
 
-        public OpenShift(CUIController controller) : this(controller, Ct) {}
+        public OpenShift(Controller controller) : this(controller, Ct) {}
         #endregion
 
         #region Overriden members
@@ -205,7 +205,7 @@ namespace Victor
         }
         protected override void List(Intent intent)
         {
-            if (ObjectEmpty(intent))
+            if (EmptyEntities(intent))
             {
                 switch (GetItemsContext())
                 {
@@ -276,7 +276,7 @@ namespace Victor
         #endregion
 
         #region Items
-        protected void DescribePods(int page, CUIPackage package)
+        protected void DescribePods(int page, Package package)
         {
             var oc = (OpenShift)package;
             var pageSize = oc.ItemsPageSize["OPENSHIFT_PODS"];
@@ -310,7 +310,7 @@ namespace Victor
 
         }
 
-        protected void DescribeProjects(int page, CUIPackage package)
+        protected void DescribeProjects(int page, Package package)
         {
             var oc = (OpenShift)package;
             var pageSize = oc.ItemsPageSize["OPENSHIFT_PROJECTS"];
@@ -344,7 +344,7 @@ namespace Victor
             }
         }
 
-        protected void DescribeBuilds(int page, CUIPackage package)
+        protected void DescribeBuilds(int page, Package package)
         {
             var oc = (OpenShift)package;
             var pageSize = oc.ItemsPageSize["OPENSHIFT_BUILDS"];
