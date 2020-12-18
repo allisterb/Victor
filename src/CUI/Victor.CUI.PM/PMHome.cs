@@ -13,8 +13,8 @@ namespace Victor.CUI.PM
         #region Constructors
         public PMHome(Controller controller) : base("ProjectManagement", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
         {
-            Items["BOARDS"] = new Items("BOARDS", typeof(Board), Boards, Board);
-            Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem);    
+            Boards = Items["BOARDS"] = new Items("BOARDS", typeof(Board), ListBoards, Board);
+            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem);    
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -24,6 +24,11 @@ namespace Victor.CUI.PM
         }
         #endregion
 
+        #region Properties
+        public Items Boards { get; }
+        public Menu Features { get; }
+        #endregion
+        
         #region Overriden members
 
         #region Intents
@@ -287,26 +292,27 @@ namespace Victor.CUI.PM
             }
         }
 
-        protected void Boards(Intent intent)
+        protected void ListBoards(Intent intent)
         {
             ThrowIfNotInitialized();
             ThrowIfNotItems(intent);
-            var boards = Items["BOARDS"];
-            if (boards.Count == 0)
+            if (Boards.Count == 0)
             {
-                boards.Add(FetchBoards());
+                Boards.Add(FetchBoards());
                 
             }
             SetItemsContext("BOARDS");
             if (!Empty(intent) && intent.Top.Label == "list")
             {
-                DescribeItems(boards.Page);
+                DescribeItems(Boards.Page);
             }
 
         }
 
         protected void Board(int index)
         {
+            var b = this.Boards[index] as Board;
+            SayInfoLine(b.Name);
         }
         protected void DescribeBoard(Package package, object item)
         { 

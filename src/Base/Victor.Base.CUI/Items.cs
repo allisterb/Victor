@@ -35,6 +35,7 @@ namespace Victor.CUI
             this.AddRange(items.Cast<object>());
             this.Page = 1;
         }
+
         public T Get<T>(int index) => (T)this[index]; 
 
     }

@@ -200,7 +200,7 @@ namespace Victor.CUI
                 SayInfoLine("Boards page {0} of {1}.", page, pages);
                 for (int i = start; i < end; i++)
                 {
-                    items.DescriptionHandler.Invoke(10);
+                    items.DescriptionHandler.Invoke(i);
                 }
                 items.Page = page;
             }
