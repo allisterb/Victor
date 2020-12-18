@@ -13,11 +13,8 @@ namespace Victor.CUI.PM
         #region Constructors
         public PMHome(Controller controller) : base("ProjectManagement", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
         {
-            MenuHandlers[Prefixed("FEATURES")] = GetFeaturesMenuItem;
-            MenuIndexes[Prefixed("FEATURES")] = 3;
-            ItemDescriptionHandlers[Prefixed("BOARDS")] = DescribeBoard;
-            ItemsPageSize[Prefixed("BOARDS")] = 8;
-            ItemsListHandlers[Prefixed("BOARDS")] = Boards;
+            Items["BOARDS"] = new Items("BOARDS", typeof(Board), Boards, Board);
+            Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem);    
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -293,20 +290,24 @@ namespace Victor.CUI.PM
         protected void Boards(Intent intent)
         {
             ThrowIfNotInitialized();
-            var boards = GetItems<List<Board>>("BOARDS");
-            if (boards == null)
+            ThrowIfNotItems(intent);
+            var boards = Items["BOARDS"];
+            if (boards.Count == 0)
             {
-                SetItems("BOARDS", boards = FetchBoards());
-                ItemsCurrentPage[Prefixed("BOARDS")] = 1;
+                boards.Add(FetchBoards());
+                
             }
             SetItemsContext("BOARDS");
             if (!Empty(intent) && intent.Top.Label == "list")
             {
-                DescribeItems(GetItemsCurrentPage("BOARDS"));
+                DescribeItems(boards.Page);
             }
 
         }
 
+        protected void Board(int index)
+        {
+        }
         protected void DescribeBoard(Package package, object item)
         { 
         }        
@@ -319,7 +320,6 @@ namespace Victor.CUI.PM
             SayInfoLine("Fetching boards for your account...");
             Controller.StartBeeper();
             var boards = MdcApi.GetBoards().Result.Boards;
-            SetItems("BOARDS", boards);
             Controller.StopBeeper();
             SayInfoLine("Fetched {0} boards.", boards.Count());
             return boards;

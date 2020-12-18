@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,23 +32,14 @@ namespace Victor.CUI
             foreach (var vn in VariableNames)
             {
                 Variables.Add(Prefixed(vn), null);
-                Variables_.Add(Prefixed(vn), null);
             }
             foreach (var i in ItemNames)
             {
                 Items.Add(Prefixed(i), null);
-                ItemsPageSize.Add(Prefixed(i), 10);
-                ItemsCurrentPage.Add(Prefixed(i), 1);
-                ItemsSelection.Add(Prefixed(i), -1);
-                ItemsListHandlers.Add(Prefixed(i), null);
-                ItemDescriptionHandlers.Add(Prefixed(i), null);
-                Items_.Add(Prefixed(i), null);
             }
             foreach (var m in MenuNames)
             {
-                MenuHandlers.Add(Prefixed(m), null);
-                MenuIndexes.Add(Prefixed(m), 0);
-                Menus_.Add(Prefixed(m), null);
+                Menus.Add(Prefixed(m), null);
             }
         }
         public Package(string name, NLUEngine engine, Controller controller, params Package[] subPackages) : this(name, engine, controller, Ct, subPackages) { }
@@ -66,36 +58,15 @@ namespace Victor.CUI
 
         public abstract string[] VariableNames { get; }
 
-        public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
-
-        public Dictionary<string, Variable> Variables_ { get; } = new Dictionary<string, Variable>();
+        public Dictionary<string, Variable> Variables { get; } = new Dictionary<string, Variable>();
 
         public abstract string[] ItemNames { get; }
 
-        public Dictionary<string, object> Items { get; } = new Dictionary<string, object>();
-
-        public Dictionary<string, Items> Items_ { get; } = new Dictionary<string, Items>();
-
-        protected Dictionary<string, int> ItemsPageSize { get; } = new Dictionary<string, int>();
-
-        public Dictionary<string, int> ItemsCurrentPage { get; } = new Dictionary<string, int>();
-
-        public Dictionary<string, int> ItemsSelection = new Dictionary<string, int>();
-
-        public Dictionary<string, Action<Intent>> ItemsListHandlers = new Dictionary<string, Action<Intent>>();
-
-        public Dictionary<string, Action<Package, object>> ItemDescriptionHandlers { get; } = new Dictionary<string, Action<Package, object>>();
+        public Dictionary<string, Items> Items { get; } = new Dictionary<string, Items>();
 
         public abstract string[] MenuNames { get; }
 
-        public Dictionary<string, Action<int>> MenuHandlers { get; } = new Dictionary<string, Action<int>>();
-
-        public Dictionary<string, int> MenuIndexes { get; } = new Dictionary<string, int>();
-
-        public Dictionary<string, int> MenuSelection = new Dictionary<string, int>();
-
-        public Dictionary<string, Menu> Menus_ { get; } = new Dictionary<string, Menu>();
-
+        public Dictionary<string, Menu> Menus { get; } = new Dictionary<string, Menu>();
         #endregion
 
         #region Methods
@@ -132,6 +103,12 @@ namespace Victor.CUI
 
         public void SetItemsContext(string name) => Controller.SetContext("ITEMS_" + Prefixed(name));
 
+        public bool IsInputContext => CurrentContext.StartsWith("INPUT_");
+
+        public void SetInputContext(string name) => Controller.SetContext("INPUT_" + Prefixed(name));
+        
+        public string GetInputContext() => CurrentContext.Replace("INPUT_", "").Replace(this.Name.ToUpper() + "_", "");
+
         public bool IsMenuContext => CurrentContext.StartsWith("MENU_");
 
         public string GetMenuContext() => CurrentContext.Replace("MENU_", "").Replace(this.Name.ToUpper() + "_", "");
@@ -139,7 +116,7 @@ namespace Victor.CUI
         public void SetMenuContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext("MENU_" + Prefixed(name), intent, action);
         #endregion
 
-        #region Variable Input
+        #region Variables
         public void GetVariableInput(string variableName, Action<Intent> action = null, Intent intent = null)
         {
             Controller.SetContext("INPUT_" + Prefixed(variableName), intent, action);
@@ -166,7 +143,7 @@ namespace Victor.CUI
         public virtual void DispatchVariableInput(Context context, string input)
         {
             string variableName = context.Label.Replace("INPUT_", "");
-            Variables[variableName] = input;
+            Variables[variableName].Value = input;
             if (Controller.DebugEnabled)
             {
                 SayInfoLine("Variable {0} set to to {1}.", variableName, input);
@@ -176,40 +153,17 @@ namespace Victor.CUI
             context.IntentAction.Invoke(context.Intent);
         }
 
-        #endregion
 
-        #region Variables
         public string Prefixed(string name) => Name.ToUpper() + "_" + name;
 
         public string Suffixed(string name) => name + "_" + Name.ToUpper();
 
-        public string GetVar(string name) => Variables[Prefixed(name).ToUpper()];
+        public string GetVar(string name) => Variables[Prefixed(name).ToUpper()].Value;
 
-        public string SetVar(string name, string value) => Variables[Prefixed(name).ToUpper()] = value;
+        public string SetVar(string name, string value) => Variables[Prefixed(name).ToUpper()].Value = value;
         #endregion
 
         #region Items
-        public T GetItems<T>(string name) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : default(T);
-
-        public object GetItems(string name) => Items[Prefixed(name).ToUpper()] != null ? Items[Prefixed(name).ToUpper()] : null;
-
-        public T GetOrFetchItems<T>(string name, Func<T> fetch) => Items[Prefixed(name).ToUpper()] != null ? (T)Items[Prefixed(name).ToUpper()] : fetch();
-
-        public T SetItems<T>(string name, T value) => (T)(Items[Prefixed(name).ToUpper()] = value);
-
-        public int GetItemsPageSize(string name) => ItemsPageSize[Prefixed(name).ToUpper()];
-
-        public int SetItemsPageSize(string name, int value) => ItemsPageSize[Prefixed(name).ToUpper()] = value;
-
-        public int GetItemsCurrentPage(string name) => ItemsCurrentPage[Prefixed(name).ToUpper()];
-
-        public Action<Package, object> GetItemsDescriptionHandler(string name) => ItemDescriptionHandlers[Prefixed(name).ToUpper()];
-
-        public void DescribeItem(string name, object o)
-        {
-            ItemDescriptionHandlers[Prefixed(name)].Invoke(this, o);
-        }
-
         public bool CanDispatchToItemsPage()
         {
             if (IsItemsContext)
@@ -223,13 +177,10 @@ namespace Victor.CUI
             }
         }
 
-        public void DescribeItems(int page) 
+        public void DescribeItems(int page)
         {
-            var itemsName = GetItemsContext();
-            var handler = GetItemsDescriptionHandler(itemsName);
-            //handler.Invoke(page, this);
-            var pageSize = this.ItemsPageSize[Prefixed(itemsName)];
-            var items = (this.GetItems(itemsName) as IEnumerable).Cast<object>();
+            var items = this.Items[GetItemsContext()];
+            var pageSize = items.PageSize;
             var count = items.Count();
             var pages = count / pageSize + 1;
             if (page > pages)
@@ -239,8 +190,8 @@ namespace Victor.CUI
             }
             else
             {
-                int start = (page - 1) * this.ItemsPageSize[Prefixed(itemsName)];
-                int end = start + this.ItemsPageSize[Prefixed(itemsName)];
+                int start = (page - 1) * pageSize; 
+                int end = start + pageSize;
                 if (end > count) end = count;
                 if (Controller.DebugEnabled)
                 {
@@ -249,45 +200,9 @@ namespace Victor.CUI
                 SayInfoLine("Boards page {0} of {1}.", page, pages);
                 for (int i = start; i < end; i++)
                 {
-                    var item = items.ElementAt(i);
-                    handler(this, item);
+                    items.DescriptionHandler.Invoke(10);
                 }
-                ItemsCurrentPage[Prefixed(itemsName)] = page;
-            }
-        }
-        public void DescribeItems<T, I>(int page) where T : IEnumerable<I>
-        {
-            var itemsName = GetItemsContext();
-            var handler = GetItemsDescriptionHandler(itemsName);
-            //handler.Invoke(page, this);
-            var pageSize = this.ItemsPageSize[Prefixed(itemsName)];
-            var items = this.GetItems<T>(itemsName);
-            var count = items.Count();
-            var pages = count / pageSize + 1;
-            if (page > pages)
-            {
-                SayErrorLine("There are only {0} pages available.", pages);
-                return;
-            }
-            else
-            {
-                int start = (page - 1) * this.ItemsPageSize[Prefixed(itemsName)];
-                int end = start + this.ItemsPageSize[Prefixed(itemsName)];
-                if (end > count) end = count;
-                if (Controller.DebugEnabled)
-                {
-                    SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", items.Count(), page, start, end);
-                }
-                SayInfoLine("Boards page {0} of {1}.", page, pages);
-                for (int i = start; i < end; i++)
-                {
-                    var item = items.ElementAt(i);
-                    handler(this, item);
-                    //oc.SayInfoLine("{0}. Name: {1}, Namespace: {2}, Labels: {3}, Status: {4}.", i + 1, pod.Metadata.Name, pod.Metadata.NamespaceProperty,
-                    //    pod.Metadata.Labels?.Select(kv => kv.Key + "=" + kv.Value).Aggregate((s1, s2) => s1 + " " + s2) ?? "{}",
-                    //    pod.Status.Phase);
-                }
-                ItemsCurrentPage[Prefixed(itemsName)] = page;
+                items.Page = page;
             }
         }
         #endregion
@@ -297,8 +212,7 @@ namespace Victor.CUI
         {
             if (IsMenuContext)
             {
-                string label = CurrentContext.Replace("MENU_", "");
-                return MenuHandlers.ContainsKey(label);
+                return Menus.ContainsKey(GetMenuContext());
             }
             else
             {
@@ -308,14 +222,14 @@ namespace Victor.CUI
 
         public void DispatchToMenuItem(Context context, DateTime time, int i)
         {
-            string label = context.Label.Replace("MENU_", "");
-            if (i < 1 || i > MenuIndexes[label])
+            var menu = Menus[GetMenuContext()];
+            if (i < 1 || i > menu.Items.Count)
             {
-                SayInfoLine("Enter a number between {0} and {1}.", 1, MenuIndexes[label]);
+                SayInfoLine("Enter a number between {0} and {1}.", 1, menu.Items.Count);
             }
             else
             {
-                MenuHandlers[label].Invoke(i);
+                menu.Handler.Invoke(i);
             }
         }
 
@@ -339,7 +253,7 @@ namespace Victor.CUI
                 }
                 else if (CanDispatchToItemsPage())
                 {
-                    DescribeItems(GetItemsPageSize(GetItemsContext()));
+                    DescribeItems(result);
                     return true;
                 }
                 else
@@ -444,9 +358,27 @@ namespace Victor.CUI
             }
             return new Tuple<string, string, List<string>>(task, command, objects);
         }
+
+        protected string GetIntentItems(Intent intent)
+        {
+            ThrowIfNotItems(intent);
+            return intent.Entities.Where(i => i.SlotName == "items").First().Value;
+        }
+
+        [DebuggerStepThrough]
         protected bool Empty(Intent intent) => intent == null || intent.IsNone;
 
+        [DebuggerStepThrough]
         protected bool EmptyEntities(Intent intent) => Empty(intent) || intent.Entities.Count() == 0;
+        
+        [DebuggerStepThrough]
+        protected void ThrowIfNotItems(Intent intent)
+        {
+            if (Empty(intent) || intent.Entities.All(e => e.SlotName != "items"))
+            {
+                throw new InvalidOperationException("Intent has no items.");
+            }
+        }
         #endregion
 
         #region Intents
@@ -571,19 +503,18 @@ namespace Victor.CUI
                 SayErrorLine("Sorry I don't understand what you mean. There is not anything I can page.");
                 return;
             }
+            var items = Items[GetItemsContext()];
             var input = intent.Input.Trim().ToLower();
-            var items = GetItemsContext();
-            var current = GetItemsCurrentPage(items);
             int page;
             if (EmptyEntities(intent))
             {
                 if (input == "np" || input.Contains("next"))
                 {
-                    page = current + 1;
+                    page = items.Page + 1;
                 }
                 else if (input == "pp" || intent.Input.Contains("previous"))
                 {
-                    page = current - 1;
+                    page = items.Page - 1;
                 }
                 else
                 {
@@ -604,9 +535,9 @@ namespace Victor.CUI
             if (EmptyEntities(intent))
             {
                 var ctx = GetItemsContext();
-                if (ItemsListHandlers.ContainsKey(ctx))
+                if (Items.ContainsKey(ctx))
                 {
-                    DispatchIntent(intent, ItemsListHandlers[ctx]);
+                    DispatchIntent(intent, Items[ctx].ListHandler);
                 }
                 else
                 {
@@ -616,11 +547,17 @@ namespace Victor.CUI
             }
             else
             {
-                var (task, command, objects) = GetIntentTaskCommandObjects(intent);
-                if (objects.Count == 0)
+                var items = GetIntentItems(intent).ToUpper();
+                
+                if (!Items.ContainsKey(items))
                 {
                     SayInfoLine("Sorry I don't know how to list what you are saying: {0}. Say something like {1} or say {2} to see the menu.", intent.Top.Label, "list boards", "menu");
                 }
+                else
+                {
+                    Items[items].ListHandler.Invoke(intent);
+                }
+                /*
                 else
                 {
                     var c = objects.First();
@@ -634,6 +571,7 @@ namespace Victor.CUI
                         DebugIntent(intent);
                     }
                 }
+                */
             }
         }
         #endregion

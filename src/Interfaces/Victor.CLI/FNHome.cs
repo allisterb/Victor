@@ -12,8 +12,8 @@ namespace Victor.CLI
         #region Constructors
         public FNHome(Controller controller) : base("Home", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-            MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
-            MenuIndexes[Prefixed("PACKAGES")] = 3;
+            //MenuHandlers[Prefixed("PACKAGES")] = GetPackagesMenuItem;
+            //MenuIndexes[Prefixed("PACKAGES")] = 3;
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {

@@ -6,6 +6,12 @@ namespace Victor.CUI
 {
     public class Menu
     {
+        public Menu(string name, Action<int> handler, params string[] items)
+        {
+            Name = name;
+            Items = new List<string>(items);
+            Handler = handler;
+        }
         public string Name { get; set; }
 
         public List<string> Items { get; set; }
