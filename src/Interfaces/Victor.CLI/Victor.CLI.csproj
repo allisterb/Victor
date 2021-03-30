@@ -63,6 +63,7 @@
     <ProjectReference Include="..\..\CUI\Victor.CUI.FN\Victor.CUI.FN.csproj" />
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\..\ext\readline\src\ReadLine\ReadLine.csproj" />
+    <ProjectReference Include="..\..\Web\Victor.Web.Server\Victor.Web.Server.csproj" />
   </ItemGroup>
 
 </Project>

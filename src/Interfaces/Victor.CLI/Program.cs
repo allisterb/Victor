@@ -2,14 +2,14 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Net;
 using CO = Colorful.Console;
 using Figgle;
 using CommandLine;
 using CommandLine.Text;
 
 using Victor.CUI;
-
+using Victor.Web.Server;
 namespace Victor.CLI
 {
     class Program : Api
@@ -33,7 +33,10 @@ namespace Victor.CLI
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Console.CancelKeyPress += Console_CancelKeyPress;
-            
+            WebServer = new WebServer();
+            WebServer.ProcessRequest += WebServer_ProcessRequest;
+            WebServer.EndPoint = new IPEndPoint(IPAddress.Loopback, 5001);
+            WebServer.IsStarted = true;
             if (!args.Contains("fn") && !args.Contains("pm") && !args.Contains("cr"))
             {
                 PrintLogo();
@@ -231,6 +234,8 @@ namespace Victor.CLI
 
         #region Properties
         static string [] Args { get; set; }
+
+        static WebServer WebServer { get; set; }
         #endregion
 
         #region Event Handlers
@@ -245,6 +250,11 @@ namespace Victor.CLI
             Info("Ctrl-C pressed. Exiting.");
             Cts.Cancel();
             Exit(ExitResult.SUCCESS);
+        }
+
+        private static void WebServer_ProcessRequest(object sender, ProcessRequestEventArgs args)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }
