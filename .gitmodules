@@ -19,3 +19,6 @@
 [submodule "ext/readline"]
 	path = ext/readline
 	url = https://github.com/wwestlake/readline.git
+[submodule "ext/ffdc-sample-csharp"]
+	path = ext/ffdc-sample-csharp
+	url = https://github.com/fusionfabric/ffdc-sample-csharp.git
