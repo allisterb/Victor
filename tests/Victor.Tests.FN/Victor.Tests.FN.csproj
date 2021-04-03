@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ext\nledger\Source\NLedger\NLedger.csproj" />
     <ProjectReference Include="..\..\src\Base\Victor.Base\Victor.Base.csproj" />
     <ProjectReference Include="..\..\src\CUI\Victor.CUI.PM\Victor.CUI.PM.csproj" />
     <ProjectReference Include="..\..\src\Vision\EmguCV\Victor.Vision.EmguCV\Victor.Vision.EmguCV.csproj" />
