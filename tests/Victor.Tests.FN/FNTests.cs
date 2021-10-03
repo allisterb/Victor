@@ -37,7 +37,7 @@ namespace Victor.Tests
         public void CanStartNLedger()
         {
             var engine = new ServiceEngine(
-                configureContext: context => { context.IsAtty = true; context.Logger = new NLedger.Utils.Logger(); },
+                configureContext: context => { context.IsAtty = true; },
                 createCustomProvider: mem =>
                 {
                     mem.Attach(w => new MemoryAnsiTextWriter(w));
@@ -55,13 +55,15 @@ namespace Victor.Tests
                 xact.AddPost(new Post(journal.Master, new Amount(10, new NLedger.Commodities.Commodity(session.MainApplicationContext.CommodityPool, new NLedger.Commodities.CommodityBase("$")))));
                 xact.AddPost(new Post(journal.Master, new Amount(-10, new NLedger.Commodities.Commodity(session.MainApplicationContext.CommodityPool, new NLedger.Commodities.CommodityBase("$")))));
                 j.AddXact(xact);
+                //j.Master.AddAccount(new Account() { f})
+                
             });
 
             
             // response = session.ExecuteCommand("bal checking --account=code");
             //session.ExecuteCommand
             //j
-            response = session.ExecuteCommand("bal checking --account=code");
+            response = session.ExecuteCommand("bal");
             //session.Dispose();
             Assert.False(response.HasErrors);
             Assert.Equal(2, session.GlobalScope.Session.Journal.Xacts.Count);

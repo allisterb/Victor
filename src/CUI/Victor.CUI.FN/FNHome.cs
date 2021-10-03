@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using Victor.CUI.PM.Models;
+
 
 namespace Victor.CUI.PM
 {
     public class FNHome : Package
     {
         #region Constructors
-        public PMHome(Controller controller) : base("ProjectManagement", new SnipsNLUEngine(Path.Combine("Engines", "PM")), controller)
+        public FNHome(Controller controller) : base("Finance", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-            Boards = Items["BOARDS"] = new Items("BOARDS", typeof(Board), ListBoards, Board);
+            Boards = Items["BOARDS"] = new Items("BOARDS", typeof(Object), ListBoards, Board);
             Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem);    
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
@@ -298,7 +298,7 @@ namespace Victor.CUI.PM
             ThrowIfNotItems(intent);
             if (Boards.Count == 0)
             {
-                Boards.Add(FetchBoards());
+                //Boards.Add(FetchBoards());
                 
             }
             SetItemsContext("BOARDS");
@@ -311,8 +311,8 @@ namespace Victor.CUI.PM
 
         protected void Board(int index)
         {
-            var b = this.Boards[index] as Board;
-            SayInfoLine(b.Name);
+            //var b = this.Boards[index] as Board;
+            //SayInfoLine(b.Name);
         }
         protected void DescribeBoard(Package package, object item)
         { 
@@ -320,6 +320,7 @@ namespace Victor.CUI.PM
         #endregion
 
         #region Monday.com API
+        /*
         internal List<Board> FetchBoards()
         {
             ThrowIfNotInitialized();
@@ -329,7 +330,7 @@ namespace Victor.CUI.PM
             Controller.StopBeeper();
             SayInfoLine("Fetched {0} boards.", boards.Count());
             return boards;
-        }
+        }*/
         #endregion
 
         #endregion

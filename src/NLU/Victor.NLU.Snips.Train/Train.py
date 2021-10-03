@@ -34,4 +34,5 @@ def train_model(_input, name, sub=""):
     engine.fit(dataset)
     engine.persist(engine_path)
 
+train_model("FN.yaml", "fn")
     
