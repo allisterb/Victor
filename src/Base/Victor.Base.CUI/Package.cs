@@ -261,6 +261,11 @@ namespace Victor.CUI
                     return ParseIntent(Controller.Context.Peek(), time, input);
                 }
             }
+			else if (input.ToLower() == "menu")
+			{
+                    DispatchIntent(null, Menu);
+					return true;
+			}
             else
             {
                 return ParseIntent(Controller.Context.Peek(), time, input);
