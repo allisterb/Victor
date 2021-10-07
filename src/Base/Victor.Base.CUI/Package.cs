@@ -266,6 +266,33 @@ namespace Victor.CUI
                     DispatchIntent(null, Menu);
 					return true;
 			}
+			else if (input.ToLower() == "help")
+			{
+                    DispatchIntent(null, Help);
+					return true;
+			}
+			else if (input.ToLower() == "info")
+			{
+                    DispatchIntent(null, Info);
+					return true;
+			}
+			else if (input.ToLower() == "exit")
+			{
+                    DispatchIntent(null, Exit);
+					return true;
+			}
+			else if (input.ToLower() == "enable debug")
+			{
+                    Controller.DebugEnabled = true;
+					SayInfoLine("Debug enabled.");
+					return true;
+			}
+			else if (input.ToLower() == "disable debug")
+			{
+                    Controller.DebugEnabled = false;
+					SayInfoLine("Debug disabled.");
+					return true;
+			}
             else
             {
                 return ParseIntent(Controller.Context.Peek(), time, input);

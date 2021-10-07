@@ -34,5 +34,5 @@ def train_model(_input, name, sub=""):
     engine.fit(dataset)
     engine.persist(engine_path)
 
-train_model("FN.yaml", "fn")
+train_model("C:\\Projects\\Victor\\src\\NLU\\Victor.NLU.Snips\\Datasets\\FN.yaml", "fn")
     

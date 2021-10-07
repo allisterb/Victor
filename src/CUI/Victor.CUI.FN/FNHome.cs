@@ -4,17 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-
-
-namespace Victor.CUI.PM
+namespace Victor.CUI.FN
 {
     public class FNHome : Package
     {
         #region Constructors
         public FNHome(Controller controller) : base("Finance", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-            Boards = Items["BOARDS"] = new Items("BOARDS", typeof(Object), ListBoards, Board);
-            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem);    
+            Accounts = Items["BOARDS"] = new Items("BOARDS", typeof(Object), ListAccounts, Board);
+            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Ledger", "Accounts");    
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -25,7 +23,7 @@ namespace Victor.CUI.PM
         #endregion
 
         #region Properties
-        public Items Boards { get; }
+        public Items Accounts { get; }
         public Menu Features { get; }
         #endregion
         
@@ -168,11 +166,23 @@ namespace Victor.CUI.PM
 
         protected override void Menu(Intent intent)
         {
-            SetMenuContext("FEATURES");
-            SayInfoLine("Select a feature to use.");
-            SayInfoLine("1. {0}", "Boards");
-            SayInfoLine("2. {0}", "Tasks");
-            SayInfoLine("3. {0}", "Users");
+            switch(CurrentContext)
+            {
+
+                case "WELCOME_FINANCE":
+            
+                    SetMenuContext("FEATURES");
+                    SayInfoLine("Select a feature to use.");
+                    SayInfoLine("1. {0}", "Accounts");
+                    SayInfoLine("2. {0}", "Transfer money");
+                    SayInfoLine("3. {0}", "Pay bills");
+                    SayInfoLine("4. {0}", "Loans and Mortgage");
+                    SayInfoLine("5. {0}", "Documents");
+                    break;
+                default:
+                    SayErrorLine("Unknown controller context: {0}.", CurrentContext);
+                    break;
+            }
         }
 
         #endregion
@@ -292,11 +302,11 @@ namespace Victor.CUI.PM
             }
         }
 
-        protected void ListBoards(Intent intent)
+        protected void ListAccounts(Intent intent)
         {
             ThrowIfNotInitialized();
             ThrowIfNotItems(intent);
-            if (Boards.Count == 0)
+            if (Accounts.Count == 0)
             {
                 //Boards.Add(FetchBoards());
                 
@@ -304,7 +314,7 @@ namespace Victor.CUI.PM
             SetItemsContext("BOARDS");
             if (!Empty(intent) && intent.Top.Label == "list")
             {
-                DescribeItems(Boards.Page);
+                DescribeItems(Accounts.Page);
             }
 
         }

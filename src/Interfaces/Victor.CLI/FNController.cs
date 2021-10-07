@@ -11,6 +11,7 @@ using Colorful;
 using Co = Colorful.Console;
 
 using Victor.CUI;
+using Victor.CUI.FN;
 
 namespace Victor.CLI
 {

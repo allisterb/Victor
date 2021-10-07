@@ -197,6 +197,9 @@
   "custom_entity_parser": "custom_entity_parser",
   "dataset_metadata": {
     "entities": {
+      "feature": {
+        "automatically_extensible": false
+      },
       "package": {
         "automatically_extensible": false
       }
@@ -204,6 +207,7 @@
     "language_code": "en",
     "slot_name_mappings": {
       "help": {
+        "feature": "feature",
         "package": "package"
       }
     }

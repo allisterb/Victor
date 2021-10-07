@@ -8,6 +8,7 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
+          "feature",
           "package"
         ]
       },
@@ -61,6 +62,18 @@
       0,
       []
     ],
+    "-41636533": [
+      0,
+      [
+        1
+      ]
+    ],
+    "-21667460": [
+      0,
+      [
+        1
+      ]
+    ],
     "188924886": [
       0,
       [
@@ -91,7 +104,8 @@
     ]
   },
   "slots_names": [
-    "package"
+    "package",
+    "feature"
   ],
   "stop_words_whitelist": {}
 }

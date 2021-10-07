@@ -10,14 +10,15 @@ slots:
   - name: function
     entity: function
 utterances:
+  # help
   - help
   - help with this
   - What is victor
   - help victor packages
   - help finance packages
+  - help with victor packages- 
   - help manage [package](accounts)
-  - help with [package](banking) package
-  - help with victor packages
+  - help with [package](documents) package
   - help with [package](documents)
   - help with [package](forms)
   - Tell me about Victor packages
@@ -25,6 +26,8 @@ utterances:
   - How do I use the [package](documents) package
   - How do I use [package](documents)  
   - What victor packages are there
+  - How do I use the [feature](accounts)?
+  - What is the [feature](accounts)?
 
 # package entity
 ---
@@ -33,7 +36,15 @@ name: package
 automatically_extensible: no
 use_synonyms: yes
 values:
-- [accounting, accounts, bookkeeping, financial accounting, personal accounting, ledger]
-- [banking, bank, banks, bank account]
-- [documents, document, pdf document]
+- [accounting, bookkeeping, financial accounting, personal accounting, ledger]
+- [documents, document, pdf document, document understanding]
 - [forms, form]
+
+# feature entity
+---
+type: entity
+name: feature
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [accounts]
