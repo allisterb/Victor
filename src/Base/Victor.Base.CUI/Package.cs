@@ -197,7 +197,7 @@ namespace Victor.CUI
                 {
                     SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", items.Count(), page, start, end);
                 }
-                SayInfoLine("Boards page {0} of {1}.", page, pages);
+                SayInfoLine("Items page {0} of {1}.", page, pages);
                 for (int i = start; i < end; i++)
                 {
                     items.DescriptionHandler.Invoke(i);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Acklann.Plaid.Entity;
 namespace Victor.CUI.FN
 {
     public class FNHome : Package
@@ -11,8 +12,9 @@ namespace Victor.CUI.FN
         #region Constructors
         public FNHome(Controller controller) : base("Finance", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-            Accounts = Items["BOARDS"] = new Items("BOARDS", typeof(Object), ListAccounts, Board);
-            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Ledger", "Accounts");    
+            Plaid = new Plaid(controller);
+            Accounts = Items["ACCOUNTS"] = new Items("ACCOUNTS", typeof(Account), ListAccounts, DescribeAccount);
+            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Accounts", "Transfer money");    
             Initialized = NLUEngine.Initialized;
             if (!Initialized)
             {
@@ -23,6 +25,10 @@ namespace Victor.CUI.FN
         #endregion
 
         #region Properties
+        public Plaid Plaid {get; }
+        
+        public List<Account> PlaidAccounts {get; protected set;}
+
         public Items Accounts { get; }
         public Menu Features { get; }
         #endregion
@@ -33,7 +39,7 @@ namespace Victor.CUI.FN
         public override void Welcome(Intent intent = null)
         {
             base.Welcome(intent);
-            SayInfoLine("Welcome to Victor PM.");
+            SayInfoLine("Welcome to Victor FN.");
             SayInfoLine("Say {0} to show the main menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
         }
 
@@ -41,8 +47,8 @@ namespace Victor.CUI.FN
         {
             if (EmptyEntities(intent))
             {
-                SayInfoLine("Victor PM is a project management program designed for vision-impaired and differently-abled users.");
-                SayInfoLine("This is the Victor auditory conversational user interface for managing project tasks, people, and other data using the monday.com data engine.");            
+                SayInfoLine("Victor FN is a personal finance and accounting program designed for vision-impaired and differently-abled users.");
+                SayInfoLine("This is the Victor auditory conversational user interface for managing accounts, bills, money transfers");            
             }
             else
             {
@@ -294,7 +300,7 @@ namespace Victor.CUI.FN
             switch(i - 1)
             {
                 case 0:
-                    //LoadBoards();
+                    ListAccounts(null);
                     break;
 
                 default:
@@ -305,42 +311,47 @@ namespace Victor.CUI.FN
         protected void ListAccounts(Intent intent)
         {
             ThrowIfNotInitialized();
-            ThrowIfNotItems(intent);
-            if (Accounts.Count == 0)
+            //ThrowIfNotItems(intent);
+            if (PlaidAccounts == null)
             {
-                //Boards.Add(FetchBoards());
+                PlaidAccounts = FetchAccounts();
+                Accounts.Add(PlaidAccounts);
                 
             }
-            SetItemsContext("BOARDS");
-            if (!Empty(intent) && intent.Top.Label == "list")
+            SetItemsContext("Accounts");
+            var accounts = Accounts.Cast<Account>().ToList();
+            for(int i = 0; i < Accounts.Count; i++) 
             {
-                DescribeItems(Accounts.Page);
+                SayInfoLine("Name: {0}.", accounts[i].Name);
             }
 
+            //if (intent == null || (!Empty(intent) && intent.Top.Label == "list"))
+            //{
+             //   DescribeItems(Accounts.Page);
+            //}
+
         }
 
-        protected void Board(int index)
+        protected void DescribeAccount(int index)
         {
-            //var b = this.Boards[index] as Board;
-            //SayInfoLine(b.Name);
+            var a = Accounts.Get<Account>(index);
+            SayInfoLine("Name: {0}.", a.Name);
         }
-        protected void DescribeBoard(Package package, object item)
-        { 
-        }        
+            
         #endregion
 
-        #region Monday.com API
-        /*
-        internal List<Board> FetchBoards()
+        #region Plaid API
+        
+        internal List<Account> FetchAccounts()
         {
             ThrowIfNotInitialized();
-            SayInfoLine("Fetching boards for your account...");
+            SayInfoLine("Fetching accounts for your institution...");
             Controller.StartBeeper();
-            var boards = MdcApi.GetBoards().Result.Boards;
+            var accounts = Plaid.GetAccounts().Result;
+            SayInfoLineIfDebug("Fetched {0} accounts.", accounts.Length);
             Controller.StopBeeper();
-            SayInfoLine("Fetched {0} boards.", boards.Count());
-            return boards;
-        }*/
+            return accounts.ToList();
+        }
         #endregion
 
         #endregion
