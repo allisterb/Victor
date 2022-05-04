@@ -1,11 +1,21 @@
 {
   "entities": {
+    "feature": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "accounts"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
     "package": {
       "automatically_extensible": false,
       "data": [
         {
           "synonyms": [
-            "accounts",
             "bookkeeping",
             "financial accounting",
             "personal accounting",
@@ -15,16 +25,9 @@
         },
         {
           "synonyms": [
-            "bank",
-            "banks",
-            "bank account"
-          ],
-          "value": "banking"
-        },
-        {
-          "synonyms": [
             "document",
-            "pdf document"
+            "pdf document",
+            "document understanding"
           ],
           "value": "documents"
         },
@@ -80,6 +83,13 @@
         {
           "data": [
             {
+              "text": "help with victor packages-"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "help manage "
             },
             {
@@ -97,17 +107,10 @@
             {
               "entity": "package",
               "slot_name": "package",
-              "text": "banking"
+              "text": "documents"
             },
             {
               "text": " package"
-            }
-          ]
-        },
-        {
-          "data": [
-            {
-              "text": "help with victor packages"
             }
           ]
         },
@@ -188,6 +191,36 @@
           "data": [
             {
               "text": "What victor packages are there"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "How do I use the "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "accounts"
+            },
+            {
+              "text": "?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is the "
+            },
+            {
+              "entity": "feature",
+              "slot_name": "feature",
+              "text": "accounts"
+            },
+            {
+              "text": "?"
             }
           ]
         }

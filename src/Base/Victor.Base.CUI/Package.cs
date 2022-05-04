@@ -197,7 +197,7 @@ namespace Victor.CUI
                 {
                     SayInfoLine("Count: {0}. Page: {1}. Start: {2}. End: {3}", items.Count(), page, start, end);
                 }
-                SayInfoLine("Boards page {0} of {1}.", page, pages);
+                SayInfoLine("Items page {0} of {1}.", page, pages);
                 for (int i = start; i < end; i++)
                 {
                     items.DescriptionHandler.Invoke(i);
@@ -261,6 +261,38 @@ namespace Victor.CUI
                     return ParseIntent(Controller.Context.Peek(), time, input);
                 }
             }
+			else if (input.ToLower() == "menu")
+			{
+                    DispatchIntent(null, Menu);
+					return true;
+			}
+			else if (input.ToLower() == "help")
+			{
+                    DispatchIntent(null, Help);
+					return true;
+			}
+			else if (input.ToLower() == "info")
+			{
+                    DispatchIntent(null, Info);
+					return true;
+			}
+			else if (input.ToLower() == "exit")
+			{
+                    DispatchIntent(null, Exit);
+					return true;
+			}
+			else if (input.ToLower() == "enable debug")
+			{
+                    Controller.DebugEnabled = true;
+					SayInfoLine("Debug enabled.");
+					return true;
+			}
+			else if (input.ToLower() == "disable debug")
+			{
+                    Controller.DebugEnabled = false;
+					SayInfoLine("Debug disabled.");
+					return true;
+			}
             else
             {
                 return ParseIntent(Controller.Context.Peek(), time, input);
