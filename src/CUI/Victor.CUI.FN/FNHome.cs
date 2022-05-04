@@ -30,6 +30,7 @@ namespace Victor.CUI.FN
         public List<Account> PlaidAccounts {get; protected set;}
 
         public Items Accounts { get; }
+        
         public Menu Features { get; }
         #endregion
         

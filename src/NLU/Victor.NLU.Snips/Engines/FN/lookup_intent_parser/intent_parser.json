@@ -8,8 +8,8 @@
       "entity_scope": {
         "builtin": [],
         "custom": [
-          "feature",
-          "package"
+          "package",
+          "feature"
         ]
       },
       "intent_group": [
