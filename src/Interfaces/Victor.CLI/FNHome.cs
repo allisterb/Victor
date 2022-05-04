@@ -31,7 +31,48 @@ namespace Victor.CLI
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
         public override bool ParseIntent(Context context, DateTime time, string input)
-        {            
+        {
+            switch (input.ToLower())
+            {
+                case "info":
+                    Info(null);
+                    return true;
+                case "help":
+                    Help(null);
+                    return true;
+                case "menu":
+                    Menu(null);
+                    return true;
+                case "exit":
+                    Exit(null);
+                    return true;
+
+                case "enable asr":
+                    this.Controller.EnableASR();
+                    return true;
+                case "disable asr":
+                    this.Controller.StopASR();
+                    return true;
+                case "back":
+                    Back(null);
+                    return true;
+                case "page":
+                    Page(null);
+                    return true;
+                    //case "list boards":
+                    //DispatchIntent(intent, List);
+                    //break;
+                    //var boards = PM.MdcApi.GetBoards();
+                    //for(int i = 0; i < boards.Result.Boards.Count; i++)
+                    //{
+                    //    SayInfoLine("{0}.{1}", i, boards.Result.Boards[i].Name);
+                    //}
+                    //return true;
+                    //foreach(var b in broads)
+                    //{
+                    //    SayInfoLine("")
+                    //}
+            }
             var intent = NLUEngine.GetIntent(input);
             if (Controller.DebugEnabled)
             {

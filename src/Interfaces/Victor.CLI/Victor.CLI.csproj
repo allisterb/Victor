@@ -34,13 +34,6 @@
     <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(OS)' == 'Windows_NT' AND '$(TargetFramework)'=='net461'">
-    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\Microsoft SDKs\Speech\v11.0\Assembly\Microsoft.Speech.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <ItemGroup>
     <None Remove="victor.cmd" />
     <None Remove="Victor.log" />
@@ -60,10 +53,15 @@
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
     <ProjectReference Include="..\..\CUI\Victor.CUI.PM\Victor.CUI.PM.csproj" />
     <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />
-    <ProjectReference Include="..\..\CUI\Victor.CUI.FN\Victor.CUI.FN.csproj" />
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\..\ext\readline\src\ReadLine\ReadLine.csproj" />
     <ProjectReference Include="..\..\Web\Victor.Web.Server\Victor.Web.Server.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Speech">
+      <HintPath>..\..\..\..\..\Program Files\Microsoft SDKs\Speech\v11.0\Assembly\Microsoft.Speech.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

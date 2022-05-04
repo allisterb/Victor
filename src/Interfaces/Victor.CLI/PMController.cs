@@ -124,6 +124,7 @@ namespace Victor.CLI
             }
 #elif WINDOWS && NET461
 
+            /*
             if (sre.Grammars.Count == 0)
             {
                 sre.SetInputToDefaultAudioDevice();
@@ -143,7 +144,7 @@ namespace Victor.CLI
                 }
                 SayInfoLine("ASR enabled.");
             }
-
+            */
             
 #endif
         }
@@ -153,8 +154,8 @@ namespace Victor.CLI
 #if UNIX
             JuliusSession.Stop();
 #elif WINDOWS && NET461
-            sre.RecognizeAsyncStop();
-            SayInfoLine("ASR disabled.");
+            //sre.RecognizeAsyncStop();
+            ///SayInfoLine("ASR disabled.");
 #endif
         }
 
@@ -283,10 +284,10 @@ namespace Victor.CLI
         public static bool beeperOn;
 
 #if WINDOWS && NET461
-        SpeechRecognitionEngine sre = new SpeechRecognitionEngine();
-        Grammar rootGrammar = new Grammar(new GrammarBuilder(new Choices(
-            "menu", "info", "help", "exit", "list boards", "list users"
-        )));
+        //SpeechRecognitionEngine sre = new SpeechRecognitionEngine();
+        //Grammar rootGrammar = new Grammar(new GrammarBuilder(new Choices(
+        //    "menu", "info", "help", "exit", "list boards", "list users"
+        //)));
 #endif
 #endregion
     }
