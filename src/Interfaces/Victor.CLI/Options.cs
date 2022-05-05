@@ -50,4 +50,11 @@ namespace Victor
         [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
         public bool NoBeeper { get; set; }
     }
+
+    [Verb("du", HelpText = "Launch the Victor DU auditory CUI.")]
+    public class DUOptions : Options
+    {
+        [Option('b', "no-beeper", Required = false, Default = false, HelpText = "Disable the beeper sound.")]
+        public bool NoBeeper { get; set; }
+    }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Victor.Base.CUI\Victor.Base.CUI.csproj" />
     <ProjectReference Include="..\..\Base\Victor.Base\Victor.Base.csproj" />
+    <ProjectReference Include="..\..\CUI\Victor.CUI.DU\Victor.CUI.DU.csproj" />
     <ProjectReference Include="..\..\CUI\Victor.CUI.FN\Victor.CUI.FN.csproj" />
     <ProjectReference Include="..\..\CUI\Victor.CUI.PM\Victor.CUI.PM.csproj" />
     <ProjectReference Include="..\..\NLU\Victor.NLU.Snips\Victor.NLU.Snips.csproj" />

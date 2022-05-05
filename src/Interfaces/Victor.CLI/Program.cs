@@ -18,7 +18,7 @@ namespace Victor.CLI
         static void Main(string[] args)
         {
             Args = args;
-            if (Args.Contains("fn") || Args.Contains("pm") || Args.Contains("cr"))
+            if (Args.Contains("du") || Args.Contains("fn") || Args.Contains("pm") || Args.Contains("cr"))
             {
                 SetLogger(new SerilogLogger(console: false, debug: true));
             }
@@ -37,7 +37,7 @@ namespace Victor.CLI
             WebServer.ProcessRequest += WebServer_ProcessRequest;
             WebServer.EndPoint = new IPEndPoint(IPAddress.Loopback, 5001);
             WebServer.IsStarted = true;
-            if (!args.Contains("fn") && !args.Contains("pm") && !args.Contains("cr"))
+            if (!args.Contains("du") && !args.Contains("fn") && !args.Contains("pm") && !args.Contains("cr"))
             {
                 PrintLogo();
             }
@@ -46,7 +46,7 @@ namespace Victor.CLI
                 Info("Debug mode set.");
             }
             
-            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, FNOptions, PMOptions>(args);
+            ParserResult<object> result = new Parser().ParseArguments<Options, SpeechRecognitionOptions, TTSOptions, FNOptions, PMOptions, DUOptions>(args);
             result.WithNotParsed((IEnumerable<Error> errors) =>
             {
                 HelpText help = GetAutoBuiltHelpText(result);
@@ -66,7 +66,7 @@ namespace Victor.CLI
                     }
                     else
                     {
-                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions));
+                        help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions), typeof(DUOptions));
                     }
                     Info(help);
                     Exit(ExitResult.SUCCESS);
@@ -74,13 +74,13 @@ namespace Victor.CLI
                 else if (errors.Any(e => e.Tag == ErrorType.HelpRequestedError))
                 {
                     HelpRequestedError error = (HelpRequestedError)errors.First(e => e.Tag == ErrorType.HelpRequestedError);
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions), typeof(DUOptions));
                     Info(help);
                     Exit(ExitResult.SUCCESS);
                 }
                 else if (errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError))
                 {
-                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions));
+                    help.AddVerbs(typeof(SpeechRecognitionOptions), typeof(TTSOptions), typeof(FNOptions), typeof(PMOptions), typeof(DUOptions));
                     Info(help);
                     Exit(ExitResult.INVALID_OPTIONS);
                 }
@@ -127,6 +127,12 @@ namespace Victor.CLI
             {
                 PMController.Options = o;
                 new PMController(o).Start();
+                Exit(ExitResult.SUCCESS);
+            })
+            .WithParsed<DUOptions>(o =>
+            {
+                DUController.Options = o;
+                new DUController(o).Start();
                 Exit(ExitResult.SUCCESS);
             });
 
