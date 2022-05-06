@@ -7,6 +7,7 @@ using Azure;
 using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.Models;
 
+
 using Victor.CUI;
 
 namespace Victor.Vision
@@ -26,7 +27,6 @@ namespace Victor.Vision
         public FormRecognizerClient Client;
         private static readonly string Endpoint = "https://victor-du.cognitiveservices.azure.com/";
         private static readonly string ApiKey = Config("AZURE_FORMRECOGNIZER_KEY");
-        private static readonly AzureKeyCredential credential = new AzureKeyCredential(ApiKey);
         #endregion
 
         #region Methods
@@ -37,7 +37,7 @@ namespace Victor.Vision
             return client;
         }
 
-        private async Task<FormPageCollection> RecognizeDocument(string filename)
+        public async Task<FormPageCollection> RecognizeDocument(string filename)
         {
             var fs = File.OpenRead(filename);
             //var invoiceUri = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/simple-invoice.png";

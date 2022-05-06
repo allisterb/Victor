@@ -15,6 +15,7 @@ namespace Victor.CUI.DU
         public DUHome(Controller controller) : base("Documents", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
             Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Open", "Scan");
+            DocType = Menus["DOC_TYPE"] = new Menu("DOC_TYPE", GetFeaturesMenuItem, "Invoice", "Business Card");
             DocItems = Items["Docs"] = new Items("Docs", typeof(Doc), ListDocs, DescribeDoc);
         
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
@@ -29,6 +30,8 @@ namespace Victor.CUI.DU
 
         #region Properties
         public Menu Features { get; }
+
+        public Menu DocType { get; }
 
         public Items DocItems { get; }
 
@@ -185,6 +188,12 @@ namespace Victor.CUI.DU
                     SayInfoLine("2. {0}", "Scan");
                     SayInfoLine("3. {0}", "Monitor");
                     break;
+                case "DOCUMENTS_DOC_TYPE":
+                    SetMenuContext("DOC_TYPE");
+                    SayInfoLine("Select a document type.");
+                    SayInfoLine("1. {0}", "Invoice");
+                    SayInfoLine("2. {0}", "Business Card");
+                    break;
                 default:
                     SayErrorLine("Unknown controller context: {0}.", CurrentContext);
                     break;
@@ -193,9 +202,9 @@ namespace Victor.CUI.DU
 
         #endregion
 
-        public override string[] VariableNames { get; } = { "FILE_NAME" };
+        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE" };
 
-        public override string[] MenuNames { get; } = { "FEATURES" };
+        public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE" };
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
@@ -216,11 +225,18 @@ namespace Victor.CUI.DU
             }
             else
             {
-                SayInfoLineIfDebug($" Got {filename}");
+                SayInfoLineIfDebug($"File to opein is: {filename}");
                 if (!File.Exists(filename))
                 {
-                    SayErrorLine($"Sorry, I couldn't find the file {filename}. Try entering it again");
+                    SayErrorLine($"Sorry, I couldn't find the file {filename}. Try entering it again or say 'cancel' to cancel this operation.");
                     GetVariableInput("FILE_NAME", Open);
+                }
+                else
+                {
+                    var r = Recognizer.RecognizeDocument(filename).Result;
+                    SetContext("DOC_TYPE", null);
+                    DispatchIntent(null, Menu);
+                    
                 }
             }
             
@@ -255,10 +271,7 @@ namespace Victor.CUI.DU
             
         #endregion
 
-        #region Azure API
-        
-        #endregion
-
+      
         #endregion
     }
 }

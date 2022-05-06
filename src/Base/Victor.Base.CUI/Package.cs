@@ -114,6 +114,9 @@ namespace Victor.CUI
         public string GetMenuContext() => CurrentContext.Replace("MENU_", "").Replace(this.Name.ToUpper() + "_", "");
 
         public void SetMenuContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext("MENU_" + Prefixed(name), intent, action);
+
+        public void SetContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext(Prefixed(name), intent, action);
+
         #endregion
 
         #region Variables
