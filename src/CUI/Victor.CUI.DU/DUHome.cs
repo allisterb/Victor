@@ -14,10 +14,10 @@ namespace Victor.CUI.DU
         #region Constructors
         public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-            Features = Menus["DOCUMENTS_FEATURES"] = new Menu("DOCUMENTS_FEATURES", GetFeaturesMenuItem, "Open", "Scan");
-            DocType = Menus["DOCUMENTS_DOC_TYPE"] = new Menu("DOCUMENTS_DOC_TYPE", GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
-            DocAnalysis = Menus["DOCUMENTS_DOC_ANALYSIS"] = new Menu("DOCUMENTS_DOC_ANALYSIS", GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
-            DocFields = Items["DOCUMENTS_DOC_FIELDS"] = new Items("DOCUMENTS_DOC_FIELDS", typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
+            Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
+            DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
+            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
+            DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
             Initialized = NLUEngine.Initialized && Recognizer.Initialized;
             if (!Initialized)
@@ -183,14 +183,14 @@ namespace Victor.CUI.DU
             {
                 case "WELCOME_DOCUMENTS":
                     SetMenuContext("FEATURES");
-                    SayInfoLine("Select a feature to use.");
+                    SayInfoLine("Select a feature to use:");
                     SayInfoLine("1. {0}", "Open");
                     SayInfoLine("2. {0}", "Scan");
                     SayInfoLine("3. {0}", "Monitor");
                     break;
                 case "DOCUMENTS_DOC_TYPE":
                     SetMenuContext("DOC_TYPE");
-                    SayInfoLine("Select a document type.");
+                    SayInfoLine("Select a document type:");
                     SayInfoLine("1. {0}", "Invoice");
                     SayInfoLine("2. {0}", "Receipt");
                     SayInfoLine("3. {0}", "W-2 Tax Form");
@@ -198,7 +198,7 @@ namespace Victor.CUI.DU
                     break;
                 case "DOCUMENTS_DOC_ANALYSIS":
                     SetMenuContext("DOC_ANALYSIS");
-                    SayInfoLine("Select document items to read.");
+                    SayInfoLine("Select document items to read:");
                     SayInfoLine("1. {0}", "Fields");
                     SayInfoLine("2. {0}", "Line Items");
                     SayInfoLine("3. {0}", "Tables");
@@ -275,7 +275,10 @@ namespace Victor.CUI.DU
                     var r = Recognizer.AnalyzeDocument("prebuilt-invoice", filename);
                     Controller.StopBeeper();
                     SetVar("CURRENT_DOC_TYPE", "INVOICE");
-                    SetItems("DOC_FIELDS", r.Documents.First().Fields.Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
+                    SetItems("DOC_FIELDS", 
+                        r.Documents.First().Fields
+                        .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.7)
+                        .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
                     SetContext("DOC_ANALYSIS", null);
                     DispatchIntent(null, Menu);
                     break;
@@ -291,12 +294,11 @@ namespace Victor.CUI.DU
             switch (i - 1)
             {
                 case 0:
-                    Controller.StartBeeper();
-                    SayInfoLine("Analyzing document as invoice...");
-                    var r = Recognizer.AnalyzeDocument("prebuilt-invoice", filename);
-                    SetVar("CURRENT_DOC_TYPE", "INVOICE");
-                    SetItems("DOC_FIELDS", r.KeyValuePairs.Select(kv => new KeyValuePair<string, string>(kv.Key.Content, kv.Value.Content)).ToArray());
-                    SetContext("DOC_ANALYZE", null);
+                    var fields = GetItems<KeyValuePair<string, string>>("DOC_FIELDS");
+                    foreach (var kv in fields)
+                    {
+                        SayInfoLine($"{kv.Key}: {kv.Value}");
+                    }
                     break;
 
                 default:
