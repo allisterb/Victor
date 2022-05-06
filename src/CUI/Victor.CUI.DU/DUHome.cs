@@ -14,9 +14,9 @@ namespace Victor.CUI.DU
         #region Constructors
         public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Open", "Scan");
-            DocType = Menus["DOC_TYPE"] = new Menu("DOC_TYPE", GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
-            DocAnalysis = Menus["DOC_ANALYSIS"] = new Menu("DOC_ANALYSIS", GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
+            Features = Menus["DOCUMENTS_FEATURES"] = new Menu("DOCUMENTS_FEATURES", GetFeaturesMenuItem, "Open", "Scan");
+            DocType = Menus["DOCUMENTS_DOC_TYPE"] = new Menu("DOCUMENTS_DOC_TYPE", GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
+            DocAnalysis = Menus["DOCUMENTS_DOC_ANALYSIS"] = new Menu("DOCUMENTS_DOC_ANALYSIS", GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
             DocFields = Items["DOCUMENTS_DOC_FIELDS"] = new Items("DOCUMENTS_DOC_FIELDS", typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
             Initialized = NLUEngine.Initialized && Recognizer.Initialized;

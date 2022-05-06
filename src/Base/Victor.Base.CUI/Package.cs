@@ -99,7 +99,7 @@ namespace Victor.CUI
 
         public bool IsItemsContext => CurrentContext.StartsWith("ITEMS_");
 
-        public string GetItemsContext() => CurrentContext.Replace("ITEMS_" + this.Name.ToUpper() + "_", "");
+        public string GetItemsContext() => CurrentContext.Replace("ITEMS_", "");
 
         public void SetItemsContext(string name) => Controller.SetContext("ITEMS_" + Prefixed(name));
 
@@ -107,11 +107,11 @@ namespace Victor.CUI
 
         public void SetInputContext(string name) => Controller.SetContext("INPUT_" + Prefixed(name));
         
-        public string GetInputContext() => CurrentContext.Replace("INPUT_", "").Replace(this.Name.ToUpper() + "_", "");
+        public string GetInputContext() => CurrentContext.Replace("INPUT_", "");
 
         public bool IsMenuContext => CurrentContext.StartsWith("MENU_");
 
-        public string GetMenuContext() => CurrentContext.Replace("MENU_", "").Replace(this.Name.ToUpper() + "_", "");
+        public string GetMenuContext() => CurrentContext.Replace("MENU_", "");
 
         public void SetMenuContext(string name, Intent intent = null, Action<Intent> action = null) => Controller.SetContext("MENU_" + Prefixed(name), intent, action);
 
