@@ -199,94 +199,7 @@ namespace Victor.CUI.DU
 
         public override string[] ItemNames { get; } = Array.Empty<string>();
 
-        /*
-        public override bool ParseIntent(CUIContext context, DateTime time, string input)
-        {
-            switch(input.ToLower())
-            {
-                case "info":
-                    Info(null);
-                    return true;
-                case "help":
-                    Help(null);
-                    return true;
-                case "menu":
-                    Menu(null);
-                    return true;
-                case "exit":
-                    Exit(null);
-                    return true;
-               
-                case "enable asr":
-                    this.Controller.EnableASR();
-                    return true;
-                case "disable asr":
-                    this.Controller.StopASR();
-                    return true;
-                case "back":
-                    Back(null);
-                    return true;
-                case "page":
-                    Page(null);
-                    return true;
-                //case "list boards":
-                    //DispatchIntent(intent, List);
-                    //break;
-                    //var boards = PM.MdcApi.GetBoards();
-                    //for(int i = 0; i < boards.Result.Boards.Count; i++)
-                    //{
-                    //    SayInfoLine("{0}.{1}", i, boards.Result.Boards[i].Name);
-                    //}
-                    //return true;
-                    //foreach(var b in broads)
-                    //{
-                    //    SayInfoLine("")
-                    //}
-            }
-            var intent = NLUEngine.GetIntent(input);
-            if (Controller.DebugEnabled)
-            {
-                DebugIntent(intent);
-            }                      
-            if (Empty(intent) || intent.Top.Score < 0.7)
-            {
-                return false;
-            }
-            else
-            {
-                switch (intent.Top.Label)
-                {
-                    case "help":
-                        Help(intent);
-                        break;
-                    case "menu":
-                        Menu(intent);
-                        break;
-                    case "exit":
-                        Exit(intent);
-                        break;
-                    case "enable":
-                        Enable(intent);
-                        break;
-                    case "disable":
-                        Disable(intent);
-                        break;
-                    case "back":
-                        Back(intent);
-                        break;
-                    case "page":
-                        Page(intent);
-                        break;
-                    case "list":
-                        DispatchIntent(intent, List);
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            }
-        }
-        */
+
         #endregion
 
         #region Methods
@@ -294,7 +207,23 @@ namespace Victor.CUI.DU
         #region Intents
         public void Open(Intent intent)
         {
-           
+            Context.Pop();
+            var filename = GetVar("FILE_NAME");
+            if (filename.ToUpper() == "CANCEL")
+            {
+                Context.Pop();
+                DispatchIntent(null, Menu);
+            }
+            else
+            {
+                SayInfoLineIfDebug($" Got {filename}");
+                if (!File.Exists(filename))
+                {
+                    SayErrorLine($"Sorry, I couldn't find the file {filename}. Try entering it again");
+                    GetVariableInput("FILE_NAME", Open);
+                }
+            }
+            
         }
         #endregion
 
@@ -304,7 +233,7 @@ namespace Victor.CUI.DU
             switch(i - 1)
             {
                 case 0:
-                    GetVariableInput("FILE_NAME", Open); ;
+                    GetVariableInput("FILE_NAME", Open);
                     break;
 
                 default:
@@ -315,25 +244,6 @@ namespace Victor.CUI.DU
         protected void ListDocs(Intent intent)
         {
             ThrowIfNotInitialized();
-            //ThrowIfNotItems(intent);
-            /*
-            if (PlaidAccounts == null)
-            {
-                PlaidAccounts = FetchAccounts();
-                Accounts.Add(PlaidAccounts);
-                
-            }
-            SetItemsContext("Accounts");
-            var accounts = Accounts.Cast<Account>().ToList();
-            for(int i = 0; i < Accounts.Count; i++) 
-            {
-                SayInfoLine("Name: {0}.", accounts[i].Name);
-            }
-            */
-            //if (intent == null || (!Empty(intent) && intent.Top.Label == "list"))
-            //{
-             //   DescribeItems(Accounts.Page);
-            //}
 
         }
 
