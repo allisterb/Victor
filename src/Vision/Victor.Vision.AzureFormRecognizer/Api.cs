@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.Models;
-
+using Azure.AI.FormRecognizer.DocumentAnalysis;
 
 using Victor.CUI;
 
@@ -19,12 +19,14 @@ namespace Victor.Vision
         public AzureFormRecognizer(Controller controller, CancellationToken ct): base(ct)
         {
             Client = AuthenticateClient();
+            Client3 = AuthenticateClient3();
             Initialized = true;
         }
         #endregion
 
         #region Properties
         public FormRecognizerClient Client;
+        public DocumentAnalysisClient Client3;
         private static readonly string Endpoint = "https://victor-du.cognitiveservices.azure.com/";
         private static readonly string ApiKey = Config("AZURE_FORMRECOGNIZER_KEY");
         #endregion
@@ -37,13 +39,22 @@ namespace Victor.Vision
             return client;
         }
 
-        public async Task<FormPageCollection> RecognizeDocument(string filename)
+        private static DocumentAnalysisClient AuthenticateClient3()
+        {
+            var credential = new AzureKeyCredential(ApiKey);
+            var client = new DocumentAnalysisClient(new Uri(Endpoint), credential);
+            return client;
+        }
+
+        public AnalyzeResult AnalyzeDocument(string modelid, string filename)
         {
             var fs = File.OpenRead(filename);
-            //var invoiceUri = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/simple-invoice.png";
-            return await Client
-                .StartRecognizeContent(fs)
-                .WaitForCompletionAsync();
+            var op = Client3.StartAnalyzeDocument(modelid, fs, cancellationToken: this.CancellationToken);
+            return op.WaitForCompletion(Ct).Value;
+           
+            //return await Client
+            //    .StartRecognizeContent(fs)
+            //    .WaitForCompletionAsync();
            
             /*
             foreach (FormPage page in formPages)

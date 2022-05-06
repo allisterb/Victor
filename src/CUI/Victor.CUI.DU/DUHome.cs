@@ -15,7 +15,7 @@ namespace Victor.CUI.DU
         public DUHome(Controller controller) : base("Documents", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
             Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Open", "Scan");
-            DocType = Menus["DOC_TYPE"] = new Menu("DOC_TYPE", GetFeaturesMenuItem, "Invoice", "Business Card");
+            DocType = Menus["DOC_TYPE"] = new Menu("DOC_TYPE", GetFeaturesMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
             DocItems = Items["Docs"] = new Items("Docs", typeof(Doc), ListDocs, DescribeDoc);
         
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
@@ -233,7 +233,7 @@ namespace Victor.CUI.DU
                 }
                 else
                 {
-                    var r = Recognizer.RecognizeDocument(filename).Result;
+                    var r = Recognizer.AnalyzeDocument("prebuilt-document", filename);
                     SetContext("DOC_TYPE", null);
                     DispatchIntent(null, Menu);
                     
@@ -256,6 +256,7 @@ namespace Victor.CUI.DU
                     throw new IndexOutOfRangeException();
             }
         }
+
 
         protected void ListDocs(Intent intent)
         {
