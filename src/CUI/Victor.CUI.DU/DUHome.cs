@@ -12,12 +12,13 @@ namespace Victor.CUI.DU
     public class DUHome : Package
     {
         #region Constructors
-        public DUHome(Controller controller) : base("Document Understandiing", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
+        public DUHome(Controller controller) : base("Documents", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
-   
-            Accounts = Items["ACCOUNTS"] = new Items("ACCOUNTS", typeof(Doc), ListAccounts, DescribeAccount);
-            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Accounts", "Transfer money");    
-            Initialized = NLUEngine.Initialized;
+            Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Open", "Scan");
+            DocItems = Items["Docs"] = new Items("Docs", typeof(Doc), ListDocs, DescribeDoc);
+        
+            Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
+            Initialized = NLUEngine.Initialized && Recognizer.Initialized;
             if (!Initialized)
             {
                 SayErrorLine("NLU engine for package {0} did not initialize. Exiting.", this.Name);
@@ -27,13 +28,13 @@ namespace Victor.CUI.DU
         #endregion
 
         #region Properties
+        public Menu Features { get; }
+
+        public Items DocItems { get; }
+
         public AzureFormRecognizer Recognizer {get; }
         
-        public List<Doc> Forms { get; protected set; }
-
-        public Items Accounts { get; }
-        
-        public Menu Features { get; }
+        public List<Doc> Docs { get; protected set; }
         #endregion
         
         #region Overriden members
@@ -177,16 +178,12 @@ namespace Victor.CUI.DU
         {
             switch(CurrentContext)
             {
-
-                case "WELCOME_FINANCE":
-            
+                case "WELCOME_DOCUMENTS":
                     SetMenuContext("FEATURES");
                     SayInfoLine("Select a feature to use.");
-                    SayInfoLine("1. {0}", "Accounts");
-                    SayInfoLine("2. {0}", "Transfer money");
-                    SayInfoLine("3. {0}", "Pay bills");
-                    SayInfoLine("4. {0}", "Loans and Mortgage");
-                    SayInfoLine("5. {0}", "Documents");
+                    SayInfoLine("1. {0}", "Open");
+                    SayInfoLine("2. {0}", "Scan");
+                    SayInfoLine("3. {0}", "Monitor");
                     break;
                 default:
                     SayErrorLine("Unknown controller context: {0}.", CurrentContext);
@@ -196,7 +193,7 @@ namespace Victor.CUI.DU
 
         #endregion
 
-        public override string[] VariableNames { get; } = { "BOARD" };
+        public override string[] VariableNames { get; } = { "FILE_NAME" };
 
         public override string[] MenuNames { get; } = { "FEATURES" };
 
@@ -295,6 +292,10 @@ namespace Victor.CUI.DU
         #region Methods
 
         #region Intents
+        public void Open(Intent intent)
+        {
+           
+        }
         #endregion
 
         #region Items
@@ -303,7 +304,7 @@ namespace Victor.CUI.DU
             switch(i - 1)
             {
                 case 0:
-                    ListAccounts(null);
+                    GetVariableInput("FILE_NAME", Open); ;
                     break;
 
                 default:
@@ -311,7 +312,7 @@ namespace Victor.CUI.DU
             }
         }
 
-        protected void ListAccounts(Intent intent)
+        protected void ListDocs(Intent intent)
         {
             ThrowIfNotInitialized();
             //ThrowIfNotItems(intent);
@@ -336,9 +337,9 @@ namespace Victor.CUI.DU
 
         }
 
-        protected void DescribeAccount(int index)
+        protected void DescribeDoc(int index)
         {
-            var a = Accounts.Get<Doc>(index);
+            var a = DocItems.Get<Doc>(index);
             //SayInfoLine("Name: {0}.", a.Name);
         }
             

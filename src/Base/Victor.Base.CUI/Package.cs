@@ -31,7 +31,7 @@ namespace Victor.CUI
             }
             foreach (var vn in VariableNames)
             {
-                Variables.Add(Prefixed(vn), null);
+                Variables.Add(Prefixed(vn), new Variable(Prefixed(vn)));
             }
             foreach (var i in ItemNames)
             {
