@@ -12,12 +12,12 @@ namespace Victor.CUI.DU
     public class DUHome : Package
     {
         #region Constructors
-        public DUHome(Controller controller) : base("Documents", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
+        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
         {
             Features = Menus["FEATURES"] = new Menu("FEATURES", GetFeaturesMenuItem, "Open", "Scan");
-            DocType = Menus["DOC_TYPE"] = new Menu("DOC_TYPE", GetFeaturesMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
-            DocItems = Items["Docs"] = new Items("Docs", typeof(Doc), ListDocs, DescribeDoc);
-        
+            DocType = Menus["DOC_TYPE"] = new Menu("DOC_TYPE", GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
+            DocAnalysis = Menus["DOC_ANALYSIS"] = new Menu("DOC_ANALYSIS", GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
+            DocFields = Items["DOCUMENTS_DOC_FIELDS"] = new Items("DOCUMENTS_DOC_FIELDS", typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
             Initialized = NLUEngine.Initialized && Recognizer.Initialized;
             if (!Initialized)
@@ -33,11 +33,11 @@ namespace Victor.CUI.DU
 
         public Menu DocType { get; }
 
-        public Items DocItems { get; }
+        public Menu DocAnalysis { get; }
+
+        public Items DocFields { get; }
 
         public AzureFormRecognizer Recognizer {get; }
-        
-        public List<Doc> Docs { get; protected set; }
         #endregion
         
         #region Overriden members
@@ -192,7 +192,17 @@ namespace Victor.CUI.DU
                     SetMenuContext("DOC_TYPE");
                     SayInfoLine("Select a document type.");
                     SayInfoLine("1. {0}", "Invoice");
-                    SayInfoLine("2. {0}", "Business Card");
+                    SayInfoLine("2. {0}", "Receipt");
+                    SayInfoLine("3. {0}", "W-2 Tax Form");
+                    SayInfoLine("4. {0}", "Business Card");
+                    break;
+                case "DOCUMENTS_DOC_ANALYSIS":
+                    SetMenuContext("DOC_ANALYSIS");
+                    SayInfoLine("Select document items to read.");
+                    SayInfoLine("1. {0}", "Fields");
+                    SayInfoLine("2. {0}", "Line Items");
+                    SayInfoLine("3. {0}", "Tables");
+                    SayInfoLine("4. {0}", "Layout");
                     break;
                 default:
                     SayErrorLine("Unknown controller context: {0}.", CurrentContext);
@@ -206,8 +216,7 @@ namespace Victor.CUI.DU
 
         public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE" };
 
-        public override string[] ItemNames { get; } = Array.Empty<string>();
-
+        public override string[] ItemNames { get; } = { "DOC_FIELDS" };
 
         #endregion
 
@@ -225,7 +234,7 @@ namespace Victor.CUI.DU
             }
             else
             {
-                SayInfoLineIfDebug($"File to opein is: {filename}");
+                SayInfoLineIfDebug($"File to open is: {filename}");
                 if (!File.Exists(filename))
                 {
                     SayErrorLine($"Sorry, I couldn't find the file {filename}. Try entering it again or say 'cancel' to cancel this operation.");
@@ -233,17 +242,15 @@ namespace Victor.CUI.DU
                 }
                 else
                 {
-                    var r = Recognizer.AnalyzeDocument("prebuilt-document", filename);
                     SetContext("DOC_TYPE", null);
                     DispatchIntent(null, Menu);
-                    
                 }
             }
             
         }
         #endregion
 
-        #region Items
+        #region Menu Items
         protected void GetFeaturesMenuItem(int i)
         {
             switch(i - 1)
@@ -257,6 +264,45 @@ namespace Victor.CUI.DU
             }
         }
 
+        protected void GetDocTypeMenuItem(int i)
+        {
+            var filename = GetVar("FILE_NAME");
+            switch (i - 1)
+            {
+                case 0:
+                    Controller.StartBeeper();
+                    SayInfoLine("Analyzing document as invoice...");
+                    var r = Recognizer.AnalyzeDocument("prebuilt-invoice", filename);
+                    Controller.StopBeeper();
+                    SetVar("CURRENT_DOC_TYPE", "INVOICE");
+                    SetItems("DOC_FIELDS", r.Documents.First().Fields.Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
+                    SetContext("DOC_ANALYSIS", null);
+                    DispatchIntent(null, Menu);
+                    break;
+
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
+
+        protected void GetDocAnalysisMenuItem(int i)
+        {
+            var filename = GetVar("FILE_NAME");
+            switch (i - 1)
+            {
+                case 0:
+                    Controller.StartBeeper();
+                    SayInfoLine("Analyzing document as invoice...");
+                    var r = Recognizer.AnalyzeDocument("prebuilt-invoice", filename);
+                    SetVar("CURRENT_DOC_TYPE", "INVOICE");
+                    SetItems("DOC_FIELDS", r.KeyValuePairs.Select(kv => new KeyValuePair<string, string>(kv.Key.Content, kv.Value.Content)).ToArray());
+                    SetContext("DOC_ANALYZE", null);
+                    break;
+
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
 
         protected void ListDocs(Intent intent)
         {
@@ -266,13 +312,12 @@ namespace Victor.CUI.DU
 
         protected void DescribeDoc(int index)
         {
-            var a = DocItems.Get<Doc>(index);
+            //var a = DocItems.Get<Doc>(index);
             //SayInfoLine("Name: {0}.", a.Name);
         }
             
         #endregion
 
-      
         #endregion
     }
 }

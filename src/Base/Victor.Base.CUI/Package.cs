@@ -156,7 +156,6 @@ namespace Victor.CUI
             context.IntentAction.Invoke(context.Intent);
         }
 
-
         public string Prefixed(string name) => Name.ToUpper() + "_" + name;
 
         public string Suffixed(string name) => name + "_" + Name.ToUpper();
@@ -167,6 +166,10 @@ namespace Victor.CUI
         #endregion
 
         #region Items
+        public void SetItems<T>(string name, IEnumerable<T> values) => Items[Prefixed(name).ToUpper()].AddRange(values.Cast<object>());
+
+        public List<T> GetItems<T>(string name) => Items[Prefixed(name).ToUpper()].Cast<T>().ToList();
+
         public bool CanDispatchToItemsPage()
         {
             if (IsItemsContext)
