@@ -147,7 +147,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Web.Server", "Web\Vi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Vision.AzureFormRecognizer", "Vision\Victor.Vision.AzureFormRecognizer\Victor.Vision.AzureFormRecognizer.csproj", "{427CED82-00BF-4112-8F1E-D99AFD4097DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.CUI.DU", "CUI\Victor.CUI.DU\Victor.CUI.DU.csproj", "{7460965F-254E-489A-922E-D9588436836A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.CUI.DU", "CUI\Victor.CUI.DU\Victor.CUI.DU.csproj", "{7460965F-254E-489A-922E-D9588436836A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{D6C43EB9-14B6-426F-BFE6-2B79893F6FE6}"
+	ProjectSection(SolutionItems) = preProject
+		..\victor.cmd = ..\victor.cmd
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

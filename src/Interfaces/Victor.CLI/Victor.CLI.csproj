@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
     <Authors>Allister Beharry</Authors>
     <Product>Victor</Product>
     <Company />
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0' OR '$(TargetFramework)'=='netcoreapp3.1'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0' OR '$(TargetFramework)'=='netcoreapp3.1' OR '$(TargetFramework)'=='netcoreapp3.1'">
     <DefineConstants>TRACE;NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
@@ -60,10 +60,13 @@
     <ProjectReference Include="..\..\Web\Victor.Web.Server\Victor.Web.Server.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT' AND '$(TargetFramework)'=='net461'">
     <Reference Include="Microsoft.Speech">
       <HintPath>..\..\..\..\..\Program Files\Microsoft SDKs\Speech\v11.0\Assembly\Microsoft.Speech.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+
+
 
 </Project>

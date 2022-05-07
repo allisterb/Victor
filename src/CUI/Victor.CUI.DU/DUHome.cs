@@ -12,19 +12,25 @@ namespace Victor.CUI.DU
     public class DUHome : Package
     {
         #region Constructors
-        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine("Engines", "fn")), controller)
+        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "fn")), controller)
         {
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
             DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
-            Initialized = NLUEngine.Initialized && Recognizer.Initialized;
-            if (!Initialized)
+            //Initialized = NLUEngine.Initialized && Recognizer.Initialized;
+            if (!NLUEngine.Initialized)
             {
                 SayErrorLine("NLU engine for package {0} did not initialize. Exiting.", this.Name);
                 Controller.Exit(ExitResult.UNKNOWN_ERROR);
             }
+            if (!Recognizer.Initialized)
+            {
+                SayErrorLine("Azure Form Recognizer not initialized.");
+                Controller.Exit(ExitResult.UNKNOWN_ERROR);
+            }
+            Initialized = true;
         }
         #endregion
 
@@ -214,9 +220,9 @@ namespace Victor.CUI.DU
 
         public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE" };
 
-        public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE" };
+        public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
 
-        public override string[] ItemNames { get; } = { "DOC_FIELDS" };
+        public override string[] ItemNames { get; } = { "DOC_FIELDS", "DOC_LINES"};
 
         #endregion
 
@@ -277,7 +283,21 @@ namespace Victor.CUI.DU
                     SetVar("CURRENT_DOC_TYPE", "INVOICE");
                     SetItems("DOC_FIELDS", 
                         r.Documents.First().Fields
-                        .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.7)
+                        .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
+                        .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
+                    SetContext("DOC_ANALYSIS", null);
+                    DispatchIntent(null, Menu);
+                    break;
+
+                case 1:
+                    Controller.StartBeeper();
+                    SayInfoLine("Analyzing document as receipt...");
+                    r = Recognizer.AnalyzeDocument("prebuilt-receipt", filename);
+                    Controller.StopBeeper();
+                    SetVar("CURRENT_DOC_TYPE", "RECEIPT");
+                    SetItems("DOC_FIELDS",
+                        r.Documents.First().Fields
+                        .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
                         .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
                     SetContext("DOC_ANALYSIS", null);
                     DispatchIntent(null, Menu);
@@ -297,7 +317,7 @@ namespace Victor.CUI.DU
                     var fields = GetItems<KeyValuePair<string, string>>("DOC_FIELDS");
                     foreach (var kv in fields)
                     {
-                        SayInfoLine($"{kv.Key}: {kv.Value}");
+                        SayInfoLine($"{kv.Key}: {kv.Value}.");
                     }
                     break;
 

@@ -7,5 +7,4 @@ REM dotnet ".\bin\Debug\netcoreapp2.1\Victor.CLI.dll" %*
 goto end
 
 :end
-cd ..\..\..\..\..\..\
 exit /B %ERROR_CODE%

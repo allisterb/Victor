@@ -5,8 +5,10 @@ using System.IO;
 using System.Threading;
 using System.Text;
 
+#if WINDOWS && NET461
 using Microsoft.Speech.Recognition;
 using Microsoft.Speech.Synthesis;
+#endif
 
 using Sc = System.Console;
 using Colorful;
