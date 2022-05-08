@@ -12,7 +12,7 @@ namespace Victor.CUI.DU
     public class DUHome : Package
     {
         #region Constructors
-        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "fn")), controller)
+        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "FN")), controller)
         {
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
