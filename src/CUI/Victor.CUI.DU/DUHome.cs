@@ -19,7 +19,6 @@ namespace Victor.CUI.DU
             DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
-            //Initialized = NLUEngine.Initialized && Recognizer.Initialized;
             if (!NLUEngine.Initialized)
             {
                 SayErrorLine("NLU engine for package {0} did not initialize. Exiting.", this.Name);
@@ -190,25 +189,25 @@ namespace Victor.CUI.DU
                 case "WELCOME_DOCUMENTS":
                     SetMenuContext("FEATURES");
                     SayInfoLine("Select a feature to use:");
-                    SayInfoLine("1. {0}", "Open");
-                    SayInfoLine("2. {0}", "Scan");
-                    SayInfoLine("3. {0}", "Monitor");
+                    SayInfoLine("1. {0}", "Open.");
+                    SayInfoLine("2. {0}", "Scan.");
+                    SayInfoLine("3. {0}", "Monitor.");
                     break;
                 case "DOCUMENTS_DOC_TYPE":
                     SetMenuContext("DOC_TYPE");
                     SayInfoLine("Select a document type:");
-                    SayInfoLine("1. {0}", "Invoice");
-                    SayInfoLine("2. {0}", "Receipt");
-                    SayInfoLine("3. {0}", "W-2 Tax Form");
-                    SayInfoLine("4. {0}", "Business Card");
+                    SayInfoLine("1. {0}", "Invoice.");
+                    SayInfoLine("2. {0}", "Receipt.");
+                    SayInfoLine("3. {0}", "W-2 Tax Form.");
+                    SayInfoLine("4. {0}", "Business Card.");
                     break;
                 case "DOCUMENTS_DOC_ANALYSIS":
                     SetMenuContext("DOC_ANALYSIS");
                     SayInfoLine("Select document items to read:");
-                    SayInfoLine("1. {0}", "Fields");
-                    SayInfoLine("2. {0}", "Line Items");
-                    SayInfoLine("3. {0}", "Tables");
-                    SayInfoLine("4. {0}", "Layout");
+                    SayInfoLine("1. {0}", "Fields.");
+                    SayInfoLine("2. {0}", "Line Items.");
+                    SayInfoLine("3. {0}", "Tables.");
+                    SayInfoLine("4. {0}", "Layout.");
                     break;
                 default:
                     SayErrorLine("Unknown controller context: {0}.", CurrentContext);
@@ -218,11 +217,13 @@ namespace Victor.CUI.DU
 
         #endregion
 
+        #region UI
         public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE" };
 
         public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
 
         public override string[] ItemNames { get; } = { "DOC_FIELDS", "DOC_LINES"};
+        #endregion
 
         #endregion
 
@@ -273,39 +274,48 @@ namespace Victor.CUI.DU
         protected void GetDocTypeMenuItem(int i)
         {
             var filename = GetVar("FILE_NAME");
+            string modellid = "";
             switch (i - 1)
             {
                 case 0:
-                    Controller.StartBeeper();
-                    SayInfoLine("Analyzing document as invoice...");
-                    var r = Recognizer.AnalyzeDocument("prebuilt-invoice", filename);
-                    Controller.StopBeeper();
+                    modellid = "prebuilt-invoice";
                     SetVar("CURRENT_DOC_TYPE", "INVOICE");
-                    SetItems("DOC_FIELDS", 
-                        r.Documents.First().Fields
-                        .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
-                        .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
-                    SetContext("DOC_ANALYSIS", null);
-                    DispatchIntent(null, Menu);
                     break;
 
                 case 1:
-                    Controller.StartBeeper();
-                    SayInfoLine("Analyzing document as receipt...");
-                    r = Recognizer.AnalyzeDocument("prebuilt-receipt", filename);
-                    Controller.StopBeeper();
+                    modellid = "prebuilt-receipt";
                     SetVar("CURRENT_DOC_TYPE", "RECEIPT");
-                    SetItems("DOC_FIELDS",
-                        r.Documents.First().Fields
-                        .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
-                        .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
-                    SetContext("DOC_ANALYSIS", null);
-                    DispatchIntent(null, Menu);
+                    break;
+
+                case 2:
+                    modellid = "prebuilt-tax.us.w2";
+                    SetVar("CURRENT_DOC_TYPE", "W2 TAX FORM");
+                    break;
+
+                case 3:
+                    modellid = "prebuilt-idDocument";
+                    SetVar("CURRENT_DOC_TYPE", "IDENTITY DOCUMENT");
+                    break;
+
+                case 4:
+                    modellid = "prebuilt-idDocument";
+                    SetVar("CURRENT_DOC_TYPE", "BUSINESS CARD");
                     break;
 
                 default:
                     throw new IndexOutOfRangeException();
             }
+
+            Controller.StartBeeper();
+            SayInfoLine("Analyzing document as receipt...");
+            var r = Recognizer.AnalyzeDocument(modellid, filename);
+            Controller.StopBeeper();
+            SetItems("DOC_FIELDS",
+                r.Documents.First().Fields
+                .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
+                .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
+            SetContext("DOC_ANALYSIS", null);
+            DispatchIntent(null, Menu);
         }
 
         protected void GetDocAnalysisMenuItem(int i)
@@ -329,7 +339,6 @@ namespace Victor.CUI.DU
         protected void ListDocs(Intent intent)
         {
             ThrowIfNotInitialized();
-
         }
 
         protected void DescribeDoc(int index)

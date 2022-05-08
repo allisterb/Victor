@@ -59,7 +59,6 @@ namespace Victor.CLI
         public override void Prompt()
         {
             InputEnabled = true;
-            //string prompt = Context.Peek().Label.StartsWith("INPUT_") ? "|*>" : "|>";
             string i =  ReadLine.Read(PromptString);
             HandleInput(DateTime.Now, i);
         }
@@ -198,6 +197,7 @@ namespace Victor.CLI
         #endregion
 
         #region Event Handlers
+        #if UNIX
         private void JuliusSession_Recognized(string sentence)
         {
             if (InputEnabled)
@@ -215,7 +215,7 @@ namespace Victor.CLI
             }
             SayInfoLine("ASR enabled.");
         }
-
+        #endif
         #endregion
 
         #region Fields
