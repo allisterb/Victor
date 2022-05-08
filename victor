@@ -1,0 +1,3 @@
+#! /bin/bash
+dotnet ./src/Interfaces/Victor.CLI/bin/Debug/netcoreapp3.1/Victor.CLI.dll $*
+
