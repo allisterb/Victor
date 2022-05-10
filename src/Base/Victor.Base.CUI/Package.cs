@@ -235,6 +235,7 @@ namespace Victor.CUI
             }
             else
             {
+                Context.Pop();
                 menu.Handler.Invoke(i);
             }
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Victor.CUI.DU.Models;
 using Victor.Vision;
 
@@ -17,7 +18,7 @@ namespace Victor.CUI.DU
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
             DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
-            DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, string>), ListDocs, DescribeDoc);
+            DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, DocumentField>), ListFields, DescribeField);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
             if (!NLUEngine.Initialized)
             {
@@ -313,8 +314,9 @@ namespace Victor.CUI.DU
             SetItems("DOC_FIELDS",
                 r.Documents.First().Fields
                 .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
-                .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Content)).ToArray());
+                .ToArray());
             SetContext("DOC_ANALYSIS", null);
+            
             DispatchIntent(null, Menu);
         }
 
@@ -324,24 +326,47 @@ namespace Victor.CUI.DU
             switch (i - 1)
             {
                 case 0:
-                    var fields = GetItems<KeyValuePair<string, string>>("DOC_FIELDS");
-                    foreach (var kv in fields)
+                    var fields = GetItems<KeyValuePair<string, DocumentField>>("DOC_FIELDS");
+                    foreach (var f in fields)
                     {
-                        SayInfoLine($"{kv.Key}: {kv.Value}.");
+                        if ((f.Value.ValueType != DocumentFieldType.Dictionary) && (f.Value.ValueType != DocumentFieldType.List))
+                        {
+                            SayInfoLine($"{f.Key}: {f.Value.Content}.");
+                        }
+                        else if (f.Value.ValueType == DocumentFieldType.List)
+                        {
+                            var fieldsList = f.Value.AsList();
+                            SayInfoLine($"{f.Key}:");
+                            foreach (var fi in fieldsList)
+                            {
+                                SayInfoLine(fi.Content);
+                            }
+                        }
+                        else if (f.Value.ValueType == DocumentFieldType.Dictionary)
+                        {
+                            var fieldsList = f.Value.AsDictionary();
+                            SayInfoLine($"{f.Key}:");
+                            foreach (var fi in fieldsList)
+                            {
+                                SayInfoLine($"{fi.Key}: {fi.Value.Content}.");
+                            }
+                        }
                     }
                     break;
 
                 default:
                     throw new IndexOutOfRangeException();
             }
+            
+            DispatchIntent(null, Menu);
         }
 
-        protected void ListDocs(Intent intent)
+        protected void ListFields(Intent intent)
         {
             ThrowIfNotInitialized();
         }
 
-        protected void DescribeDoc(int index)
+        protected void DescribeField(int index)
         {
             //var a = DocItems.Get<Doc>(index);
             //SayInfoLine("Name: {0}.", a.Name);
