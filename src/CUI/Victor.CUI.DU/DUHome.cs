@@ -17,8 +17,10 @@ namespace Victor.CUI.DU
         {
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
-            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Line Items", "Tables");
+            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Lines", "Tables");
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, DocumentField>), ListFields, DescribeField);
+            DocTables = Items[Prefixed("DOC_TABLES")] = new Items(Prefixed("DOC_TABLES"), typeof(DocumentTable), ListFields, DescribeField);
+            DocLines = Items[Prefixed("DOC_LINES")] = new Items(Prefixed("DOC_LINES"), typeof(DocumentLine), ListFields, DescribeField);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
             if (!NLUEngine.Initialized)
             {
@@ -42,6 +44,10 @@ namespace Victor.CUI.DU
         public Menu DocAnalysis { get; }
 
         public Items DocFields { get; }
+
+        public Items DocTables { get; }
+
+        public Items DocLines { get; }
 
         public AzureFormRecognizer Recognizer {get; }
         #endregion
@@ -209,6 +215,7 @@ namespace Victor.CUI.DU
                     SayInfoLine("2. {0}", "Line Items.");
                     SayInfoLine("3. {0}", "Tables.");
                     SayInfoLine("4. {0}", "Layout.");
+                    SayInfoLine("Or enter a command to analyze the document.");
                     break;
                 default:
                     SayErrorLine("Unknown controller context: {0}.", CurrentContext);
@@ -223,7 +230,7 @@ namespace Victor.CUI.DU
 
         public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
 
-        public override string[] ItemNames { get; } = { "DOC_FIELDS", "DOC_LINES"};
+        public override string[] ItemNames { get; } = { "DOC_FIELDS", "DOC_LINES", "DOC_TABLES"};
         #endregion
 
         #endregion
@@ -310,11 +317,30 @@ namespace Victor.CUI.DU
             Controller.StartBeeper();
             SayInfoLine("Analyzing document as receipt...");
             var r = Recognizer.AnalyzeDocument(modellid, filename);
-            Controller.StopBeeper();
+
             SetItems("DOC_FIELDS",
                 r.Documents.First().Fields
                 .Where(f => !string.IsNullOrEmpty(f.Value.Content) && f.Value.Confidence.HasValue && f.Value.Confidence.Value >= 0.5)
                 .ToArray());
+            if (r.Tables.Count > 0)
+            {
+                SetItems("DOC_TABLES", r.Tables.ToArray());
+            }
+            else
+            {
+                SetItems("DOC_TABLES", Array.Empty<DocumentTable>());
+            }
+
+            if (r.Pages.Count > 0)
+            {
+                SetItems("DOC_LINES", r.Pages.First().Lines.ToArray());
+            }
+            else
+            {
+                SetItems("DOC_LINES", Array.Empty<DocumentLine>());
+            }
+
+            Controller.StopBeeper();
             SetContext("DOC_ANALYSIS", null);
             
             DispatchIntent(null, Menu);
@@ -351,6 +377,14 @@ namespace Victor.CUI.DU
                                 SayInfoLine($"{fi.Key}: {fi.Value.Content}.");
                             }
                         }
+                    }
+                    break;
+
+                case 1:
+                    var lines = GetItems<DocumentLine>("DOC_LINES");
+                    foreach (var l in lines)
+                    {
+                        SayInfoLine(l.Content);
                     }
                     break;
 
