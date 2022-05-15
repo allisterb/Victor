@@ -13,14 +13,14 @@ namespace Victor.CUI.DU
     public class DUHome : Package
     {
         #region Constructors
-        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "FN")), controller)
+        public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "DU")), controller)
         {
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
-            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Fields", "Lines", "Tables");
+            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Lines", "Fields", "Tables");
+            DocLines = Items[Prefixed("DOC_LINES")] = new Items(Prefixed("DOC_LINES"), typeof(DocumentLine), ListFields, DescribeField);
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, DocumentField>), ListFields, DescribeField);
             DocTables = Items[Prefixed("DOC_TABLES")] = new Items(Prefixed("DOC_TABLES"), typeof(DocumentTable), ListFields, DescribeField);
-            DocLines = Items[Prefixed("DOC_LINES")] = new Items(Prefixed("DOC_LINES"), typeof(DocumentLine), ListFields, DescribeField);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
             if (!NLUEngine.Initialized)
             {
@@ -43,12 +43,13 @@ namespace Victor.CUI.DU
 
         public Menu DocAnalysis { get; }
 
+        public Items DocLines { get; }
+
         public Items DocFields { get; }
 
         public Items DocTables { get; }
 
-        public Items DocLines { get; }
-
+        
         public AzureFormRecognizer Recognizer {get; }
         #endregion
         
@@ -196,25 +197,25 @@ namespace Victor.CUI.DU
                 case "WELCOME_DOCUMENTS":
                     SetMenuContext("FEATURES");
                     SayInfoLine("Select a feature to use:");
-                    SayInfoLine("1. {0}", "Open.");
-                    SayInfoLine("2. {0}", "Scan.");
-                    SayInfoLine("3. {0}", "Monitor.");
+                    SayInfoLine("1: {0}", "Open.");
+                    SayInfoLine("2: {0}", "Scan.");
+                    SayInfoLine("3: {0}", "Monitor.");
                     break;
                 case "DOCUMENTS_DOC_TYPE":
                     SetMenuContext("DOC_TYPE");
                     SayInfoLine("Select a document type:");
-                    SayInfoLine("1. {0}", "Invoice.");
-                    SayInfoLine("2. {0}", "Receipt.");
-                    SayInfoLine("3. {0}", "W-2 Tax Form.");
-                    SayInfoLine("4. {0}", "Business Card.");
+                    SayInfoLine("1: {0}", "Invoice.");
+                    SayInfoLine("2: {0}", "Receipt.");
+                    SayInfoLine("3: {0}", "W-2 Tax Form.");
+                    SayInfoLine("4: {0}", "Business Card.");
                     break;
                 case "DOCUMENTS_DOC_ANALYSIS":
                     SetMenuContext("DOC_ANALYSIS");
                     SayInfoLine("Select document items to read:");
-                    SayInfoLine("1. {0}", "Fields.");
-                    SayInfoLine("2. {0}", "Line Items.");
-                    SayInfoLine("3. {0}", "Tables.");
-                    SayInfoLine("4. {0}", "Layout.");
+                    SayInfoLine("1: {0}", "Lines.");
+                    SayInfoLine("2: {0}", "Fields.");
+                    SayInfoLine("3: {0}", "Tables.");
+                    SayInfoLine("4: {0}", "Layout.");
                     SayInfoLine("Or enter a command to analyze the document.");
                     break;
                 default:
@@ -230,7 +231,7 @@ namespace Victor.CUI.DU
 
         public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
 
-        public override string[] ItemNames { get; } = { "DOC_FIELDS", "DOC_LINES", "DOC_TABLES"};
+        public override string[] ItemNames { get; } = { "DOC_LINES", "DOC_FIELDS", "DOC_TABLES"};
         #endregion
 
         #endregion
