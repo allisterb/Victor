@@ -25,7 +25,7 @@ namespace Victor.CLI
             {
                 EnableBeeper();
             }
-            SayInfoLine("Victor DU loading...");
+            SayInfoLine("Victor Document Understanding loading...");
             StartBeeper();
             Options = o;
             if(Options.Debug)

@@ -17,7 +17,7 @@ namespace Victor.CUI.DU
         public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "DU")), controller)
         {
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan", "Ask");
-            DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
+            DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card", "Training Manual");
             DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Lines", "Fields", "Tables", "Layout", "Done");
             DocLines = Items[Prefixed("DOC_LINES")] = new Items(Prefixed("DOC_LINES"), typeof(DocumentLine), ListFields, DescribeField);
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, DocumentField>), ListFields, DescribeField);
@@ -92,6 +92,7 @@ namespace Victor.CUI.DU
 
         protected override void Info(Intent intent = null)
         {
+            var context = CurrentContext;
             if (EmptyEntities(intent))
             {
                 SayInfoLine("Victor Document Understanding is an auditory user interface designed for people with vision disabilities to help with understanding, navigating and querying structured business documents.");
@@ -100,8 +101,7 @@ namespace Victor.CUI.DU
             else
             {
                 var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
-                var context = Context.Count > 0 ? Context.Peek().Label : "";
-
+               
                 if (!string.IsNullOrEmpty(feature))
                 {
                     feature = new string(feature.Where(c => Char.IsLetterOrDigit(c)).ToArray());
@@ -145,10 +145,10 @@ namespace Victor.CUI.DU
                 switch (context)
                 {
                     case "WELCOME_DOCUMENTS":
-                        SayInfoLine("Victor features can be accessed via menus or using text commands. Say {0} to access the main menu.", "HOME");
+                        SayInfoLine("Victor features can be accessed via menus or using text commands. Say {0} to access the main menu.", "menu");
                         break;
-                    case "MENU_HOME_PACKAGES":
-                        SayInfoLine("Enter the number associated with the Victor SM package category you want to select.");
+                    case "MENU_DOCUMENTS_FEATURES":
+                        SayInfoLine("This is the main menu. Enter the number of the feature you want to use. Enter {0} to open a local document for analysis, {1} to scan a document using a connected scanner, {2} to query a document knowledge base.", 1, 2, 3);
                         break;
                     default:
                         SayErrorLine("Unknown HELP context: {0}.", context);
@@ -233,6 +233,7 @@ namespace Victor.CUI.DU
                     SayInfoLine("2: {0}", "Receipt.");
                     SayInfoLine("3: {0}", "W-2 Tax Form.");
                     SayInfoLine("4: {0}", "Business Card.");
+                    SayInfoLine("5: {0}", "Training Manual.");
                     break;
                 case "DOCUMENTS_DOC_ANALYSIS":
                     SetMenuContext("DOC_ANALYSIS");
@@ -249,7 +250,7 @@ namespace Victor.CUI.DU
                     SayInfoLine("Select knowledge base:");
                     for (int i = 0; i < KBs.Count; i++)
                     {
-                        SayInfoLine((i + 1).ToString() + ": {0}", KBs[i]);
+                        SayInfoLine((i + 1).ToString() + ": {0}.", KBs[i]);
                     }
                     break;
                 default:
@@ -357,7 +358,8 @@ namespace Victor.CUI.DU
             }
 
             Controller.StartBeeper();
-            SayInfoLine("Analyzing document as receipt...");
+            string docType = GetVar("CURRENT_DOC_TYPE");
+            SayInfoLine("Analyzing document as {0}...", docType);
             var r = Recognizer.AnalyzeDocument(modellid, filename);
 
             SetItems("DOC_FIELDS",
@@ -391,9 +393,20 @@ namespace Victor.CUI.DU
         protected void GetDocAnalysisMenuItem(int i)
         {
             var filename = GetVar("FILE_NAME");
+            var docType = GetVar("CURRENT_DOC_TYPE");
             switch (i - 1)
             {
                 case 0:
+                    SayInfoLine("Printing {0} lines...", docType);
+                    var lines = GetItems<DocumentLine>("DOC_LINES");
+                    foreach (var l in lines)
+                    {
+                        SayInfoLine(l.Content);
+                    }
+                    break;
+
+                case 1:
+                    SayInfoLine("Printing {0} fields...", docType);
                     var fields = GetItems<KeyValuePair<string, DocumentField>>("DOC_FIELDS");
                     foreach (var f in fields)
                     {
@@ -421,24 +434,15 @@ namespace Victor.CUI.DU
                         }
                     }
                     break;
-
-                case 1:
-                    var lines = GetItems<DocumentLine>("DOC_LINES");
-                    foreach (var l in lines)
-                    {
-                        SayInfoLine(l.Content);
-                    }
-                    break;
-
+                
                 case 4:
-
                     Context.Pop(); // Doc Analysis
                     break;
 
                 default:
                     throw new IndexOutOfRangeException();
             }
-            
+            SayInfoLine("");
             DispatchIntent(null, Menu);
         }
 
