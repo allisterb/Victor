@@ -18,9 +18,18 @@ namespace Victor.Vision
         #region Constructors
         public AzureFormRecognizer(Controller controller, CancellationToken ct): base(ct)
         {
-            Client = AuthenticateClient();
-            Client3 = AuthenticateClient3();
-            Initialized = true;
+            if (string.IsNullOrEmpty(ApiKey))
+            {
+                Error("AZURE_FORMRECOGNIZER_KEY environment variable not set.");
+                Initialized = false;
+                return;
+            }
+            else
+            {
+                Client = GetClient2();
+                Client3 = GetClient3();
+                Initialized = true;
+            }
         }
         #endregion
 
@@ -32,14 +41,14 @@ namespace Victor.Vision
         #endregion
 
         #region Methods
-        private static FormRecognizerClient AuthenticateClient()
+        private static FormRecognizerClient GetClient2()
         {
             var credential = new AzureKeyCredential(ApiKey);
             var client = new FormRecognizerClient(new Uri(Endpoint), credential);
             return client;
         }
 
-        private static DocumentAnalysisClient AuthenticateClient3()
+        private static DocumentAnalysisClient GetClient3()
         {
             var credential = new AzureKeyCredential(ApiKey);
             var client = new DocumentAnalysisClient(new Uri(Endpoint), credential);

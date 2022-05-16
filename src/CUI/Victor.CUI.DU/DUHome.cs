@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 
 using Azure.AI.FormRecognizer.DocumentAnalysis;
-using Victor.CUI.DU.Models;
+
+using Victor.NLU;
 using Victor.Vision;
 
 namespace Victor.CUI.DU
@@ -15,21 +16,30 @@ namespace Victor.CUI.DU
         #region Constructors
         public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "DU")), controller)
         {
-            Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan");
+            Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan", "Ask");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
             DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Lines", "Fields", "Tables");
             DocLines = Items[Prefixed("DOC_LINES")] = new Items(Prefixed("DOC_LINES"), typeof(DocumentLine), ListFields, DescribeField);
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, DocumentField>), ListFields, DescribeField);
             DocTables = Items[Prefixed("DOC_TABLES")] = new Items(Prefixed("DOC_TABLES"), typeof(DocumentTable), ListFields, DescribeField);
             Recognizer = new AzureFormRecognizer(this.Controller, this.CancellationToken);
+            QnA = new AzureQnA(this.Controller, this.CancellationToken);
+            
             if (!NLUEngine.Initialized)
             {
                 SayErrorLine("NLU engine for package {0} did not initialize. Exiting.", this.Name);
                 Controller.Exit(ExitResult.UNKNOWN_ERROR);
             }
+            
             if (!Recognizer.Initialized)
             {
                 SayErrorLine("Azure Form Recognizer not initialized.");
+                Controller.Exit(ExitResult.UNKNOWN_ERROR);
+            }
+            
+            if (!QnA.Initialized)
+            {
+                SayErrorLine("Azure QnA not initialized.");
                 Controller.Exit(ExitResult.UNKNOWN_ERROR);
             }
             Initialized = true;
@@ -49,8 +59,9 @@ namespace Victor.CUI.DU
 
         public Items DocTables { get; }
 
-        
         public AzureFormRecognizer Recognizer {get; }
+
+        public AzureQnA QnA { get; }
         #endregion
         
         #region Overriden members
@@ -59,16 +70,16 @@ namespace Victor.CUI.DU
         public override void Welcome(Intent intent = null)
         {
             base.Welcome(intent);
-            SayInfoLine("Welcome to Victor DU.");
-            SayInfoLine("Say {0} to show the main menu or {1} to get more background information. Say {2} to exit.", "menu", "info", "exit");
+            SayInfoLine("Welcome to Victor Document Understanding.");
+            SayInfoLine("Say {0} at any time to get help. Say {1} at any to show the menu for the current feature or task. Say {2} to exit the application. Say {3} to get general information about the Victor program.", "help", "menu", "exit", "info");
         }
 
         protected override void Info(Intent intent = null)
         {
             if (EmptyEntities(intent))
             {
-                SayInfoLine("Victor FN is a personal finance and accounting program designed for vision-impaired and differently-abled users.");
-                SayInfoLine("This is the Victor auditory conversational user interface for managing accounts, bills, money transfers");            
+                SayInfoLine("Victor Document Understanding is an auditory user interface designed for people with vision disabilities to help with understanding, navigating and querying structured business documents.");
+
             }
             else
             {
@@ -117,11 +128,8 @@ namespace Victor.CUI.DU
             {
                 switch (context)
                 {
-                    case "WELCOME_PROJECTMANAGEMENT":
-
-                        SayInfoLine("Victor Poject management program designed for people with vision or other disabilities.");
-
-                        SayInfoLine("Victor SM tasks and features are divided into packages. This is the {0} package which lets you jump to other packages or set global options and variables.", "HOME");
+                    case "WELCOME_DOCUMENTS":
+                        SayInfoLine("Victor features can be accessed via menus or using text commands. Say {0} to access the main me.", "HOME");
                         break;
                     case "MENU_HOME_PACKAGES":
                         SayInfoLine("Enter the number associated with the Victor SM package category you want to select.");
@@ -199,7 +207,7 @@ namespace Victor.CUI.DU
                     SayInfoLine("Select a feature to use:");
                     SayInfoLine("1: {0}", "Open.");
                     SayInfoLine("2: {0}", "Scan.");
-                    SayInfoLine("3: {0}", "Monitor.");
+                    SayInfoLine("3: {0}", "Ask.");
                     break;
                 case "DOCUMENTS_DOC_TYPE":
                     SetMenuContext("DOC_TYPE");
@@ -218,8 +226,19 @@ namespace Victor.CUI.DU
                     SayInfoLine("4: {0}", "Layout.");
                     SayInfoLine("Or enter a command to analyze the document.");
                     break;
+                case "DOCUMENTS_KBS":
+                    SetMenuContext("DOCUMENTS_KB");
+                    var kbs = GetVar("KBS").Split(';');
+                    SayInfoLine("Select knowledge base:");
+                    for (int i = 0; i < kbs.Length; i++)
+                    {
+                        SayInfoLine(i.ToString() + ": {0}", kbs[i]);
+                    }
+                    
+                    break;
                 default:
-                    SayErrorLine("Unknown controller context: {0}.", CurrentContext);
+                    SayInfoLineIfDebug("Unknown controller context: {0}.", CurrentContext);
+                    SayErrorLine("Sorry, I don't understand what you mean.");
                     break;
             }
         }
@@ -227,7 +246,7 @@ namespace Victor.CUI.DU
         #endregion
 
         #region UI
-        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE" };
+        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE", "KBS" };
 
         public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
 
@@ -264,6 +283,19 @@ namespace Victor.CUI.DU
             }
             
         }
+
+        public void Ask(Intent intent)
+        {
+            if (CurrentContext == "WELCOME_DOCUMENTS")
+            {
+
+                Controller.StopBeeper();
+            }
+            Context.Pop();
+            SetContext("DOC_ASK", null);
+            DispatchIntent(null, Menu);
+
+        }
         #endregion
 
         #region Menu Items
@@ -274,7 +306,15 @@ namespace Victor.CUI.DU
                 case 0:
                     GetVariableInput("FILE_NAME", Open);
                     break;
-
+                case 2:
+                    Context.Pop();
+                    SayInfoLine("Fetching knowledge bases...");
+                    Controller.StartBeeper();
+                    var kbs = QnA.GetKnowledgebases();
+                    SetVar("KBS", string.Join(";", kbs));
+                    SetContext("KBS");
+                    DispatchIntent(null, Menu);
+                    break;
                 default:
                     throw new IndexOutOfRangeException();
             }
