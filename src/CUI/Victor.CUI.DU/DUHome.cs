@@ -16,6 +16,7 @@ namespace Victor.CUI.DU
         #region Constructors
         public DUHome(Controller controller) : base("DOCUMENTS", new SnipsNLUEngine(Path.Combine(Api.AssemblyDirectory.FullName, "Engines", "DU")), controller)
         {
+            Intents.Add("doc_analysis", AnalyzeDoc);
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan", "Ask");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card", "Training Manual");
             DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Lines", "Fields", "Tables", "Layout", "Done");
@@ -315,6 +316,11 @@ namespace Victor.CUI.DU
             var kbid = GetVar("KB_ID");
             var kbquestion = GetVar("KB_QUESTION");
             var ans = QnA.GetAnswer(kbid, kbquestion);
+
+        }
+
+        public void AnalyzeDoc(Intent intent)
+        {
 
         }
         #endregion

@@ -37,7 +37,10 @@ slots:
     entity: doc_field_name
 utterances:
   - Show me the [doc_function](fields)
+  - Show me the document [doc_function](fields)
+  - what are the [doc_function](fields)
   - What is the [doc_field_name](control number) [doc_function](field)?
+   - What is the invoice [doc_field_name](control number) [doc_function](field)?
 
 # feature entity
 ---

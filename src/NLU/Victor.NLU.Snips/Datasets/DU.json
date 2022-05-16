@@ -109,7 +109,47 @@
         {
           "data": [
             {
+              "text": "Show me the document "
+            },
+            {
+              "entity": "doc_function",
+              "slot_name": "doc_function",
+              "text": "fields"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "what are the "
+            },
+            {
+              "entity": "doc_function",
+              "slot_name": "doc_function",
+              "text": "fields"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
               "text": "What is the "
+            },
+            {
+              "entity": "doc_field_name",
+              "slot_name": "doc_field_name",
+              "text": "control number"
+            },
+            {
+              "text": " "
+            },
+            {
+              "entity": "doc_function",
+              "slot_name": "doc_function",
+              "text": "field"
+            },
+            {
+              "text": "? - What is the invoice "
             },
             {
               "entity": "doc_field_name",
