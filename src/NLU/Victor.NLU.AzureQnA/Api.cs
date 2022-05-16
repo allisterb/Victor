@@ -60,11 +60,11 @@ namespace Victor.NLU
             return client;
         }
 
-        public List<string> GetKnowledgebases()
+        public List<(string, string)> GetKnowledgebases()
         {
             
             var dto = Client.Knowledgebase.ListAllAsync(this.CancellationToken).Result;
-            return dto.Knowledgebases.Select(r => !string.IsNullOrEmpty(r.Name) ? r.Name : r.Id).ToList();
+            return dto.Knowledgebases.Select(r => !string.IsNullOrEmpty(r.Name) ? (r.Name, r.Id) : (r.Id, r.Id)).ToList();
         }
 
         public string GetAnswer(string kb, string q)

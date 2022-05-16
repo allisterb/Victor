@@ -46,7 +46,7 @@ namespace Victor.CUI.DU
             SayInfoLine("Fetching knowledge bases...");
             KBs = QnA.GetKnowledgebases();
             SayInfoLine("Done.");
-            DocKBs = Menus[Prefixed("KBS")] = new Menu(Prefixed("KBS"), GetDocKBMenuItem, KBs);
+            DocKBs = Menus[Prefixed("KBS")] = new Menu(Prefixed("KBS"), GetDocKBMenuItem, KBs.Select(kb => kb.Item2));
             Initialized = true;
         }
         #endregion
@@ -70,7 +70,7 @@ namespace Victor.CUI.DU
 
         public AzureQnA QnA { get; }
 
-        public List<string> KBs { get; }
+        public List<(string, string)> KBs { get; }
         #endregion
 
         #region Overriden members
@@ -267,7 +267,8 @@ namespace Victor.CUI.DU
                     SayInfoLine("Select knowledge base:");
                     for (int i = 0; i < KBs.Count; i++)
                     {
-                        SayInfoLine((i + 1).ToString() + ": {0}.", KBs[i]);
+                        var (name, id) = KBs[i];
+                        SayInfoLine((i + 1).ToString() + ": {0}.", name);
                     }
                     break;
                 default:
@@ -316,12 +317,48 @@ namespace Victor.CUI.DU
             var kbid = GetVar("KB_ID");
             var kbquestion = GetVar("KB_QUESTION");
             var ans = QnA.GetAnswer(kbid, kbquestion);
+            SayInfoLine(ans);
 
+            DispatchIntent(null, Menu);
         }
 
         public void AnalyzeDoc(Intent intent)
         {
+            switch (CurrentContext)
+            {
+                case "MENU_DOCUMENTS_DOC_ANALYSIS":
+                    Context.Pop();
+                    if (EmptyEntities(intent))
+                    {
+                        GetDocAnalysisMenuItem(2);
+                        break;
+                    }
+                    else
+                    {
+                        if (GetIntentDocAnalysis(intent) != null)
+                        {
+                            var filename = GetVar("FILE_NAME");
+                            var docType = GetVar("CURRENT_DOC_TYPE");
+                            if (GetIntentDocAnalysisFieldName(intent) != null)
+                            {
+                                var fields = GetItems<KeyValuePair<string, DocumentField>>("DOC_FIELDS");
+                                var fieldname = GetIntentDocAnalysisFieldName(intent).ToLower();
+                                if (fields.Select(f => f.Key.ToLower()).Any(f => f == fieldname.Replace(" ", "")))
+                                {
+                                    SayInfoLine("The {0} field is: {1}.", fieldname, fields.First(f => f.Key.ToLower() == fieldname.Replace(" ", "")).Value.Content);
+                                }
 
+                            }
+                        }
+                    }
+                    DispatchIntent(null, Menu);
+                    break;
+                default:
+                    SayErrorLine("Sorry I don't understand what you mean.");
+                    DispatchIntent(null, Help);
+                    break;
+            }
+            
         }
         #endregion
 
@@ -470,11 +507,11 @@ namespace Victor.CUI.DU
 
         protected void GetDocKBMenuItem(int i)
         {
-            var kbid = KBs[i - 1];
+            var kbname = KBs[i - 1].Item1;
+            var kbid = KBs[i - 1].Item2;
             SetVar("KB_ID", kbid);
-            SayInfoLine($"Enter your question for knowledge base {kbid}.");
+            SayInfoLine($"Enter your question for knowledge base {kbname}.");
             GetVariableInput("KB_QUESTION", Ask);
-
         }
 
         protected void ListFields(Intent intent)
@@ -487,9 +524,35 @@ namespace Victor.CUI.DU
             //var a = DocItems.Get<Doc>(index);
             //SayInfoLine("Name: {0}.", a.Name);
         }
-            
+
         #endregion
 
+        protected string GetIntentHelpTopic(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no entities.");
+            }
+            return intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("help_topic"))?.Value;
+        }
+
+        protected string GetIntentDocAnalysis(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no entities.");
+            }
+            return intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("doc_function"))?.Value;
+        }
+
+        protected string GetIntentDocAnalysisFieldName(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no entities.");
+            }
+            return intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("doc_field_name"))?.Value;
+        }
         #endregion
     }
 }
