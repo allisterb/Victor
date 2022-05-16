@@ -18,7 +18,7 @@ namespace Victor.CUI.DU
         {
             Features = Menus[Prefixed("FEATURES")] = new Menu(Prefixed("FEATURES"), GetFeaturesMenuItem, "Open", "Scan", "Ask");
             DocType = Menus[Prefixed("DOC_TYPE")] = new Menu(Prefixed("DOC_TYPE"), GetDocTypeMenuItem, "Invoice", "Receipt", "W-2 Tax Form", "Business Card");
-            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Lines", "Fields", "Tables");
+            DocAnalysis = Menus[Prefixed("DOC_ANALYSIS")] = new Menu(Prefixed("DOC_ANALYSIS"), GetDocAnalysisMenuItem, "Lines", "Fields", "Tables", "Layout", "Done");
             DocLines = Items[Prefixed("DOC_LINES")] = new Items(Prefixed("DOC_LINES"), typeof(DocumentLine), ListFields, DescribeField);
             DocFields = Items[Prefixed("DOC_FIELDS")] = new Items(Prefixed("DOC_FIELDS"), typeof(KeyValuePair<string, DocumentField>), ListFields, DescribeField);
             DocTables = Items[Prefixed("DOC_TABLES")] = new Items(Prefixed("DOC_TABLES"), typeof(DocumentTable), ListFields, DescribeField);
@@ -145,7 +145,7 @@ namespace Victor.CUI.DU
                 switch (context)
                 {
                     case "WELCOME_DOCUMENTS":
-                        SayInfoLine("Victor features can be accessed via menus or using text commands. Say {0} to access the main me.", "HOME");
+                        SayInfoLine("Victor features can be accessed via menus or using text commands. Say {0} to access the main menu.", "HOME");
                         break;
                     case "MENU_HOME_PACKAGES":
                         SayInfoLine("Enter the number associated with the Victor SM package category you want to select.");
@@ -219,6 +219,7 @@ namespace Victor.CUI.DU
             switch(CurrentContext)
             {
                 case "WELCOME_DOCUMENTS":
+                case "DOCUMENTS_MAIN":
                     SetMenuContext("FEATURES");
                     SayInfoLine("Select a feature to use:");
                     SayInfoLine("1: {0}", "Open.");
@@ -240,6 +241,7 @@ namespace Victor.CUI.DU
                     SayInfoLine("2: {0}", "Fields.");
                     SayInfoLine("3: {0}", "Tables.");
                     SayInfoLine("4: {0}", "Layout.");
+                    SayInfoLine("5: {0}", "Done.");
                     SayInfoLine("Or enter a command to analyze the document.");
                     break;
                 case "DOCUMENTS_KBS":
@@ -425,6 +427,11 @@ namespace Victor.CUI.DU
                     {
                         SayInfoLine(l.Content);
                     }
+                    break;
+
+                case 4:
+         
+                    SetContext("MAIN");
                     break;
 
                 default:
