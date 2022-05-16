@@ -294,6 +294,7 @@ namespace Victor.CUI.DU
 
         public void Ask(Intent intent)
         {
+            Context.Pop();
             var kbid = GetVar("KB_ID");
             var kbquestion = GetVar("KB_QUESTION");
             var ans = QnA.GetAnswer(kbid, kbquestion);
@@ -382,8 +383,8 @@ namespace Victor.CUI.DU
             }
 
             Controller.StopBeeper();
+            Context.Pop();
             SetContext("DOC_ANALYSIS", null);
-            
             DispatchIntent(null, Menu);
         }
 
@@ -430,8 +431,8 @@ namespace Victor.CUI.DU
                     break;
 
                 case 4:
-         
-                    SetContext("MAIN");
+
+                    Context.Pop(); // Doc Analysis
                     break;
 
                 default:
