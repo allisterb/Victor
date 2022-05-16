@@ -70,10 +70,17 @@ namespace Victor.CUI.DU
         public AzureQnA QnA { get; }
 
         public List<string> KBs { get; }
-
         #endregion
-        
+
         #region Overriden members
+
+        #region UI
+        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE", "KBS", "KB_ID", "KB_QUESTION" };
+
+        public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
+
+        public override string[] ItemNames { get; } = { "DOC_LINES", "DOC_FIELDS", "DOC_TABLES" };
+        #endregion
 
         #region Intents
         public override void Welcome(Intent intent = null)
@@ -240,9 +247,8 @@ namespace Victor.CUI.DU
                     SayInfoLine("Select knowledge base:");
                     for (int i = 0; i < KBs.Count; i++)
                     {
-                        SayInfoLine(i.ToString() + ": {0}", KBs[i]);
+                        SayInfoLine((i + 1).ToString() + ": {0}", KBs[i]);
                     }
-                    
                     break;
                 default:
                     SayInfoLineIfDebug("Unknown controller context: {0}.", CurrentContext);
@@ -251,14 +257,6 @@ namespace Victor.CUI.DU
             }
         }
 
-        #endregion
-
-        #region UI
-        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE", "KBS", "KB_ID", "KB_QUESTION" };
-
-        public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
-
-        public override string[] ItemNames { get; } = { "DOC_LINES", "DOC_FIELDS", "DOC_TABLES"};
         #endregion
 
         #endregion
@@ -294,14 +292,9 @@ namespace Victor.CUI.DU
 
         public void Ask(Intent intent)
         {
-            if (CurrentContext == "WELCOME_DOCUMENTS")
-            {
-
-                Controller.StopBeeper();
-            }
-            Context.Pop();
-            SetContext("DOC_ASK", null);
-            DispatchIntent(null, Menu);
+            var kbid = GetVar("KB_ID");
+            var kbquestion = GetVar("KB_QUESTION");
+            var ans = QnA.GetAnswer(kbid, kbquestion);
 
         }
         #endregion
@@ -443,7 +436,7 @@ namespace Victor.CUI.DU
 
         protected void GetDocKBMenuItem(int i)
         {
-            var kbid = KBs[i];
+            var kbid = KBs[i - 1];
             SetVar("KB_ID", kbid);
             SayInfoLine($"Enter your question for knowledge base {kbid}.");
             GetVariableInput("KB_QUESTION", Ask);
