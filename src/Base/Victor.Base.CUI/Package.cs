@@ -313,7 +313,7 @@ namespace Victor.CUI
             {
                 DebugIntent(intent);
             }
-            if (intent.Top.Score < 0.8)
+            if (intent.Top.Score < 0.7)
             {
                 return false;
             }
@@ -356,6 +356,15 @@ namespace Victor.CUI
             var function = intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("function"))?.Value;
             return new Tuple<string, string, string>(feature, package, function);
 
+        }
+
+        protected string GetIntentHelpTopic(Intent intent)
+        {
+            if (EmptyEntities(intent))
+            {
+                throw new InvalidOperationException("The intent has no entities.");
+            }
+            return intent.Entities.FirstOrDefault(e => e.SlotName.EndsWith("help_topic"))?.Value;
         }
 
         protected Tuple<string, string, List<string>> GetIntentCommandItemsParams(Intent intent)

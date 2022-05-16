@@ -1,5 +1,37 @@
 {
   "entities": {
+    "doc_field_name": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [
+            "controlnumber"
+          ],
+          "value": "control number"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "doc_function": {
+      "automatically_extensible": false,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "lines"
+        },
+        {
+          "synonyms": [],
+          "value": "fields"
+        },
+        {
+          "synonyms": [],
+          "value": "layout"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
     "document": {
       "automatically_extensible": false,
       "data": [
@@ -40,9 +72,65 @@
       ],
       "matching_strictness": 1.0,
       "use_synonyms": true
+    },
+    "function": {
+      "automatically_extensible": true,
+      "data": [],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
+    },
+    "help_topic": {
+      "automatically_extensible": true,
+      "data": [
+        {
+          "synonyms": [],
+          "value": "tax"
+        }
+      ],
+      "matching_strictness": 1.0,
+      "use_synonyms": true
     }
   },
   "intents": {
+    "doc_analysis": {
+      "utterances": [
+        {
+          "data": [
+            {
+              "text": "Show me the "
+            },
+            {
+              "entity": "doc_function",
+              "slot_name": "doc_function",
+              "text": "fields"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What is the "
+            },
+            {
+              "entity": "doc_field_name",
+              "slot_name": "doc_field_name",
+              "text": "control number"
+            },
+            {
+              "text": " "
+            },
+            {
+              "entity": "doc_function",
+              "slot_name": "doc_function",
+              "text": "field"
+            },
+            {
+              "text": "?"
+            }
+          ]
+        }
+      ]
+    },
     "help": {
       "utterances": [
         {
@@ -114,6 +202,51 @@
             },
             {
               "text": "?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "Where do I send W-2 "
+            },
+            {
+              "entity": "function",
+              "slot_name": "help_topic",
+              "text": "tax"
+            },
+            {
+              "text": " forms?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What fields are required in "
+            },
+            {
+              "entity": "function",
+              "slot_name": "help_topic",
+              "text": "tax"
+            },
+            {
+              "text": " forms?"
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "text": "What federal "
+            },
+            {
+              "entity": "function",
+              "slot_name": "help_topic",
+              "text": "tax"
+            },
+            {
+              "text": " percentage is withheld?"
             }
           ]
         }

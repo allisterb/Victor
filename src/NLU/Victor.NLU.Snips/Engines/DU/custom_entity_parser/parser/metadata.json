@@ -1,12 +1,28 @@
 {
   "parsers_metadata": [
     {
-      "entity_identifier": "document",
+      "entity_identifier": "doc_field_name",
       "entity_parser": "parser_1"
     },
     {
-      "entity_identifier": "feature",
+      "entity_identifier": "doc_function",
       "entity_parser": "parser_2"
+    },
+    {
+      "entity_identifier": "document",
+      "entity_parser": "parser_3"
+    },
+    {
+      "entity_identifier": "feature",
+      "entity_parser": "parser_4"
+    },
+    {
+      "entity_identifier": "function",
+      "entity_parser": "parser_5"
+    },
+    {
+      "entity_identifier": "help_topic",
+      "entity_parser": "parser_6"
     }
   ]
 }

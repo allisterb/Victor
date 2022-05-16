@@ -26,6 +26,7 @@ namespace Victor.NLU
             }
             else
             {
+                Controller = controller;
                 Client = GetClient();
                 RuntimeClient = GetRuntimeClient();
                 Initialized = true;
@@ -36,6 +37,7 @@ namespace Victor.NLU
         #region Properties
         private static readonly string Endpoint = "https://victor-ta.cognitiveservices.azure.com/";
         private static readonly string ApiKey = Config("AZURE_QNA_KEY");
+        public Controller Controller;
         public QnAMakerClient Client;
         public QnAMakerRuntimeClient RuntimeClient;
         #endregion

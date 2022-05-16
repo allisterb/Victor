@@ -186,8 +186,12 @@
   },
   "slot_fillers": [
     {
-      "intent": "help",
+      "intent": "doc_analysis",
       "slot_filler_name": "slot_filler_0"
+    },
+    {
+      "intent": "help",
+      "slot_filler_name": "slot_filler_1"
     }
   ]
 }

@@ -36,5 +36,5 @@ def train_model(_input, name, sub=""):
 
 # sys.path.append(r'C:\Projects\Victor\src\NLU\Victor.NLU.Snips.Train')
 # from Train import train_model
-#train_model("C:\\Projects\\Victor\\src\\NLU\\Victor.NLU.Snips\\Datasets\\FN.yaml", "fn")
+#train_model("C:\\Projects\\Victor\\src\\NLU\\Victor.NLU.Snips\\Datasets\\DU.yaml", "DU")
     

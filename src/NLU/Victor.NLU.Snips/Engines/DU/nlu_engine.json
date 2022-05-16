@@ -197,17 +197,34 @@
   "custom_entity_parser": "custom_entity_parser",
   "dataset_metadata": {
     "entities": {
+      "doc_field_name": {
+        "automatically_extensible": false
+      },
+      "doc_function": {
+        "automatically_extensible": false
+      },
       "document": {
         "automatically_extensible": false
       },
       "feature": {
         "automatically_extensible": false
+      },
+      "function": {
+        "automatically_extensible": true
+      },
+      "help_topic": {
+        "automatically_extensible": true
       }
     },
     "language_code": "en",
     "slot_name_mappings": {
+      "doc_analysis": {
+        "doc_field_name": "doc_field_name",
+        "doc_function": "doc_function"
+      },
       "help": {
-        "feature": "feature"
+        "feature": "feature",
+        "help_topic": "function"
       }
     }
   },

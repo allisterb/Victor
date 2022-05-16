@@ -150,14 +150,30 @@ namespace Victor.CUI.DU
                     case "MENU_DOCUMENTS_FEATURES":
                         SayInfoLine("This is the main menu. Enter the number of the feature you want to use. Enter {0} to open a local document for analysis, {1} to scan a document using a connected scanner, {2} to query a document knowledge base.", 1, 2, 3);
                         break;
+                    case "MENU_DOCUMENTS_DOC_ANALYSIS":
+                        SayInfoLine("This is the document analysis menu. It shows the different kinds of document analysis data available. Enter the number of the document analysis data you want to see. You can also use a text command to retrieve document analysis data or to query a knowledge base.");
+                        break;
                     default:
                         SayErrorLine("Unknown HELP context: {0}.", context);
                         SayInfoLine("Say {0} to enable debug mode.", "enable debug");
                         break;
                 }
             }
-            else
+            else if (GetIntentHelpTopic(intent) != null)
             {
+                var help_topic = GetIntentHelpTopic(intent);
+                switch(help_topic)
+                {
+                    case "tax":
+                        SayInfoLine("Querying Tax Documents knowledge base...");
+                        Controller.StartBeeper();
+                        var ans = QnA.GetAnswer("TaxDocumentsKB", intent.Input);
+                        Controller.StopBeeper();
+                        SayInfoLine(ans);
+                        break;
+                }
+            }
+            else {
                 var (feature, package, function) = GetIntentFeaturePackageFunction(intent);
 
                 if (!string.IsNullOrEmpty(feature))
@@ -243,7 +259,7 @@ namespace Victor.CUI.DU
                     SayInfoLine("3: {0}", "Tables.");
                     SayInfoLine("4: {0}", "Layout.");
                     SayInfoLine("5: {0}", "Done.");
-                    SayInfoLine("Or enter a command to analyze the document.");
+                    SayInfoLine("Or enter text to analyze the document or query a knowledge base.");
                     break;
                 case "DOCUMENTS_KBS":
                     SetMenuContext("KBS");

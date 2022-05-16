@@ -9,6 +9,8 @@ slots:
     entity: document
   - name: function
     entity: function
+  - name: help_topic
+    entity: function
 utterances:
   # help
   - help
@@ -19,6 +21,23 @@ utterances:
   - Tell me about Victor featurea
   - How do I use the [feature](open feature)?
   - What is the [feature](scan)?
+
+  - Where do I send W-2 [help_topic](tax) forms?
+  - What fields are required in [help_topic](tax) forms?
+  - What federal [help_topic](tax) percentage is withheld?
+
+# doc_analysis intent
+---
+type: intent
+name: doc_analysis
+slots:
+  - name: doc_function
+    entity: doc_function
+  - name: doc_field_name
+    entity: doc_field_name
+utterances:
+  - Show me the [doc_function](fields)
+  - What is the [doc_field_name](control number) [doc_function](field)?
 
 # feature entity
 ---
@@ -40,3 +59,34 @@ use_synonyms: yes
 values:
 - [receipt, receipts]
 - [invoice, business invoice]
+
+# help_topic entity
+---
+type: entity
+name: help_topic
+automatically_extensible: yes
+use_synonyms: yes
+values:
+- tax
+
+# doc_function entity
+---
+type: entity
+name: doc_function
+automatically_extensible: no
+use_synonyms: yes
+values:
+- lines
+- fields
+- layout
+
+# doc_field_name entity
+---
+type: entity
+name: doc_field_name
+automatically_extensible: no
+use_synonyms: yes
+values:
+- [control number, controlnumber]
+
+#C:\Projects\Victor\data\sample-docs\sample_w2.pdf
