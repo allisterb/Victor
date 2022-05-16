@@ -60,8 +60,25 @@ namespace Victor.NLU
 
         public List<string> GetKnowledgebases()
         {
+            
             var dto = Client.Knowledgebase.ListAllAsync(this.CancellationToken).Result;
-            return dto.Knowledgebases.Select(r => r.Id).ToList();
+            return dto.Knowledgebases.Select(r => !string.IsNullOrEmpty(r.Name) ? r.Name : r.Id).ToList();
+        }
+
+        public string GetAnswer(string kb, string q)
+        {
+            var queryDTO = new QueryDTO();
+            queryDTO.Question = q;
+            queryDTO.Top = 3;
+            queryDTO.IsTest = true;
+            queryDTO.AnswerSpanRequest = new QueryDTOAnswerSpanRequest()
+            {
+                Enable = true,
+                ScoreThreshold = 5.0,
+                TopAnswersWithSpan = 1
+            };
+            var dto = Client.Knowledgebase.GenerateAnswerAsync(kb, queryDTO).Result;
+            return dto.Answers.First().Answer;
         }
         #endregion
     }

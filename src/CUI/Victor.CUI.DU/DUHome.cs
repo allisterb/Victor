@@ -42,6 +42,10 @@ namespace Victor.CUI.DU
                 SayErrorLine("Azure QnA not initialized.");
                 Controller.Exit(ExitResult.UNKNOWN_ERROR);
             }
+            SayInfoLine("Fetching knowledge bases...");
+            KBs = QnA.GetKnowledgebases();
+            SayInfoLine("Done.");
+            DocKBs = Menus[Prefixed("KBS")] = new Menu(Prefixed("KBS"), GetDocKBMenuItem, KBs);
             Initialized = true;
         }
         #endregion
@@ -53,6 +57,8 @@ namespace Victor.CUI.DU
 
         public Menu DocAnalysis { get; }
 
+        public Menu DocKBs { get; }
+
         public Items DocLines { get; }
 
         public Items DocFields { get; }
@@ -62,6 +68,9 @@ namespace Victor.CUI.DU
         public AzureFormRecognizer Recognizer {get; }
 
         public AzureQnA QnA { get; }
+
+        public List<string> KBs { get; }
+
         #endregion
         
         #region Overriden members
@@ -227,12 +236,11 @@ namespace Victor.CUI.DU
                     SayInfoLine("Or enter a command to analyze the document.");
                     break;
                 case "DOCUMENTS_KBS":
-                    SetMenuContext("DOCUMENTS_KB");
-                    var kbs = GetVar("KBS").Split(';');
+                    SetMenuContext("KBS");
                     SayInfoLine("Select knowledge base:");
-                    for (int i = 0; i < kbs.Length; i++)
+                    for (int i = 0; i < KBs.Count; i++)
                     {
-                        SayInfoLine(i.ToString() + ": {0}", kbs[i]);
+                        SayInfoLine(i.ToString() + ": {0}", KBs[i]);
                     }
                     
                     break;
@@ -246,7 +254,7 @@ namespace Victor.CUI.DU
         #endregion
 
         #region UI
-        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE", "KBS" };
+        public override string[] VariableNames { get; } = { "FILE_NAME", "CURRENT_DOC", "CURRENT_DOC_TYPE", "KBS", "KB_ID", "KB_QUESTION" };
 
         public override string[] MenuNames { get; } = { "FEATURES", "DOC_TYPE", "DOC_ANALYSIS" };
 
@@ -304,14 +312,11 @@ namespace Victor.CUI.DU
             switch(i - 1)
             {
                 case 0:
+                    SayInfoLine("Enter the file name to open.");
                     GetVariableInput("FILE_NAME", Open);
                     break;
                 case 2:
                     Context.Pop();
-                    SayInfoLine("Fetching knowledge bases...");
-                    Controller.StartBeeper();
-                    var kbs = QnA.GetKnowledgebases();
-                    SetVar("KBS", string.Join(";", kbs));
                     SetContext("KBS");
                     DispatchIntent(null, Menu);
                     break;
@@ -434,6 +439,15 @@ namespace Victor.CUI.DU
             }
             
             DispatchIntent(null, Menu);
+        }
+
+        protected void GetDocKBMenuItem(int i)
+        {
+            var kbid = KBs[i];
+            SetVar("KB_ID", kbid);
+            SayInfoLine($"Enter your question for knowledge base {kbid}.");
+            GetVariableInput("KB_QUESTION", Ask);
+
         }
 
         protected void ListFields(Intent intent)

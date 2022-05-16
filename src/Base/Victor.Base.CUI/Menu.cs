@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Victor.CUI
@@ -10,6 +11,13 @@ namespace Victor.CUI
         {
             Name = name;
             Items = new List<string>(items);
+            Handler = handler;
+        }
+
+        public Menu(string name, Action<int> handler, IEnumerable<string> items)
+        {
+            Name = name;
+            Items = items.ToList();
             Handler = handler;
         }
         public string Name { get; set; }
