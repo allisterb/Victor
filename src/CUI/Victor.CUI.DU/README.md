@@ -1,1 +1,2 @@
 ﻿# Victor Document Understanding
+Victor Document Understanding is a auditory user interface to assist blind users in navigating, querying, and understanding business documents like invoices, receipts, tax forms, and training manuals.
