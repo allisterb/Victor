@@ -22,3 +22,6 @@
 [submodule "ext/ffdc-sample-csharp"]
 	path = ext/ffdc-sample-csharp
 	url = https://github.com/fusionfabric/ffdc-sample-csharp.git
+[submodule "ext/ntwain"]
+	path = ext/ntwain
+	url = https://github.com/allisterb/ntwain.git
