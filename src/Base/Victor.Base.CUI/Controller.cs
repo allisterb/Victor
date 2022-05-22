@@ -73,6 +73,8 @@ namespace Victor.CUI
 
         public abstract void Exit(ExitResult code);
 
+        public abstract List<byte[]> Scan();
+
         public abstract bool ASREnabled { get; }
         #endregion
 

@@ -128,6 +128,11 @@ namespace Victor.CLI
             #endif
         }
 
+        public override List<byte[]> Scan()
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool ASREnabled
         {
             get

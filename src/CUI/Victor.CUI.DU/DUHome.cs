@@ -320,6 +320,9 @@ namespace Victor.CUI.DU
                     SayInfoLine("Enter the file name to open.");
                     GetVariableInput("FILE_NAME", Open);
                     break;
+                case 1:
+                    Controller.Scan();
+                    break;
                 case 2:
                     Context.Pop();
                     SetContext("KBS");

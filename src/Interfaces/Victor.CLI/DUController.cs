@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Text;
 
@@ -9,6 +11,7 @@ using Sc = System.Console;
 
 using Colorful;
 using Co = Colorful.Console;
+
 
 using Victor.CUI;
 using Victor.CUI.FN;
@@ -43,7 +46,7 @@ namespace Victor.CLI
             Initialized = Packages[0].Initialized;
             StopBeeper();
         }
-        #endregion
+#endregion
 
         #region Overriden members
         public override void Start()
@@ -132,11 +135,11 @@ namespace Victor.CLI
         {
             get
             {
-                #if UNIX
+        #if UNIX
                 return JuliusSession.Initialized && JuliusSession.IsListening;
-                #else
+        #else
                 return false;
-                #endif
+        #endif
             }
         }
 
@@ -194,10 +197,30 @@ namespace Victor.CLI
             }
             SayErrorLine("Sorry, I don't understand what you mean. Enter {0} to see the things you can do right now or {1} to get more help.", "info", "help");
         }
+        
+        public override List<byte[]> Scan()
+        {
+            #if NET461 && WINDOWS
+            WIAScan();
+            return null;
+        #else
+                    SayErrorLine("Scan not implemented.");
+                    return null;
+        #endif
+        }
+
+        #if NET461 && WINDOWS
+        public void WIAScan()
+        {
+            var deviceId = WIAScanner.GetDevices().First();
+            var r = WIAScanner.Scan(deviceId);
+        }
+        #endif
+        
         #endregion
 
         #region Event Handlers
-        #if UNIX
+#if UNIX
         private void JuliusSession_Recognized(string sentence)
         {
             if (InputEnabled)
@@ -215,7 +238,7 @@ namespace Victor.CLI
             }
             SayInfoLine("ASR enabled.");
         }
-        #endif
+#endif
         #endregion
 
         #region Fields
@@ -224,6 +247,6 @@ namespace Victor.CLI
         static ManualResetEvent _signalBeep;
 
         public static bool beeperOn;
-        #endregion
+#endregion
     }
 }

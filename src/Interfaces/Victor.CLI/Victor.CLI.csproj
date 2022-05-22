@@ -10,6 +10,7 @@
     <FileVersion>0.4.0.0</FileVersion>
     <Version>0.4.0</Version>
     <Description>Victor auditory user interface</Description>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
@@ -30,16 +31,28 @@
     <DefineConstants>WINDOWS</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(OS)' == 'Unix'">
     <ProjectReference Include="..\..\ASR\Victor.ASR.Julius\Victor.ASR.Julius.csproj" />
     <ProjectReference Include="..\..\TTS\Victor.TTS.Mimic\Victor.TTS.Mimic.csproj" />
+  </ItemGroup>
+  
+   <ItemGroup>
+    <Compile Remove="WIAScanner.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT' AND '$(TargetFramework)'=='net461'">
+    <Compile Include="WIAScanner.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="victor.cmd" />
     <None Remove="Victor.log" />
   </ItemGroup>
-
   
   <Import Project="..\..\..\build\common.props" />
   
@@ -59,6 +72,7 @@
     <ProjectReference Include="..\..\Loggers\Victor.Logger.Serilog\Victor.Logger.Serilog.csproj" />
     <ProjectReference Include="..\..\..\ext\readline\src\ReadLine\ReadLine.csproj" />
     <ProjectReference Include="..\..\Web\Victor.Web.Server\Victor.Web.Server.csproj" />
+    
   </ItemGroup>
 
   <ItemGroup Condition="'$(OS)' == 'Windows_NT' AND '$(TargetFramework)'=='net461'">
@@ -67,7 +81,16 @@
     </Reference>
   </ItemGroup>
 
-
-
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT' AND '$(TargetFramework)'=='net461'">
+    <COMReference Include="WIA">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>94a0e92d-43c0-494e-ac29-fd45948a5221</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
 
 </Project>

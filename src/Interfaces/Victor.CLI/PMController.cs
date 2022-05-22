@@ -162,6 +162,12 @@ namespace Victor.CLI
         }
 
         public override void Exit(ExitResult code) => Victor.CLI.Program.Exit(code);
+
+        public override List<byte[]> Scan()
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool ASREnabled
         {
             get
