@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Drawing;
 
 namespace Victor.CLI
@@ -34,36 +36,28 @@ namespace Victor.CLI
             public const uint WIA_DPS_FIRST = WIA_DPC_FIRST + WIA_RESERVED_FOR_NEW_PROPS;
             public const uint WIA_DPS_DOCUMENT_HANDLING_STATUS = WIA_DPS_FIRST + 13;
             public const uint WIA_DPS_DOCUMENT_HANDLING_SELECT = WIA_DPS_FIRST + 14;
+
+            public const string WIA_SCAN_COLOR_MODE = "6146";
+            public const string WIA_PREVIEW = "3100";
+            public const string WIA_HORIZONTAL_SCAN_RESOLUTION_DPI = "6147";
+            public const string WIA_VERTICAL_SCAN_RESOLUTION_DPI = "6148";
+            public const string WIA_HORIZONTAL_SCAN_START_PIXEL = "6149";
+            public const string WIA_VERTICAL_SCAN_START_PIXEL = "6150";
+            public const string WIA_HORIZONTAL_SCAN_SIZE_PIXELS = "6151";
+            public const string WIA_VERTICAL_SCAN_SIZE_PIXELS = "6152";
+            public const string WIA_SCAN_BRIGHTNESS_PERCENTS = "6154";
+            public const string WIA_SCAN_CONTRAST_PERCENTS = "6155";
         }
 
-        /// <summary>
-        /// Use scanner to scan an image (with user selecting the scanner from a dialog).
-        /// </summary>
-        /// <returns>Scanned images.</returns>
-        public static List<Image> Scan()
-        {
-            WIA.ICommonDialog dialog = new WIA.CommonDialog();
-            WIA.Device device = dialog.ShowSelectDevice(WIA.WiaDeviceType.UnspecifiedDeviceType, true, false);
-
-            if (device != null)
-            {
-                return Scan(device.DeviceID);
-            }
-            else
-            {
-                throw new Exception("You must select a device for scanning.");
-            }
-        }
-
+        
         /// <summary>
         /// Use scanner to scan an image (scanner is selected by its unique id).
         /// </summary>
         /// <param name="scannerName"></param>
         /// <returns>Scanned images.</returns>
-        public static List<Image> Scan(string scannerId)
+        public static List<byte[]> Scan(string scannerId, DUController controller)
         {
-            List<Image> images = new List<Image>();
-
+            List<byte[]> images = new List<byte[]>();
             bool hasMorePages = true;
             while (hasMorePages)
             {
@@ -88,33 +82,86 @@ namespace Victor.CLI
                     string availableDevices = "";
                     foreach (WIA.DeviceInfo info in manager.DeviceInfos)
                     {
-                        availableDevices += info.DeviceID + "n";
+                        availableDevices +=  Environment.NewLine;
                     }
-
-                    // show error with available devices
-                    throw new Exception("The device with provided ID could not be found. Available Devices:n" + availableDevices);
+                    controller.SayErrorLine("The device with provided ID could not be found. Available Devices:" + Environment.NewLine + availableDevices);
+                    return null;
+                }
+                var props = device.Properties;
+                foreach(var p in props)
+                {
+                    WIA.IProperty prop = (WIA.IProperty)p;
+                    string n = prop.Name;
+                    if (n == "Description")
+                    {
+                        string v = (string)prop.get_Value();
+                        if (!string.IsNullOrEmpty(v))
+                        {
+                            controller.SayInfoLine($"Using scanner {v}...");
+                        }
+                        break;
+                    }
                 }
 
-                WIA.Item item = device.Items[1] as WIA.Item;
+
+                WIA.Item item = device.Items[1];
+                SetWIAProperty(item.Properties, WIA_PROPERTIES.WIA_HORIZONTAL_SCAN_RESOLUTION_DPI, 200f);
+                SetWIAProperty(item.Properties, WIA_PROPERTIES.WIA_VERTICAL_SCAN_RESOLUTION_DPI, 200f);
+                SetWIAProperty(item.Properties, WIA_PROPERTIES.WIA_HORIZONTAL_SCAN_SIZE_PIXELS, 8.5f * 200f);
+                SetWIAProperty(item.Properties, WIA_PROPERTIES.WIA_VERTICAL_SCAN_SIZE_PIXELS, 11f * 200f);
+                SetWIAProperty(item.Properties, WIA_PROPERTIES.WIA_SCAN_COLOR_MODE, 1);
+                //SetWIAProperty(item.Properties, WIA_PROPERTIES.WIA_PREVIEW, 1);
 
                 try
                 {
                     // scan image
-                    WIA.ICommonDialog wiaCommonDialog = new WIA.CommonDialog();
-                    WIA.ImageFile image = (WIA.ImageFile)wiaCommonDialog.ShowTransfer(item, wiaFormatBMP, false);
-
+                    //WIA.ICommonDialog wiaCommonDialog = new WIA.CommonDialog();
+                    controller.SayInfoLine("Scanning...");
+                    controller.StartBeeper();
+                    
+                    WIA.ImageFile image = (WIA.ImageFile)item.Transfer(wiaFormatPNG); //wiaCommonDialog.ShowTransfer(item, wiaFormatBMP, false);
+                    //WIA.ImageProcess imageProcess = new WIA.ImageProcess();
+        
+                    //imageProcess.Filters.Add(imageProcess.FilterInfos.get_Item("Scale").FilterID);
+                    //imageProcess.Filters[0].Properties.get_Item("MaximumWidth").set_Value(1024);
+                    //imageProcess.Filters[0].Properties.get_Item("PreserveAspectRation").set_Value(true);
+                    //imageProcess.Filters.Add(imageProcess.FilterInfos.get_Item("Convert").FilterID);
+                    //imageProcess.Filters[0].Properties.get_Item("FormatID").set_Value(wiaFormatJPEG);
+                    //imageProcess.Filters[0].Properties.get_Item("Quality").set_Value(75);
+                    //WIA.ImageFile image2 = imageProcess.Apply(image);
+                    /*
+                    //With.Filters(1)
+                    //    .Properties("MaximumWidth").Value = 1024
+                        .Properties("MaximumHeight").Value = 1024
+                        .Properties("PreserveAspectRatio").Value = True
+                    End With
+                    .Filters.Add.FilterInfos.Item("Convert").FilterID
+                    With.Filters(2)
+                        .Properties("FormatID").Value = wiaFormatJPEG
+                        .Properties("Quality").Value = 50 '1 to 100 percent, higher is better.
+                    End With
+                End With
+                    */
+                    controller.StopBeeper();
                     // save to temp file
                     string fileName = Path.GetTempFileName();
                     File.Delete(fileName);
                     image.SaveFile(fileName);
-                    image = null;
-
+                    var ifactory = new ImageProcessor.ImageFactory(false);
+                    ImageProcessor.Imaging.Formats.ISupportedImageFormat format = new ImageProcessor.Imaging.Formats.PngFormat { Quality = 70 };
+                    var ib = File.ReadAllBytes(fileName);
+                    ifactory.Load(ib);
+                    ifactory.Resize(new Size(1280, 720));
+                    MemoryStream ms = new MemoryStream();
+                    ifactory.Save(ms);
+                    
                     // add file to output list
-                    images.Add(Image.FromFile(fileName));
+                    images.Add(ms.ToArray());
                 }
                 catch (Exception exc)
                 {
-                    throw exc;
+                    controller.SayErrorLine($"An error occurred during scanning: {exc.Message}.");
+                    return null;
                 }
                 finally
                 {
@@ -168,5 +215,25 @@ namespace Victor.CLI
             return devices;
         }
 
+        private static void SetWIAProperty(WIA.IProperties properties,
+               object propName, object propValue)
+        {
+            WIA.Property prop = properties.get_Item(ref propName);
+            prop.set_Value(ref propValue);
+        }
+       
+
+        public enum WIAPageSize
+        {
+            A4, // 8.3 x 11.7 in  (210 x 297 mm)
+            Letter, // 8.5 x 11 in (216 x 279 mm)
+            Legal, // 8.5 x 14 in (216 x 356 mm)
+        }
+
+        public enum WIAScanQuality
+        {
+            Preview,
+            Final,
+        }
     }
 }

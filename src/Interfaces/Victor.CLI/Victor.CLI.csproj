@@ -91,6 +91,7 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+    <PackageReference Include="ImageProcessor" Version="2.9.1" />
   </ItemGroup>
 
 </Project>

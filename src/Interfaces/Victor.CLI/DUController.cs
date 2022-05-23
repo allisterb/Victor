@@ -131,6 +131,16 @@ namespace Victor.CLI
             #endif
         }
 
+        public override List<byte[]> Scan()
+        {
+            #if NET461 && WINDOWS
+            return WIAScan();
+            #else
+            SayErrorLine("Scan not implemented.");
+            return null;
+            #endif
+        }
+
         public override bool ASREnabled
         {
             get
@@ -198,22 +208,11 @@ namespace Victor.CLI
             SayErrorLine("Sorry, I don't understand what you mean. Enter {0} to see the things you can do right now or {1} to get more help.", "info", "help");
         }
         
-        public override List<byte[]> Scan()
-        {
-            #if NET461 && WINDOWS
-            WIAScan();
-            return null;
-        #else
-                    SayErrorLine("Scan not implemented.");
-                    return null;
-        #endif
-        }
-
         #if NET461 && WINDOWS
-        public void WIAScan()
+        public List<byte[]> WIAScan()
         {
             var deviceId = WIAScanner.GetDevices().First();
-            var r = WIAScanner.Scan(deviceId);
+            return WIAScanner.Scan(deviceId, this);
         }
         #endif
         

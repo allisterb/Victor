@@ -260,6 +260,38 @@ namespace Victor.CUI.DU
             
         }
 
+        public void Scan(Intent intent)
+        {
+            Context.Pop();
+            var filename = GetVar("FILE_NAME");
+            if (filename.ToUpper() == "CANCEL")
+            {
+                Context.Pop();
+                DispatchIntent(null, Menu);
+            }
+            else
+            {
+                SayInfoLineIfDebug($"File to scan to is: {filename}");
+                if (File.Exists(filename))
+                {
+                    SayWarningLine($"The file {filename} exists and will be overwritten.");
+                }
+                var img = Controller.Scan();
+                if (img == null || img.Count == 0)
+                {
+                    SayErrorLine("Did not receive a document from the scanner.");
+                    Context.Pop();
+                    DispatchIntent(null, Menu);
+                }
+                else
+                {
+                    File.WriteAllBytes(filename, img.First());
+                    SetContext("DOC_TYPE", null);
+                    DispatchIntent(null, Menu);
+                }
+            }
+        }
+
         public void Ask(Intent intent)
         {
             Context.Pop();
@@ -321,7 +353,8 @@ namespace Victor.CUI.DU
                     GetVariableInput("FILE_NAME", Open);
                     break;
                 case 1:
-                    Controller.Scan();
+                    SayInfoLine("Enter the file name to scan to.");
+                    GetVariableInput("FILE_NAME", Scan);
                     break;
                 case 2:
                     Context.Pop();
