@@ -1,0 +1,6 @@
+@Victor.Server.DI_HostAddress = http://localhost:5216
+
+GET {{Victor.Server.DI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

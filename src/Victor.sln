@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35017.193
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.Base", "Base\Victor.Base\Victor.Base.csproj", "{F51E4C71-0EC7-43BF-B095-09BFE6271F52}"
 EndProject
@@ -160,6 +160,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Victor.NLU.AzureQnA", "NLU\Victor.NLU.AzureQnA\Victor.NLU.AzureQnA.csproj", "{A5989E3C-8179-401E-ABD2-4AD47C5A067B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTwain", "..\ext\ntwain\src\NTwain\NTwain.csproj", "{22DA5BBD-128A-4237-A461-D9CE0E54979B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Victor.Server.DI", "Servers\Victor.Server.DI\Victor.Server.DI.csproj", "{859FCD1A-2026-450F-B17F-946C9FD905E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -581,6 +583,14 @@ Global
 		{22DA5BBD-128A-4237-A461-D9CE0E54979B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22DA5BBD-128A-4237-A461-D9CE0E54979B}.Release|x86.ActiveCfg = Release|Any CPU
 		{22DA5BBD-128A-4237-A461-D9CE0E54979B}.Release|x86.Build.0 = Release|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Debug|x86.Build.0 = Debug|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Release|x86.ActiveCfg = Release|Any CPU
+		{859FCD1A-2026-450F-B17F-946C9FD905E7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -643,6 +653,7 @@ Global
 		{7460965F-254E-489A-922E-D9588436836A} = {0D85527C-44EE-499A-8024-402349632FA6}
 		{A5989E3C-8179-401E-ABD2-4AD47C5A067B} = {4D5197B4-E735-441A-8980-023FD450CDF8}
 		{22DA5BBD-128A-4237-A461-D9CE0E54979B} = {FD4F5F66-349C-4EBC-90D9-585758DAB55A}
+		{859FCD1A-2026-450F-B17F-946C9FD905E7} = {FD4F5F66-349C-4EBC-90D9-585758DAB55A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC5685EE-DB95-4277-8DB7-6FA4A8FD811D}
