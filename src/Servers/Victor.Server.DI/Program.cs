@@ -3,15 +3,21 @@ namespace Victor.Server.DI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting
+    ;
 
+
+using Serilog;
 class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-      
+        var logger = new LoggerConfiguration()
+                     .ReadFrom.Configuration(builder.Configuration)
+                     .Enrich.FromLogContext()
+                     .CreateLogger();
+        builder.Host.UseSerilog(logger);
         // Add services to the container.
 
         builder.Services.AddControllers();
@@ -20,7 +26,7 @@ class Program
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
-
+        app.UseSerilogRequestLogging();
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

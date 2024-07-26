@@ -1,5 +1,6 @@
 namespace Victor.Server.DI
 {
+    using System;
     public class WeatherForecast
     {
         public DateOnly Date { get; set; }
