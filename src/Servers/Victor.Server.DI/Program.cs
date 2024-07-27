@@ -1,13 +1,11 @@
 namespace Victor.Server.DI;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting
-    ;
-
-
+using Microsoft.Extensions.Hosting;
+ 
 using Serilog;
+
 class Program
 {
     public static void Main(string[] args)
@@ -16,6 +14,7 @@ class Program
         var logger = new LoggerConfiguration()
                      .ReadFrom.Configuration(builder.Configuration)
                      .Enrich.FromLogContext()
+                     .Enrich.WithThreadId()
                      .CreateLogger();
         builder.Host.UseSerilog(logger);
         // Add services to the container.
@@ -36,7 +35,7 @@ class Program
 
         app.UseHttpsRedirection();
 
-        app.UseAuthorization();
+        //app.UseAuthorization();
 
         app.MapControllers();
 
